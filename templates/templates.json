@@ -1,0 +1,47 @@
+{
+  "$schema": "https://rahulchaube.space/schemas/templates.json",
+  "templates": [
+    {
+      "id": "react",
+      "name": "React app",
+      "description": "Single-page React app with hot reload.",
+      "tags": ["frontend", "react"],
+      "entry": "src/main.tsx"
+    },
+    {
+      "id": "next",
+      "name": "Next-style app",
+      "description": "React with file-based pages.",
+      "tags": ["frontend", "react", "ssr"],
+      "entry": "src/pages/index.tsx"
+    },
+    {
+      "id": "express",
+      "name": "Express server",
+      "description": "HTTP server with Express.",
+      "tags": ["backend", "http"],
+      "entry": "src/index.ts"
+    },
+    {
+      "id": "hono",
+      "name": "Hono server",
+      "description": "Lightweight edge-ready server.",
+      "tags": ["backend", "http", "edge"],
+      "entry": "src/index.ts"
+    },
+    {
+      "id": "library",
+      "name": "Library",
+      "description": "Reusable TypeScript library with tests.",
+      "tags": ["library"],
+      "entry": "src/index.ts"
+    },
+    {
+      "id": "cli",
+      "name": "CLI",
+      "description": "Command-line tool compiled to a binary.",
+      "tags": ["cli"],
+      "entry": "src/main.ts"
+    }
+  ]
+}

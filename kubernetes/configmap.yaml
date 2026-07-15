@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rahulchaube-config
+data:
+  NODE_ENV: "production"
+  SITE_URL: "https://rahulchaube.space"
+  RAHULCHAUBE_API_URL: "https://rahulchaube.space/api"
+  FEATURE_BENCHMARKS: "true"
+  FEATURE_BLOG: "true"

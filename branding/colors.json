@@ -1,0 +1,38 @@
+{
+  "name": "RahulChaube Runtime",
+  "tagline": "The Next Generation JavaScript Runtime & Developer Platform.",
+  "version": "1.0.0",
+  "primary": "#a21caf",
+  "primaryHex": 0xa21caf,
+  "accent": "#d946ef",
+  "accentHex": 0xd946ef,
+  "dark": {
+    "background": "#0b0b0f",
+    "surface": "#14141a",
+    "text": "#f9fafb",
+    "muted": "#9ca3af"
+  },
+  "light": {
+    "background": "#ffffff",
+    "surface": "#f9fafb",
+    "text": "#1f2937",
+    "muted": "#6b7280"
+  },
+  "semantic": {
+    "success": "#16a34a",
+    "warning": "#f59e0b",
+    "error": "#dc2626",
+    "info": "#2563eb"
+  },
+  "fonts": {
+    "sans": "Inter, Segoe UI, system-ui, sans-serif",
+    "mono": "JetBrains Mono, Fira Code, ui-monospace, monospace"
+  },
+  "logo": {
+    "light": "branding/logo.svg",
+    "dark": "branding/logo-dark.svg",
+    "icon": "branding/favicon.svg"
+  },
+  "domain": "https://rahulchaube.space",
+  "license": "MIT"
+}

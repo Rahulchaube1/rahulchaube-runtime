@@ -1,0 +1,57 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "RahulChaube Runtime API",
+    "version": "1.0.0",
+    "description": "Public API for RahulChaube Runtime (health, metrics, auth, docs).",
+    "license": { "name": "MIT" }
+  },
+  "servers": [{ "url": "https://rahulchaube.space/api" }],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health check",
+        "responses": {
+          "200": {
+            "description": "Service is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string" },
+                    "uptimeSeconds": { "type": "integer" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/metrics": {
+      "get": {
+        "summary": "Runtime metrics",
+        "responses": { "200": { "description": "Metrics" } }
+      }
+    },
+    "/auth/token": {
+      "post": {
+        "summary": "Issue a demo token",
+        "responses": { "200": { "description": "Token" } }
+      }
+    },
+    "/protected": {
+      "get": {
+        "summary": "Protected resource (requires Bearer auth)",
+        "security": [{ "bearer": [] }],
+        "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" } }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearer": { "type": "http", "scheme": "bearer" }
+    }
+  }
+}

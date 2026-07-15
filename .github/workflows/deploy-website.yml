@@ -1,0 +1,32 @@
+name: deploy-website
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "website/**"
+      - "branding/**"
+      - "docs/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  deployments: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install website deps
+        working-directory: website
+        run: npm ci || npm install
+      - name: Build
+        working-directory: website
+        run: npm run build
+      - name: Deploy to rahulchaube.space
+        working-directory: website
+        run: echo "Deploy dist/ to your host (Vercel/Cloudflare/Docker)."

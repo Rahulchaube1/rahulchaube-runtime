@@ -1,0 +1,13 @@
+{
+  "name": "@example/api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "rahulchaube run --hot src/index.ts",
+    "build": "rahulchaube build src/index.ts --outdir dist --minify",
+    "start": "rahulchaube run dist/index.js"
+  },
+  "dependencies": { "hono": "^4.0.0" },
+  "devDependencies": { "typescript": "^5.0.0" }
+}

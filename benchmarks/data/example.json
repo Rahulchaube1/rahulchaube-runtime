@@ -1,0 +1,14 @@
+{
+  "_comment": "PLACEHOLDER DATA — not measured on a standardized machine. Do not cite as official benchmark results. Replace with real `rahulchaube benchmark` output before publishing.",
+  "generatedAt": "2026-07-15T00:00:00Z",
+  "environment": {
+    "os": "linux",
+    "arch": "x64",
+    "note": "Example only — replace with real measurements."
+  },
+  "workloads": [
+    { "name": "startup (hello world)", "rahulchaubeMs": 6, "nodeMs": 45, "bunMs": 7, "denoMs": 30 },
+    { "name": "install 1000 deps", "rahulchaubeS": 1.2, "nodeS": 12.0, "bunS": 1.1, "denoS": 9.0 },
+    { "name": "transpile 10000 files", "rahulchaubeS": 0.9, "nodeS": 6.0, "bunS": 0.9, "denoS": 4.0 }
+  ]
+}

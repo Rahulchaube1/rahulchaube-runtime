@@ -1,0 +1,12 @@
+{
+  "name": "rahulchaube-monorepo-example",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "workspaces": ["packages/*"],
+  "scripts": {
+    "build": "rahulchaube run scripts/build.ts",
+    "test": "rahulchaube test"
+  },
+  "devDependencies": { "typescript": "^5.0.0", "rahulchaube-cli": "workspace:*" }
+}

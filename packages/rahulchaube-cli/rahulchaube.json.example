@@ -1,0 +1,7 @@
+{
+  "telemetry": false,
+  "autoInstall": true,
+  "concurrency": 8,
+  "theme": "default",
+  "plugins": []
+}
