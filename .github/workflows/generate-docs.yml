@@ -1,0 +1,21 @@
+name: generate-docs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - "packages/rahulchaube-cli/**"
+  workflow_dispatch:
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - name: Validate docs links (example)
+        run: |
+          echo "Validating rahulchaube docs tree…"
+          test -f docs/rahulchaube/getting-started.md
+          test -f docs/rahulchaube/api-reference.md

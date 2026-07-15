@@ -1,0 +1,13 @@
+{
+  "name": "@example/express",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "rahulchaube run --hot src/index.ts",
+    "build": "rahulchaube build src/index.ts --outdir dist --minify",
+    "start": "rahulchaube run dist/index.js"
+  },
+  "dependencies": { "express": "^4.19.2" },
+  "devDependencies": { "@types/express": "^4.17.21", "typescript": "^5.0.0" }
+}

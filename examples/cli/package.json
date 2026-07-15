@@ -1,0 +1,12 @@
+{
+  "name": "@example/cli",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": { "hello-cli": "dist/hello-cli" },
+  "scripts": {
+    "dev": "rahulchaube run --hot src/main.ts",
+    "build": "rahulchaube build src/main.ts --compile --outfile dist/hello-cli",
+    "start": "rahulchaube run dist/hello-cli"
+  },
+  "devDependencies": { "typescript": "^5.0.0" }
+}

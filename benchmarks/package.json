@@ -1,0 +1,10 @@
+{
+  "name": "@rahulchaube/benchmarks",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "bench": "rahulchaube run suite.bench.ts"
+  },
+  "devDependencies": { "typescript": "^5.0.0" }
+}

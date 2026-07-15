@@ -1,0 +1,14 @@
+{
+  "name": "rahulchaube-dev",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:20",
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  "forwardPorts": [3000, 8787],
+  "postCreateCommand": "curl -fsSL https://rahulchaube.space/install | bash || true",
+  "customizations": {
+    "vscode": {
+      "extensions": ["oven.bun-vscode"]
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "projects": [
+    {
+      "name": "Example API",
+      "description": "A minimal JSON API built with Hono and RahulChaube Runtime.",
+      "url": "https://rahulchaube.space/examples/api",
+      "stack": ["hono", "api"]
+    },
+    {
+      "name": "Example Web",
+      "description": "A monorepo web app demonstrating workspaces.",
+      "url": "https://rahulchaube.space/examples/monorepo",
+      "stack": ["react", "monorepo"]
+    },
+    {
+      "name": "Example CLI",
+      "description": "A command-line tool compiled to a single binary.",
+      "url": "https://rahulchaube.space/examples/cli",
+      "stack": ["cli"]
+    }
+  ]
+}

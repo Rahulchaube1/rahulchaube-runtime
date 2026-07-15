@@ -1,0 +1,21 @@
+services:
+  website:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+
+  api:
+    build:
+      context: ../api
+      dockerfile: ../docker/Dockerfile.api
+    ports:
+      - "8787:8787"
+    environment:
+      - RAHULCHAUBE_API_PORT=8787
+      - RAHULCHAUBE_API_RATE_LIMIT=100
+    restart: unless-stopped

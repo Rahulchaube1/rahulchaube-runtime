@@ -1,0 +1,7 @@
+{
+  "name": "@example/web",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": { "dev": "rahulchaube run --hot src/index.ts" },
+  "dependencies": { "@example/core": "workspace:*" }
+}

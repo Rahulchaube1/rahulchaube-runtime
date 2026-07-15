@@ -1,0 +1,36 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-cli:
+    name: Build & typecheck CLI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install
+      - name: Typecheck CLI
+        working-directory: packages/rahulchaube-cli
+        run: bun run typecheck
+      - name: Smoke test CLI
+        run: bun packages/rahulchaube-cli/bin/rahulchaube.ts --help
+
+  build-engine:
+    name: Build native engine
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - name: Build (uses engine build scripts)
+        run: bun run build:debug
+        continue-on-error: true

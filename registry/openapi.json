@@ -1,0 +1,37 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "RahulChaube Registry (draft)",
+    "version": "0.0.1-draft",
+    "description": "Draft API for a future, self-hostable package registry. Not yet implemented."
+  },
+  "paths": {
+    "/-/package/{name}": {
+      "get": {
+        "summary": "Get package metadata",
+        "parameters": [{ "name": "name", "in": "path", "required": true, "schema": { "type": "string" } }],
+        "responses": { "200": { "description": "Metadata" } }
+      }
+    },
+    "/{name}/-/{file}": {
+      "get": {
+        "summary": "Download tarball (integrity verified by client)",
+        "parameters": [
+          { "name": "name", "in": "path", "required": true, "schema": { "type": "string" } },
+          { "name": "file", "in": "path", "required": true, "schema": { "type": "string" } }
+        ],
+        "responses": { "200": { "description": "Tarball stream" } }
+      }
+    },
+    "/{name}": {
+      "put": {
+        "summary": "Publish a package (auth required)",
+        "security": [{ "bearer": [] }],
+        "responses": { "201": { "description": "Published" } }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": { "bearer": { "type": "http", "scheme": "bearer" } }
+  }
+}
