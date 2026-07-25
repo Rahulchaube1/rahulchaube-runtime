@@ -19,10 +19,10 @@ export function Hero() {
   };
 
   return (
-    <section className="relative overflow-hidden border-b border-zinc-200 dark:border-[#30363D] py-16 lg:py-24 font-sans bg-white dark:bg-[#0D1117] transition-colors duration-200">
+    <section className="relative overflow-hidden border-b border-zinc-200 dark:border-[#163830] py-16 lg:py-24 font-sans bg-[#F4F8F6] dark:bg-[#071A16] transition-colors duration-200">
       {/* Background Subtle Grid */}
       <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
-      <div className="absolute top-0 right-1/4 -z-10 w-96 h-96 bg-blue-500/10 dark:bg-blue-600/10 rounded-full blur-3xl" />
+      <div className="absolute top-0 right-1/4 -z-10 w-96 h-96 bg-emerald-500/10 dark:bg-emerald-600/10 rounded-full blur-3xl" />
 
       <div className="mx-auto max-w-6xl px-4">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -34,11 +34,11 @@ export function Hero() {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-semibold border border-blue-500/20 font-mono"
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-[#2FA866] dark:text-[#A8F05B] text-xs font-semibold border border-[#2FA866]/20 font-mono"
             >
               <Tag className="w-3.5 h-3.5" />
               <span>v1.0.0 General Availability is Live</span>
-              <ShieldCheck className="w-3.5 h-3.5 text-green-500" />
+              <ShieldCheck className="w-3.5 h-3.5 text-[#6FCF63]" />
             </motion.div>
 
             {/* Title & Brand Logo */}
@@ -64,17 +64,17 @@ export function Hero() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="bg-zinc-100 dark:bg-[#161B22] border border-zinc-300 dark:border-[#30363D] rounded-xl p-3 flex items-center justify-between font-mono text-xs max-w-lg shadow-sm"
+              className="bg-white dark:bg-[#0A1F1B] border border-zinc-300 dark:border-[#163830] rounded-xl p-3 flex items-center justify-between font-mono text-xs max-w-lg shadow-sm"
             >
               <div className="flex items-center gap-2 overflow-x-auto text-zinc-800 dark:text-[#F0F6FC] pr-2">
-                <span className="text-blue-500 shrink-0">$</span>
+                <span className="text-[#2FA866] shrink-0">$</span>
                 <span className="truncate">{installCmd}</span>
               </div>
               <button
                 onClick={handleCopy}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-zinc-200 dark:bg-[#1C2128] hover:bg-zinc-300 dark:hover:bg-[#252C35] text-zinc-800 dark:text-[#F0F6FC] transition-colors shrink-0 font-sans font-semibold text-[11px]"
+                className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-[#0E2923] hover:bg-zinc-200 dark:hover:bg-[#163830] text-zinc-800 dark:text-[#F0F6FC] transition-colors shrink-0 font-sans font-semibold text-[11px]"
               >
-                {copied ? <Check className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5" />}
+                {copied ? <Check className="w-3.5 h-3.5 text-[#6FCF63]" /> : <Copy className="w-3.5 h-3.5" />}
                 <span>{copied ? "Copied" : "Copy"}</span>
               </button>
             </motion.div>
@@ -106,7 +106,7 @@ export function Hero() {
                 href={site.social.github}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-lg bg-zinc-100 dark:bg-[#161B22] hover:bg-zinc-200 dark:hover:bg-[#1C2128] text-zinc-900 dark:text-[#F0F6FC] border border-zinc-300 dark:border-[#30363D] transition-all"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-lg bg-white dark:bg-[#0A1F1B] hover:bg-zinc-100 dark:hover:bg-[#0E2923] text-zinc-900 dark:text-[#F0F6FC] border border-zinc-300 dark:border-[#163830] transition-all"
               >
                 <Github className="w-4 h-4" />
                 <span>GitHub Repository</span>
@@ -131,14 +131,14 @@ export function Hero() {
               transition={{ duration: 0.6, delay: 0.4 }}
               className="grid grid-cols-3 gap-2 font-mono text-[11px]"
             >
-              <div className="p-2.5 rounded-lg bg-zinc-100 dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] flex items-center justify-center gap-1.5 text-zinc-700 dark:text-[#8B949E]">
-                <Zap className="w-3.5 h-3.5 text-blue-500" /> &lt;20ms
+              <div className="p-2.5 rounded-lg bg-white dark:bg-[#0A1F1B] border border-zinc-200 dark:border-[#163830] flex items-center justify-center gap-1.5 text-zinc-700 dark:text-[#8B949E]">
+                <Zap className="w-3.5 h-3.5 text-[#2FA866]" /> &lt;20ms
               </div>
-              <div className="p-2.5 rounded-lg bg-zinc-100 dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] flex items-center justify-center gap-1.5 text-zinc-700 dark:text-[#8B949E]">
-                <Cpu className="w-3.5 h-3.5 text-green-500" /> TS &amp; JSX
+              <div className="p-2.5 rounded-lg bg-white dark:bg-[#0A1F1B] border border-zinc-200 dark:border-[#163830] flex items-center justify-center gap-1.5 text-zinc-700 dark:text-[#8B949E]">
+                <Cpu className="w-3.5 h-3.5 text-[#6FCF63]" /> TS &amp; JSX
               </div>
-              <div className="p-2.5 rounded-lg bg-zinc-100 dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] flex items-center justify-center gap-1.5 text-zinc-700 dark:text-[#8B949E]">
-                <Terminal className="w-3.5 h-3.5 text-amber-500" /> 21 CLI
+              <div className="p-2.5 rounded-lg bg-white dark:bg-[#0A1F1B] border border-zinc-200 dark:border-[#163830] flex items-center justify-center gap-1.5 text-zinc-700 dark:text-[#8B949E]">
+                <Terminal className="w-3.5 h-3.5 text-[#A8F05B]" /> 21 CLI
               </div>
             </motion.div>
           </div>

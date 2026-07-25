@@ -13,14 +13,14 @@ export function Navbar() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-40 border-b border-zinc-200 dark:border-[#30363D] bg-white/85 dark:bg-[#0D1117]/85 backdrop-blur-md font-sans transition-colors duration-200">
+    <header className="sticky top-0 z-40 border-b border-zinc-200 dark:border-[#163830] bg-white/85 dark:bg-[#071A16]/85 backdrop-blur-md font-sans transition-colors duration-200">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
         {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-2.5 font-bold text-zinc-900 dark:text-[#F0F6FC] hover:opacity-90 transition-opacity">
           <Logo className="w-7 h-7" />
           <div className="flex flex-col text-left">
             <span className="text-sm tracking-tight font-extrabold flex items-center gap-1.5">
-              RahulChaube <span className="text-[10px] px-1.5 py-0.2 rounded bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20 font-mono">v1.0</span>
+              RahulChaube <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-500/10 text-[#2FA866] dark:text-[#A8F05B] border border-[#2FA866]/20 font-mono">v1.0</span>
             </span>
           </div>
         </Link>
@@ -36,8 +36,8 @@ export function Navbar() {
                 className={cn(
                   "px-3 py-1.5 rounded-md transition-colors font-medium relative",
                   isActive
-                    ? "text-zinc-900 dark:text-[#F0F6FC] font-semibold bg-zinc-100 dark:bg-[#1C2128]"
-                    : "hover:text-zinc-900 dark:hover:text-[#F0F6FC] hover:bg-zinc-100 dark:hover:bg-[#161B22]"
+                    ? "text-zinc-900 dark:text-[#F0F6FC] font-semibold bg-zinc-100 dark:bg-[#0E2923]"
+                    : "hover:text-zinc-900 dark:hover:text-[#F0F6FC] hover:bg-zinc-100 dark:hover:bg-[#0A1F1B]"
                 )}
               >
                 {item.label}
@@ -58,7 +58,7 @@ export function Navbar() {
             href={site.social.github}
             target="_blank"
             rel="noreferrer"
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-zinc-100 dark:bg-[#161B22] hover:bg-zinc-200 dark:hover:bg-[#1C2128] text-zinc-900 dark:text-[#F0F6FC] border border-zinc-200 dark:border-[#30363D] transition-all"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-zinc-100 dark:bg-[#0A1F1B] hover:bg-zinc-200 dark:hover:bg-[#0E2923] text-zinc-900 dark:text-[#F0F6FC] border border-zinc-200 dark:border-[#163830] transition-all"
             aria-label="GitHub Repository"
           >
             <Github className="w-3.5 h-3.5 text-zinc-700 dark:text-[#F0F6FC]" />
