@@ -8,10 +8,11 @@
   </defs>
 
   <rect width="64" height="64" rx="16" fill="#071A16" stroke="#163830" stroke-width="2" />
-  <rect x="10" y="10" width="12" height="44" rx="6" fill="url(#rc-gradient-dark)" />
-  <path d="M 25 10 H 42 C 49.7 10 54 14.3 54 22 C 54 29.7 49.7 34 42 34 H 25" fill="none" stroke="url(#rc-gradient-dark)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
-  <path d="M 25 34 H 42 C 49.7 34 54 38.3 54 46 C 54 53.7 49.7 54 42 54 H 25" fill="none" stroke="url(#rc-gradient-dark)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
-  <line x1="20" y1="36" x2="44" y2="28" stroke="#071A16" stroke-width="4.5" stroke-linecap="round" />
-  <path d="M 32 20 L 35 22.5 L 32 25" fill="none" stroke="#071A16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-  <line x1="37" y1="25" x2="41" y2="25" stroke="#071A16" stroke-width="2" stroke-linecap="round" />
+  <rect x="11" y="11" width="8" height="42" rx="4" fill="url(#rc-gradient-dark)" />
+  <path d="M 19 11 H 34 C 41 11 45 15 45 21.5 C 45 28 41 32 34 32 H 19" fill="none" stroke="url(#rc-gradient-dark)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M 28 31 L 41 53" fill="none" stroke="url(#rc-gradient-dark)" stroke-width="7" stroke-linecap="round" />
+  <path d="M 46 16 C 52 21 55 29 55 37 C 55 46.5 47.5 53 37 53 H 26" fill="none" stroke="url(#rc-gradient-dark)" stroke-width="6" stroke-linecap="round" />
+  <line x1="22" y1="36" x2="48" y2="28" stroke="#071A16" stroke-width="3" stroke-linecap="round" />
+  <path d="M 24 19 L 27 21.5 L 24 24" fill="none" stroke="#071A16" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+  <line x1="29" y1="24" x2="33" y2="24" stroke="#071A16" stroke-width="1.8" stroke-linecap="round" />
 </svg>

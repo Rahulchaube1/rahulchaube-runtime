@@ -24,45 +24,53 @@ export function Logo({
         {/* Outer Dark Container */}
         <rect width="64" height="64" rx="16" fill="#071A16" stroke="#163830" strokeWidth="2" />
 
-        {/* Left Vertical Pillar (R Stem) */}
-        <rect x="10" y="10" width="12" height="44" rx="6" fill="url(#rc-vector-gradient)" />
+        {/* R Stem (Left Vertical Pillar) */}
+        <rect x="11" y="11" width="8" height="42" rx="4" fill="url(#rc-vector-gradient)" />
 
-        {/* Upper Modular Block (R Loop / Upper C) */}
+        {/* R Upper Loop */}
         <path
-          d="M 25 10 H 42 C 49.7 10 54 14.3 54 22 C 54 29.7 49.7 34 42 34 H 25"
+          d="M 19 11 H 34 C 41 11 45 15 45 21.5 C 45 28 41 32 34 32 H 19"
           fill="none"
           stroke="url(#rc-vector-gradient)"
-          strokeWidth="10"
+          strokeWidth="7"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
 
-        {/* Lower Modular Block (Lower C) */}
+        {/* R Leg (Diagonal) */}
         <path
-          d="M 25 34 H 42 C 49.7 34 54 38.3 54 46 C 54 53.7 49.7 54 42 54 H 25"
+          d="M 28 31 L 41 53"
           fill="none"
           stroke="url(#rc-vector-gradient)"
-          strokeWidth="10"
+          strokeWidth="7"
           strokeLinecap="round"
-          strokeLinejoin="round"
+        />
+
+        {/* C Outer Arc (embracing right and bottom) */}
+        <path
+          d="M 46 16 C 52 21 55 29 55 37 C 55 46.5 47.5 53 37 53 H 26"
+          fill="none"
+          stroke="url(#rc-vector-gradient)"
+          strokeWidth="6"
+          strokeLinecap="round"
         />
 
         {/* 45° Negative-Space Diagonal Cut */}
-        <line x1="20" y1="36" x2="44" y2="28" stroke="#071A16" strokeWidth="4.5" strokeLinecap="round" />
+        <line x1="22" y1="36" x2="48" y2="28" stroke="#071A16" strokeWidth="3" strokeLinecap="round" />
 
-        {/* Subtle Terminal Prompt inside C (> _) */}
+        {/* Subtle Terminal Prompt inside R loop (> _) */}
         <path
-          d="M 32 20 L 35 22.5 L 32 25"
+          d="M 24 19 L 27 21.5 L 24 24"
           fill="none"
           stroke="#071A16"
-          strokeWidth="2"
+          strokeWidth="1.8"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
         <line
-          x1="37" y1="25" x2="41" y2="25"
+          x1="29" y1="24" x2="33" y2="24"
           stroke="#071A16"
-          strokeWidth="2"
+          strokeWidth="1.8"
           strokeLinecap="round"
         />
       </svg>
