@@ -23,15 +23,15 @@ export function DownloadTabs() {
   ] as const;
 
   const commands = {
-    mac: "curl -fsSL https://everestqai.com/install | bash",
-    linux: "curl -fsSL https://everestqai.com/install | bash",
-    win: 'powershell -c "irm https://everestqai.com/install.ps1 | iex"',
-    docker: "docker run -it --rm everestq/runtime:latest everestq --version",
-    brew: "brew install everestq/tap/everestq",
-    winget: "winget install EverestQ.Runtime",
-    apt: "curl -fsSL https://everestqai.com/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/everestq.gpg\necho \"deb [signed-by=/etc/apt/keyrings/everestq.gpg] https://everestqai.com/apt stable main\" | sudo tee /etc/apt/sources.list.d/everestq.list\nsudo apt update && sudo apt install everestq-runtime",
-    dnf: "sudo dnf config-manager --add-repo https://everestqai.com/rpm/everestq.repo\nsudo dnf install everestq-runtime",
-    ps: 'irm https://everestqai.com/install.ps1 | iex',
+    mac: "curl -fsSL https://rahulchaube.space/install | bash",
+    linux: "curl -fsSL https://rahulchaube.space/install | bash",
+    win: 'powershell -c "irm https://rahulchaube.space/install.ps1 | iex"',
+    docker: "docker run -it --rm rahulchaube/runtime:latest rahulchaube --version",
+    brew: "brew install rahulchaube/tap/rahulchaube",
+    winget: "winget install RahulChaube.Runtime",
+    apt: "curl -fsSL https://rahulchaube.space/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/rahulchaube.gpg\necho \"deb [signed-by=/etc/apt/keyrings/rahulchaube.gpg] https://rahulchaube.space/apt stable main\" | sudo tee /etc/apt/sources.list.d/rahulchaube.list\nsudo apt update && sudo apt install rahulchaube",
+    dnf: "sudo dnf config-manager --add-repo https://rahulchaube.space/rpm/rahulchaube.repo\nsudo dnf install rahulchaube",
+    ps: 'irm https://rahulchaube.space/install.ps1 | iex',
   };
 
   const currentCommand = commands[selectedTab];
@@ -89,7 +89,7 @@ export function DownloadTabs() {
             <ShieldCheck className="w-4 h-4 text-[#6FCF63] shrink-0" />
             <span>Official release binaries verified with SHA-256 checksums.</span>
           </div>
-          <span className="font-mono text-[11px]">everestq-runtime-v1.0.0</span>
+          <span className="font-mono text-[11px]">rahulchaube-runtime-v1.0.0</span>
         </div>
       </div>
     </div>

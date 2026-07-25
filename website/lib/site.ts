@@ -5,10 +5,10 @@ export interface DownloadTarget {
 }
 
 export const site = {
-  name: "EverestQ Runtime",
-  shortName: "EverestQ",
-  company: "EverestQ",
-  domain: "https://everestqai.com",
+  name: "RahulChaube Runtime",
+  shortName: "RahulChaube",
+  company: "RahulChaube",
+  domain: "https://rahulchaube.space",
   tagline: "High-performance JavaScript & TypeScript developer platform.",
   description:
     "A next-generation JavaScript & TypeScript runtime, package manager, and developer platform engineered for high-throughput execution, instant startup, and modular CLI tooling.",
@@ -16,9 +16,9 @@ export const site = {
   social: {
     github: "https://github.com/Rahulchaube1/rahulchaube-runtime",
     npm: "https://www.npmjs.com/package/rahulchaube",
-    x: "https://x.com/everestqai",
-    linkedin: "https://linkedin.com/company/everestq",
-    discord: "https://discord.gg/everestq",
+    x: "https://x.com/rahulchaube",
+    linkedin: "https://linkedin.com/in/rahulchaube",
+    discord: "https://discord.gg/rahulchaube",
   },
   nav: [
     { label: "Overview", href: "/" },

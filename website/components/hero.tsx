@@ -6,11 +6,11 @@ import { site } from "@/lib/site";
 import { Button } from "./ui/button";
 import { TerminalDemo } from "./terminal-demo";
 import { Logo } from "@/components/logo";
-import { Download, ArrowRight, Copy, Check, Zap, Cpu, Terminal } from "lucide-react";
+import { Download, ArrowRight, Github, Copy, Check, Zap, Cpu, Terminal } from "lucide-react";
 
 export function Hero() {
   const [copied, setCopied] = useState(false);
-  const installCmd = "curl -fsSL https://everestqai.com/install | bash";
+  const installCmd = "curl -fsSL https://rahulchaube.space/install | bash";
 
   const handleCopy = () => {
     navigator.clipboard.writeText(installCmd);
@@ -90,6 +90,16 @@ export function Hero() {
               >
                 Documentation <ArrowRight className="w-4 h-4" />
               </Button>
+
+              <a
+                href={site.social.github}
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-lg bg-white dark:bg-[#0A1F1B] hover:bg-zinc-100 dark:hover:bg-[#0E2923] text-zinc-900 dark:text-[#F0F6FC] border border-zinc-300 dark:border-[#163830] transition-all"
+              >
+                <Github className="w-4 h-4" />
+                <span>GitHub Repository</span>
+              </a>
             </motion.div>
           </div>
 

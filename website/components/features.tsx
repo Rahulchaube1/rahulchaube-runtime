@@ -110,7 +110,7 @@ export function Features() {
     <section className="mx-auto max-w-6xl px-4 py-20 font-sans border-t border-zinc-200 dark:border-[#163830] transition-colors duration-200">
       <div className="text-center max-w-2xl mx-auto mb-12">
         <h2 className="text-3xl font-extrabold text-zinc-900 dark:text-[#F0F6FC] tracking-tight">
-          EverestQ Platform Features
+          RahulChaube Platform Features
         </h2>
         <p className="mt-3 text-sm text-zinc-600 dark:text-[#8B949E]">
           Everything you need to build, bundle, test, and ship modern TypeScript applications.

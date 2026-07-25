@@ -3,8 +3,8 @@ import { ShieldCheck, FileText } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Open Source Licenses & Legal Notices — EverestQ Runtime",
-  description: "Open source license text, MIT copyright declarations, and upstream software disclosures for EverestQ Runtime.",
+  title: "Open Source Licenses & Legal Notices — RahulChaube Runtime",
+  description: "Open source license text, MIT copyright declarations, and upstream software disclosures for RahulChaube Runtime.",
 };
 
 export default function LicensePage() {
@@ -15,7 +15,7 @@ export default function LicensePage() {
           Open Source Licenses &amp; Disclosures
         </h1>
         <p className="text-zinc-600 dark:text-[#8B949E] text-sm">
-          EverestQ Runtime is distributed under the open-source MIT License.
+          RahulChaube Runtime is distributed under the open-source MIT License.
         </p>
       </div>
 
@@ -23,12 +23,12 @@ export default function LicensePage() {
         {/* Main MIT License */}
         <div className="bg-white dark:bg-[#0E2923] border border-zinc-200 dark:border-[#163830] rounded-xl p-6 sm:p-8 shadow-sm">
           <h2 className="text-lg font-bold text-zinc-900 dark:text-[#F0F6FC] mb-4 flex items-center gap-2">
-            <ShieldCheck className="w-5 h-5 text-[#2FA866]" /> EverestQ Runtime MIT License
+            <ShieldCheck className="w-5 h-5 text-[#2FA866]" /> RahulChaube Runtime MIT License
           </h2>
           <pre className="p-4 rounded-lg bg-zinc-100 dark:bg-[#0A1F1B] border border-zinc-200 dark:border-[#163830] font-mono text-xs text-zinc-800 dark:text-[#8B949E] overflow-x-auto whitespace-pre-wrap leading-relaxed">
 {`MIT License
 
-Copyright (c) 2026 EverestQ.
+Copyright (c) 2026 RahulChaube.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -56,10 +56,10 @@ SOFTWARE.`}
             <FileText className="w-5 h-5 text-[#6FCF63]" /> Upstream Engine Attribution
           </h2>
           <p className="text-xs text-zinc-600 dark:text-[#8B949E] leading-relaxed mb-4">
-            EverestQ Runtime incorporates components derived from open-source projects including Bun (Oven LLC) and WebKit under the MIT and LGPL licenses.
+            RahulChaube Runtime incorporates components derived from open-source projects including Bun (Oven LLC) and WebKit under the MIT and LGPL licenses.
           </p>
           <div className="text-xs text-zinc-600 dark:text-[#8B949E] font-mono p-4 rounded-lg bg-zinc-100 dark:bg-[#0A1F1B] border border-zinc-200 dark:border-[#163830]">
-            EverestQ Runtime is an independent, MIT-licensed software platform. Not affiliated with or endorsed by Oven LLC or Apple Inc.
+            RahulChaube Runtime is an independent, MIT-licensed software platform. Not affiliated with or endorsed by Oven LLC or Apple Inc.
           </div>
         </div>
       </div>

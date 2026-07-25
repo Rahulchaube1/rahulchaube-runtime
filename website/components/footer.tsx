@@ -57,7 +57,7 @@ export function Footer() {
         <div>
           <h4 className="text-xs font-semibold text-zinc-900 dark:text-[#F0F6FC] uppercase tracking-wider mb-3">Community &amp; Contact</h4>
           <ul className="space-y-2">
-            <li><a href="mailto:contact@everestqai.com" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Email</a></li>
+            <li><a href="mailto:rahulchaube@users.noreply.github.com" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Email</a></li>
             <li><a href={site.social.discord} target="_blank" rel="noreferrer" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Discord</a></li>
             <li><a href={site.social.x} target="_blank" rel="noreferrer" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">X (Twitter)</a></li>
             <li><a href={site.social.linkedin} target="_blank" rel="noreferrer" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">LinkedIn</a></li>
@@ -68,7 +68,7 @@ export function Footer() {
       {/* Bottom Bar */}
       <div className="border-t border-zinc-200 dark:border-[#163830] py-6 bg-zinc-50/50 dark:bg-[#0A1F1B]/60">
         <div className="container mx-auto px-4 max-w-6xl flex flex-col sm:flex-row items-center justify-between gap-4">
-          <span className="text-zinc-500 dark:text-[#8B949E]">© 2026 EverestQ. All rights reserved.</span>
+          <span className="text-zinc-500 dark:text-[#8B949E]">© 2026 RahulChaube Runtime. All rights reserved.</span>
           <div className="flex items-center gap-6 text-zinc-500 dark:text-[#8B949E]">
             <Link href="/license" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Privacy</Link>
             <Link href="/license" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Terms</Link>
