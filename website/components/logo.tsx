@@ -14,7 +14,7 @@ export function Logo({
         className={className}
       >
         <defs>
-          <linearGradient id="rc-vector-gradient" x1="32" y1="6" x2="32" y2="58" gradientUnits="userSpaceOnUse">
+          <linearGradient id="rc-vector-gradient" x1="32" y1="8" x2="32" y2="56" gradientUnits="userSpaceOnUse">
             <stop offset="0%" stopColor="#A8F05B" />
             <stop offset="50%" stopColor="#6FCF63" />
             <stop offset="100%" stopColor="#2FA866" />
@@ -22,53 +22,47 @@ export function Logo({
         </defs>
 
         {/* Outer Dark Container */}
-        <rect width="64" height="64" rx="14" fill="#071A16" stroke="#163830" strokeWidth="2" />
+        <rect width="64" height="64" rx="16" fill="#071A16" stroke="#163830" strokeWidth="2" />
 
-        {/* Left Vertical Pillar (R) */}
-        <rect x="12" y="12" width="9" height="40" rx="4.5" fill="url(#rc-vector-gradient)" />
+        {/* Left Vertical Pillar (R Stem) */}
+        <rect x="10" y="10" width="12" height="44" rx="6" fill="url(#rc-vector-gradient)" />
 
-        {/* Upper Loop of R */}
+        {/* Upper Modular Block (R Loop / Upper C) */}
         <path
-          d="M 21 12 H 34 C 40 12 44 16.5 44 22 C 44 27.5 40 32 34 32 H 21"
+          d="M 25 10 H 42 C 49.7 10 54 14.3 54 22 C 54 29.7 49.7 34 42 34 H 25"
           fill="none"
           stroke="url(#rc-vector-gradient)"
-          strokeWidth="8"
+          strokeWidth="10"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
 
-        {/* 45° Diagonal Negative-Space Cut */}
+        {/* Lower Modular Block (Lower C) */}
         <path
-          d="M 27 30 L 41 52"
+          d="M 25 34 H 42 C 49.7 34 54 38.3 54 46 C 54 53.7 49.7 54 42 54 H 25"
           fill="none"
           stroke="url(#rc-vector-gradient)"
-          strokeWidth="8"
+          strokeWidth="10"
           strokeLinecap="round"
+          strokeLinejoin="round"
         />
 
-        {/* Large C Arc */}
-        <path
-          d="M 51 18 C 45 12 36 12 30 12 C 20 12 12 20 12 32 C 12 44 20 52 30 52 C 36 52 45 52 51 46"
-          fill="none"
-          stroke="url(#rc-vector-gradient)"
-          strokeWidth="6"
-          strokeLinecap="round"
-          opacity="0.9"
-        />
+        {/* 45° Negative-Space Diagonal Cut */}
+        <line x1="20" y1="36" x2="44" y2="28" stroke="#071A16" strokeWidth="4.5" strokeLinecap="round" />
 
         {/* Subtle Terminal Prompt inside C (> _) */}
         <path
-          d="M 33 21 L 36 23.5 L 33 26"
+          d="M 32 20 L 35 22.5 L 32 25"
           fill="none"
           stroke="#071A16"
-          strokeWidth="1.5"
+          strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
         <line
-          x1="38" y1="26" x2="41" y2="26"
+          x1="37" y1="25" x2="41" y2="25"
           stroke="#071A16"
-          strokeWidth="1.5"
+          strokeWidth="2"
           strokeLinecap="round"
         />
       </svg>

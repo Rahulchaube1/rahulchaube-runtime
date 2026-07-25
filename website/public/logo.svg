@@ -1,17 +1,28 @@
 <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="rc-gradient" x1="32" y1="6" x2="32" y2="58" gradientUnits="userSpaceOnUse">
+    <linearGradient id="rc-gradient" x1="32" y1="8" x2="32" y2="56" gradientUnits="userSpaceOnUse">
       <stop offset="0%" stop-color="#A8F05B" />
       <stop offset="50%" stop-color="#6FCF63" />
       <stop offset="100%" stop-color="#2FA866" />
     </linearGradient>
   </defs>
 
-  <rect width="64" height="64" rx="14" fill="#071A16" stroke="#163830" stroke-width="2" />
-  <rect x="12" y="12" width="9" height="40" rx="4.5" fill="url(#rc-gradient)" />
-  <path d="M 21 12 H 34 C 40 12 44 16.5 44 22 C 44 27.5 40 32 34 32 H 21" fill="none" stroke="url(#rc-gradient)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
-  <path d="M 27 30 L 41 52" fill="none" stroke="url(#rc-gradient)" stroke-width="8" stroke-linecap="round" />
-  <path d="M 51 18 C 45 12 36 12 30 12 C 20 12 12 20 12 32 C 12 44 20 52 30 52 C 36 52 45 52 51 46" fill="none" stroke="url(#rc-gradient)" stroke-width="6" stroke-linecap="round" opacity="0.9" />
-  <path d="M 33 21 L 36 23.5 L 33 26" fill="none" stroke="#071A16" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-  <line x1="38" y1="26" x2="41" y2="26" stroke="#071A16" stroke-width="1.5" stroke-linecap="round" />
+  <!-- Outer Rounded Square Container -->
+  <rect width="64" height="64" rx="16" fill="#071A16" stroke="#163830" stroke-width="2" />
+
+  <!-- Left Vertical Pillar (R Stem) -->
+  <rect x="10" y="10" width="12" height="44" rx="6" fill="url(#rc-gradient)" />
+
+  <!-- Upper Modular Block (R Loop / Upper C) -->
+  <path d="M 25 10 H 42 C 49.7 10 54 14.3 54 22 C 54 29.7 49.7 34 42 34 H 25" fill="none" stroke="url(#rc-gradient)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- Lower Modular Block (Lower C) -->
+  <path d="M 25 34 H 42 C 49.7 34 54 38.3 54 46 C 54 53.7 49.7 54 42 54 H 25" fill="none" stroke="url(#rc-gradient)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
+
+  <!-- 45° Negative-Space Diagonal Cut -->
+  <line x1="20" y1="36" x2="44" y2="28" stroke="#071A16" stroke-width="4.5" stroke-linecap="round" />
+
+  <!-- Terminal Prompt > _ inside C counter -->
+  <path d="M 32 20 L 35 22.5 L 32 25" fill="none" stroke="#071A16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+  <line x1="37" y1="25" x2="41" y2="25" stroke="#071A16" stroke-width="2" stroke-linecap="round" />
 </svg>
