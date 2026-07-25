@@ -1,148 +1,77 @@
-<p align="center">
-  <h1 align="center">RahulChaube Runtime</h1>
-</p>
+# RahulChaube Runtime
 
-<p align="center">
-  A next-generation JavaScript &amp; TypeScript runtime and developer platform.
-</p>
+![Version](https://img.shields.io/badge/version-1.0.0-emerald.svg)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)
+![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-darkgreen.svg)
 
-<div align="center">
-  <a href="#install">Installation</a>
-  <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-  <a href="docs/rahulchaube/getting-started.md">Getting Started</a>
-  <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-  <a href="docs/rahulchaube/architecture-guide.md">Architecture</a>
-  <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-  <a href="docs/rahulchaube/plugin-guide.md">Plugins</a>
-  <span>&nbsp;&nbsp;•&nbsp;&nbsp;</span>
-  <a href="docs/rahulchaube/api-reference.md">API</a>
-  <br />
-</div>
+**RahulChaube Runtime** is an all-in-one high-performance JavaScript & TypeScript runtime and developer platform. It ships as a single executable called `rahulchaube`.
 
-## What is RahulChaube Runtime?
+Website: [https://rahulchaube.space](https://rahulchaube.space)
 
-**RahulChaube Runtime** is an all-in-one toolkit for JavaScript and TypeScript
-applications. It ships as a single executable called `rahulchaube`.
+---
 
-At its core is the **RahulChaube runtime**, a fast JavaScript runtime designed as
-a drop-in replacement for Node.js. It executes TypeScript, JSX, and modern
-JavaScript with minimal startup overhead and a small memory footprint.
+## Core Features
+
+- **Native Execution**: Execute TypeScript (`.ts`, `.tsx`) and modern JavaScript without build steps.
+- **Fast Package Engine**: Parallel dependency resolution and symlinked package cache.
+- **Integrated Tooling**: Built-in test runner, SWC bundler, and CLI environment diagnostics (`rahulchaube doctor`).
+- **Universal Configuration**: Single `rahulchaube.config.ts` for runtime, plugins, and build options.
+
+---
+
+## Quick Start
 
 ```bash
-rahulchaube run index.tsx            # TS and JSX supported out-of-the-box
+# Install dependencies
+rahulchaube install
+
+# Scaffold a new application
+rahulchaube create react my-app
+
+# Execute TypeScript file directly
+rahulchaube run index.tsx
+
+# Run environment diagnostics
+rahulchaube doctor
 ```
 
-The `rahulchaube` command-line tool also implements a test runner, script runner,
-and a modern package manager with a redesigned, premium developer experience:
+---
 
-```bash
-rahulchaube test                     # run tests
-rahulchaube run start                # run the `start` script in `package.json`
-rahulchaube add react                # install a package
-rahulchaube create react my-app      # scaffold a new project
-```
+## Command Overview
 
-## Why a new identity?
-
-RahulChaube Runtime is an **independent, MIT-licensed fork** of the Bun project.
-It is **not** the official Bun, is **not** affiliated with, and is **not**
-endorsed by the Bun authors (Oven LLC). The original code, its licenses, and all
-copyright notices are preserved. This project exists to provide its own
-identity, command surface, and developer experience on top of a proven engine.
-
-> All credits, copyrights, and license terms from the upstream Bun project are
-> retained in [`LICENSE.md`](./LICENSE.md). This rebrand only changes the
-> product name, CLI, documentation, and user-facing assets.
-
-## Install
-
-RahulChaube Runtime supports Linux (x64 & arm64), macOS (x64 & Apple Silicon),
-and Windows (x64 & arm64).
-
-```sh
-# via npm (global)
-npm install -g rahulchaube-cli
-
-# via the bundled engine
-rahulchaube --version
-```
-
-> **Note:** The native engine is built from the upstream Bun sources. On systems
-> where the prebuilt engine is available, `rahulchaube` delegates to it while
-> presenting the rebranded experience.
-
-### Quick start
-
-```sh
-rahulchaube create react my-app     # scaffold a React app
-cd my-app
-rahulchaube install                 # install dependencies
-rahulchaube run dev                 # start the dev server
-```
-
-## Command overview
-
-### Package manager
+### Package Management
 
 | Command | Description |
 | --- | --- |
 | `rahulchaube install` | Install dependencies |
-| `rahulchaube add <pkg>` | Add a dependency (`--dev`) |
-| `rahulchaube remove <pkg>` | Remove a dependency |
-| `rahulchaube update [pkg]` | Update dependencies |
-| `rahulchaube why <pkg>` | Explain why a dependency is installed |
-| `rahulchaube outdated` | List outdated dependencies |
-| `rahulchaube audit` | Scan for vulnerabilities |
-| `rahulchaube licenses` | Summarize dependency licenses |
-| `rahulchaube graph` | Visualize the dependency graph |
-| `rahulchaube cache clean` | Clean package caches |
+| `rahulchaube add <pkg>` | Add a package dependency |
+| `rahulchaube remove <pkg>` | Remove a package dependency |
+| `rahulchaube outdated` | List outdated packages |
+| `rahulchaube doctor` | Run environment diagnostics |
 
-### Execute & build
+### Execution & Building
 
 | Command | Description |
 | --- | --- |
-| `rahulchaube run <script>` | Run a `package.json` script |
-| `rahulchaube test` | Run the test suite |
-| `rahulchaube build [entry]` | Bundle your project (`--minify`, `--sourcemap`, `--splitting`) |
+| `rahulchaube run <script>` | Execute a script |
+| `rahulchaube test` | Run test suite |
+| `rahulchaube build` | Bundle project assets |
 | `rahulchaube benchmark` | Run performance benchmarks |
 
-### Project & tooling
+---
 
-| Command | Description |
-| --- | --- |
-| `rahulchaube create <template> [name]` | Scaffold a project (`react`, `next`, `express`, `hono`, `library`, `cli`) |
-| `rahulchaube doctor [--fix]` | Diagnose and repair your environment |
-| `rahulchaube migrate [from]` | Migrate from npm / yarn / pnpm / bun |
-| `rahulchaube plugins install|list|update|remove` | Manage third-party plugins |
+## Repository Structure
 
-### AI-assisted tools
+```
+.
+├── branding/         # Master vector SVG branding & raster assets
+├── website/          # Next.js 16 production web platform
+└── docs/             # Documentation & architecture guides
+```
 
-| Command | Description |
-| --- | --- |
-| `rahulchaube explain <error\|concept>` | Explain an error or concept |
-| `rahulchaube optimize [--apply]` | Suggest (and apply) performance fixes |
-| `rahulchaube analyze [--json]` | Analyze project health & diagnostics |
-| `rahulchaube explain` | Human-readable diagnostics |
+---
 
-## Documentation
+## Contributing & Licensing
 
-- [Getting Started](docs/rahulchaube/getting-started.md)
-- [Installation](docs/rahulchaube/installation.md)
-- [Migration Guide](docs/rahulchaube/migration-guide.md)
-- [Performance Guide](docs/rahulchaube/performance-guide.md)
-- [Architecture Guide](docs/rahulchaube/architecture-guide.md)
-- [Plugin Guide](docs/rahulchaube/plugin-guide.md)
-- [API Reference](docs/rahulchaube/api-reference.md)
-- [Benchmarks](docs/rahulchaube/benchmarks.md)
-
-## Contributing
-
-Refer to [`CONTRIBUTING.md`](./CONTRIBUTING.md) to start contributing. This is a
-fork — please keep the original MIT license and attribution intact when
-submitting changes.
-
-## License
-
-RahulChaube Runtime is distributed under the **MIT License**. The original Bun
-project and all bundled third-party libraries retain their respective licenses,
-detailed in [`LICENSE.md`](./LICENSE.md).
+RahulChaube Runtime is licensed under the [MIT License](./LICENSE).
