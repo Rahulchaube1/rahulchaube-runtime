@@ -2,48 +2,39 @@
 
 import { useState } from "react";
 import { CodeBlock } from "@/components/code-block";
-import { Terminal, ShieldCheck, Package, Layers, Copy, Check, Apple, Monitor, Container } from "lucide-react";
+import { Terminal, ShieldCheck, Copy, Check, Apple, Monitor, Container, Package } from "lucide-react";
 
 export function DownloadTabs() {
-  const [activeCategory, setActiveCategory] = useState<"os" | "pm">("os");
-  const [selectedOs, setSelectedOs] = useState<"mac" | "linux" | "win" | "docker">("mac");
-  const [selectedPm, setSelectedPm] = useState<"brew" | "scoop" | "choco" | "winget" | "apt" | "rpm">("brew");
+  const [selectedTab, setSelectedTab] = useState<
+    "mac" | "linux" | "win" | "docker" | "brew" | "winget" | "apt" | "dnf" | "ps"
+  >("mac");
   const [copied, setCopied] = useState(false);
 
-  const osOptions = [
-    { id: "mac", label: "macOS", badge: "Apple Silicon & Intel", icon: Apple },
-    { id: "linux", label: "Linux", badge: "Ubuntu, Debian, Fedora, Arch", icon: Terminal },
-    { id: "win", label: "Windows", badge: "x64 & ARM64", icon: Monitor },
-    { id: "docker", label: "Docker", badge: "Official Container Image", icon: Container },
+  const tabs = [
+    { id: "mac", label: "macOS", icon: Apple, category: "OS" },
+    { id: "linux", label: "Linux", icon: Terminal, category: "OS" },
+    { id: "win", label: "Windows", icon: Monitor, category: "OS" },
+    { id: "docker", label: "Docker", icon: Container, category: "OS" },
+    { id: "brew", label: "Homebrew", icon: Package, category: "PM" },
+    { id: "winget", label: "Winget", icon: Package, category: "PM" },
+    { id: "apt", label: "APT", icon: Package, category: "PM" },
+    { id: "dnf", label: "DNF", icon: Package, category: "PM" },
+    { id: "ps", label: "PowerShell", icon: Terminal, category: "PM" },
   ] as const;
 
-  const pmOptions = [
-    { id: "brew", label: "Homebrew", os: "macOS / Linux" },
-    { id: "scoop", label: "Scoop", os: "Windows" },
-    { id: "choco", label: "Chocolatey", os: "Windows" },
-    { id: "winget", label: "Winget", os: "Windows" },
-    { id: "apt", label: "APT", os: "Ubuntu / Debian" },
-    { id: "rpm", label: "RPM / DNF", os: "Fedora / RHEL" },
-  ] as const;
-
-  const osCommands = {
-    mac: "curl -fsSL https://rahulchaube.space/install | bash",
-    linux: "curl -fsSL https://rahulchaube.space/install | bash",
-    win: 'powershell -c "irm https://rahulchaube.space/install.ps1 | iex"',
-    docker: "docker run -it --rm rahulchaube/runtime:latest rahulchaube --version",
+  const commands = {
+    mac: "curl -fsSL https://everestqai.com/install | bash",
+    linux: "curl -fsSL https://everestqai.com/install | bash",
+    win: 'powershell -c "irm https://everestqai.com/install.ps1 | iex"',
+    docker: "docker run -it --rm everestq/runtime:latest everestq --version",
+    brew: "brew install everestq/tap/everestq",
+    winget: "winget install EverestQ.Runtime",
+    apt: "curl -fsSL https://everestqai.com/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/everestq.gpg\necho \"deb [signed-by=/etc/apt/keyrings/everestq.gpg] https://everestqai.com/apt stable main\" | sudo tee /etc/apt/sources.list.d/everestq.list\nsudo apt update && sudo apt install everestq-runtime",
+    dnf: "sudo dnf config-manager --add-repo https://everestqai.com/rpm/everestq.repo\nsudo dnf install everestq-runtime",
+    ps: 'irm https://everestqai.com/install.ps1 | iex',
   };
 
-  const pmCommands = {
-    brew: "brew install rahulchaube/tap/rahulchaube",
-    scoop: "scoop bucket add rahulchaube https://github.com/Rahulchaube1/scoop-bucket\nscoop install rahulchaube",
-    choco: "choco install rahulchaube",
-    winget: "winget install RahulChaube.Runtime",
-    apt: "curl -fsSL https://rahulchaube.space/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/rahulchaube.gpg\necho \"deb [signed-by=/etc/apt/keyrings/rahulchaube.gpg] https://rahulchaube.space/apt stable main\" | sudo tee /etc/apt/sources.list.d/rahulchaube.list\nsudo apt update && sudo apt install rahulchaube",
-    rpm: "sudo dnf config-manager --add-repo https://rahulchaube.space/rpm/rahulchaube.repo\nsudo dnf install rahulchaube",
-  };
-
-  const currentCommand =
-    activeCategory === "os" ? osCommands[selectedOs] : pmCommands[selectedPm];
+  const currentCommand = commands[selectedTab];
 
   const handleCopy = () => {
     navigator.clipboard.writeText(currentCommand);
@@ -52,101 +43,53 @@ export function DownloadTabs() {
   };
 
   return (
-    <div className="space-y-8 font-sans">
-      {/* Category Selector */}
-      <div className="flex justify-center">
-        <div className="bg-zinc-100 dark:bg-[#161B22] p-1 rounded-xl border border-zinc-200 dark:border-[#30363D] flex gap-1">
-          <button
-            onClick={() => setActiveCategory("os")}
-            className={`px-5 py-2 rounded-lg font-medium text-xs transition-all flex items-center gap-2 ${
-              activeCategory === "os"
-                ? "bg-blue-600 text-white shadow-sm font-semibold"
-                : "text-zinc-600 dark:text-[#8B949E] hover:text-zinc-900 dark:hover:text-[#F0F6FC] hover:bg-zinc-200 dark:hover:bg-[#1C2128]"
-            }`}
-          >
-            <Terminal className="w-3.5 h-3.5" /> Operating Systems
-          </button>
-          <button
-            onClick={() => setActiveCategory("pm")}
-            className={`px-5 py-2 rounded-lg font-medium text-xs transition-all flex items-center gap-2 ${
-              activeCategory === "pm"
-                ? "bg-blue-600 text-white shadow-sm font-semibold"
-                : "text-zinc-600 dark:text-[#8B949E] hover:text-zinc-900 dark:hover:text-[#F0F6FC] hover:bg-zinc-200 dark:hover:bg-[#1C2128]"
-            }`}
-          >
-            <Package className="w-3.5 h-3.5" /> Package Managers
-          </button>
-        </div>
-      </div>
-
-      {/* Sub Options */}
-      {activeCategory === "os" ? (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {osOptions.map((opt) => {
-            const IconComp = opt.icon;
-            return (
-              <button
-                key={opt.id}
-                onClick={() => setSelectedOs(opt.id as any)}
-                className={`p-4 rounded-xl border text-left transition-all flex flex-col justify-between ${
-                  selectedOs === opt.id
-                    ? "bg-blue-50 dark:bg-blue-500/10 border-blue-500/50 ring-1 ring-blue-500/50"
-                    : "bg-white dark:bg-[#1C2128] border-zinc-200 dark:border-[#30363D] hover:border-zinc-300 dark:hover:border-[#484F58]"
-                }`}
-              >
-                <div className="p-2 rounded-lg bg-zinc-100 dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] w-fit mb-3 text-blue-600 dark:text-blue-400">
-                  <IconComp className="w-5 h-5" />
-                </div>
-                <div>
-                  <div className="font-semibold text-sm text-zinc-900 dark:text-[#F0F6FC]">{opt.label}</div>
-                  <div className="text-[11px] text-zinc-500 dark:text-[#8B949E] mt-0.5">{opt.badge}</div>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2">
-          {pmOptions.map((opt) => (
+    <div className="space-y-6 font-sans">
+      {/* Tabs Bar */}
+      <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-9 gap-1.5 p-1.5 rounded-xl bg-zinc-100 dark:bg-[#0A1F1B] border border-zinc-200 dark:border-[#163830]">
+        {tabs.map((t) => {
+          const IconComp = t.icon;
+          const isActive = selectedTab === t.id;
+          return (
             <button
-              key={opt.id}
-              onClick={() => setSelectedPm(opt.id as any)}
-              className={`p-3 rounded-xl border text-center transition-all ${
-                selectedPm === opt.id
-                  ? "bg-blue-50 dark:bg-blue-500/10 border-blue-500/50 ring-1 ring-blue-500/50"
-                  : "bg-white dark:bg-[#1C2128] border-zinc-200 dark:border-[#30363D] hover:border-zinc-300 dark:hover:border-[#484F58]"
+              key={t.id}
+              onClick={() => setSelectedTab(t.id as any)}
+              className={`px-2 py-2 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 ${
+                isActive
+                  ? "bg-[#2FA866] text-white shadow-sm"
+                  : "text-zinc-600 dark:text-[#8B949E] hover:text-zinc-900 dark:hover:text-[#F0F6FC] hover:bg-zinc-200 dark:hover:bg-[#0E2923]"
               }`}
             >
-              <div className="font-semibold text-xs text-zinc-900 dark:text-[#F0F6FC]">{opt.label}</div>
-              <div className="text-[10px] text-zinc-500 dark:text-[#8B949E] mt-0.5">{opt.os}</div>
+              <IconComp className="w-3.5 h-3.5 shrink-0" />
+              <span className="truncate">{t.label}</span>
             </button>
-          ))}
-        </div>
-      )}
+          );
+        })}
+      </div>
 
-      {/* Interactive Command Display */}
-      <div className="bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-xl p-5 shadow-xl relative">
+      {/* Command Box */}
+      <div className="bg-white dark:bg-[#0E2923] border border-zinc-200 dark:border-[#163830] rounded-xl p-6 shadow-xl relative">
         <div className="flex items-center justify-between mb-3 text-xs text-zinc-600 dark:text-[#8B949E] font-mono">
-          <span className="flex items-center gap-1.5">
-            <Layers className="w-3.5 h-3.5 text-blue-500" />
-            {activeCategory === "os"
-              ? `Installation command for ${osOptions.find((o) => o.id === selectedOs)?.label}`
-              : `Package installation via ${pmOptions.find((p) => p.id === selectedPm)?.label}`}
+          <span className="flex items-center gap-2">
+            <Terminal className="w-4 h-4 text-[#2FA866] dark:text-[#A8F05B]" />
+            Installation command for <strong className="text-zinc-900 dark:text-[#F0F6FC]">{tabs.find((t) => t.id === selectedTab)?.label}</strong>
           </span>
           <button
             onClick={handleCopy}
-            className="flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:text-blue-500 font-sans font-medium transition-colors"
+            className="flex items-center gap-1 text-[#2FA866] dark:text-[#A8F05B] hover:underline font-sans font-semibold transition-colors"
           >
-            {copied ? <Check className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5" />}
+            {copied ? <Check className="w-3.5 h-3.5 text-[#6FCF63]" /> : <Copy className="w-3.5 h-3.5" />}
             {copied ? "Copied!" : "Copy"}
           </button>
         </div>
 
         <CodeBlock code={currentCommand} lang="sh" />
 
-        <div className="mt-4 pt-3 border-t border-zinc-200 dark:border-[#30363D] flex items-center gap-2 text-xs text-zinc-500 dark:text-[#8B949E]">
-          <ShieldCheck className="w-4 h-4 text-green-500 shrink-0" />
-          <span>All packages are signed and verified with SHA256 checksums.</span>
+        <div className="mt-4 pt-4 border-t border-zinc-200 dark:border-[#163830] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-zinc-500 dark:text-[#8B949E]">
+          <div className="flex items-center gap-2">
+            <ShieldCheck className="w-4 h-4 text-[#6FCF63] shrink-0" />
+            <span>Official release binaries verified with SHA-256 checksums.</span>
+          </div>
+          <span className="font-mono text-[11px]">everestq-runtime-v1.0.0</span>
         </div>
       </div>
     </div>

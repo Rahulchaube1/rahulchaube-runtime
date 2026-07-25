@@ -6,7 +6,6 @@ import { site } from "@/lib/site";
 import { Logo } from "@/components/logo";
 import { SearchModal } from "@/components/search-modal";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Github } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function Navbar() {
@@ -20,7 +19,7 @@ export function Navbar() {
           <Logo className="w-7 h-7" />
           <div className="flex flex-col text-left">
             <span className="text-sm tracking-tight font-extrabold flex items-center gap-1.5">
-              RahulChaube <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-500/10 text-[#2FA866] dark:text-[#A8F05B] border border-[#2FA866]/20 font-mono">v1.0</span>
+              EverestQ <span className="text-[10px] px-1.5 py-0.2 rounded bg-emerald-500/10 text-[#2FA866] dark:text-[#A8F05B] border border-[#2FA866]/20 font-mono">v1.0</span>
             </span>
           </div>
         </Link>
@@ -54,16 +53,12 @@ export function Navbar() {
 
           <ThemeToggle />
 
-          <a
-            href={site.social.github}
-            target="_blank"
-            rel="noreferrer"
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-zinc-100 dark:bg-[#0A1F1B] hover:bg-zinc-200 dark:hover:bg-[#0E2923] text-zinc-900 dark:text-[#F0F6FC] border border-zinc-200 dark:border-[#163830] transition-all"
-            aria-label="GitHub Repository"
+          <Link
+            href="/download"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-[#2FA866] hover:bg-[#279559] text-white transition-all shadow-sm"
           >
-            <Github className="w-3.5 h-3.5 text-zinc-700 dark:text-[#F0F6FC]" />
-            <span className="hidden sm:inline">GitHub</span>
-          </a>
+            <span>Get Started</span>
+          </Link>
         </div>
       </nav>
     </header>

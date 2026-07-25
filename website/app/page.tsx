@@ -1,5 +1,6 @@
 import { Hero } from "@/components/hero";
 import { Features } from "@/components/features";
+import { ComparisonSection } from "@/components/comparison";
 import { CliShowcase } from "@/components/cli-showcase";
 import { BenchmarkChart } from "@/components/benchmark-chart";
 import { RoadmapTimeline } from "@/components/roadmap-timeline";
@@ -46,6 +47,7 @@ export default function HomePage() {
       </section>
 
       <Features />
+      <ComparisonSection />
       <CliShowcase />
 
       {/* Benchmarks Section */}
@@ -65,7 +67,7 @@ export default function HomePage() {
               Every benchmark measurement is reproducible. Clone the repository and run the benchmark suite locally.
             </p>
             <div className="mt-4">
-              <CodeBlock code={"cd benchmarks\nrahulchaube run suite.bench.ts"} lang="sh" />
+              <CodeBlock code={"cd benchmarks\neverestq run suite.bench.ts"} lang="sh" />
             </div>
             <Link href="/benchmarks" className="mt-4 inline-block text-xs font-semibold text-[#2FA866] dark:text-[#A8F05B] hover:underline">
               View detailed benchmark metrics →

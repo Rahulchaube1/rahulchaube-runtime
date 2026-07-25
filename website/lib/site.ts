@@ -5,16 +5,20 @@ export interface DownloadTarget {
 }
 
 export const site = {
-  name: "RahulChaube Runtime",
-  shortName: "RahulChaube",
-  domain: "https://rahulchaube.space",
-  tagline: "A fast, drop-in JavaScript runtime & developer platform.",
+  name: "EverestQ Runtime",
+  shortName: "EverestQ",
+  company: "EverestQ",
+  domain: "https://everestqai.com",
+  tagline: "High-performance JavaScript & TypeScript developer platform.",
   description:
-    "An independent, MIT-licensed JavaScript and TypeScript runtime engineered for ultra-fast startup, scannable CLI tooling, integrated package management, and multi-OS distribution.",
+    "A next-generation JavaScript & TypeScript runtime, package manager, and developer platform engineered for high-throughput execution, instant startup, and modular CLI tooling.",
   version: "1.0.0",
   social: {
     github: "https://github.com/Rahulchaube1/rahulchaube-runtime",
     npm: "https://www.npmjs.com/package/rahulchaube",
+    x: "https://x.com/everestqai",
+    linkedin: "https://linkedin.com/company/everestq",
+    discord: "https://discord.gg/everestq",
   },
   nav: [
     { label: "Overview", href: "/" },
