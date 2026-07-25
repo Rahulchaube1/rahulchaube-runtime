@@ -3,55 +3,69 @@
   "info": {
     "title": "RahulChaube Runtime API",
     "version": "1.0.0",
-    "description": "Public API for RahulChaube Runtime (health, metrics, auth, docs).",
-    "license": { "name": "MIT" }
+    "description": "Production REST API for RahulChaube Runtime release management, telemetry, and developer services."
   },
-  "servers": [{ "url": "https://rahulchaube.space/api" }],
   "paths": {
-    "/health": {
+    "/api/health": {
       "get": {
         "summary": "Health check",
-        "responses": {
-          "200": {
-            "description": "Service is healthy",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": { "type": "string" },
-                    "uptimeSeconds": { "type": "integer" }
-                  }
-                }
-              }
-            }
-          }
-        }
+        "responses": { "200": { "description": "OK" } }
       }
     },
-    "/metrics": {
+    "/api/version": {
       "get": {
-        "summary": "Runtime metrics",
-        "responses": { "200": { "description": "Metrics" } }
+        "summary": "Version information",
+        "responses": { "200": { "description": "Version details" } }
       }
     },
-    "/auth/token": {
+    "/api/releases": {
+      "get": {
+        "summary": "List official releases",
+        "responses": { "200": { "description": "Releases list" } }
+      }
+    },
+    "/api/download": {
+      "get": {
+        "summary": "Download links matrix",
+        "responses": { "200": { "description": "Platform download URLs" } }
+      }
+    },
+    "/api/checksum": {
+      "get": {
+        "summary": "Release SHA256 checksums",
+        "responses": { "200": { "description": "Checksum map" } }
+      }
+    },
+    "/api/plugins": {
+      "get": {
+        "summary": "Official CLI plugins",
+        "responses": { "200": { "description": "Plugins list" } }
+      }
+    },
+    "/api/templates": {
+      "get": {
+        "summary": "Available project starter templates",
+        "responses": { "200": { "description": "Templates list" } }
+      }
+    },
+    "/api/metrics": {
+      "get": {
+        "summary": "Runtime telemetry & metrics",
+        "responses": { "200": { "description": "Metrics JSON" } }
+      }
+    },
+    "/api/auth/token": {
       "post": {
-        "summary": "Issue a demo token",
-        "responses": { "200": { "description": "Token" } }
+        "summary": "Issue authentication token",
+        "responses": { "200": { "description": "Token issued" } }
       }
     },
-    "/protected": {
+    "/api/protected": {
       "get": {
-        "summary": "Protected resource (requires Bearer auth)",
-        "security": [{ "bearer": [] }],
-        "responses": { "200": { "description": "OK" }, "401": { "description": "Unauthorized" } }
+        "summary": "Protected resource",
+        "security": [{ "BearerAuth": [] }],
+        "responses": { "200": { "description": "Access granted" }, "401": { "description": "Unauthorized" } }
       }
-    }
-  },
-  "components": {
-    "securitySchemes": {
-      "bearer": { "type": "http", "scheme": "bearer" }
     }
   }
 }

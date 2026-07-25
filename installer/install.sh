@@ -26,9 +26,18 @@ while [ $# -gt 0 ]; do
   case "$1" in
     --version) VERSION="$2"; shift 2 ;;
     --dry-run) DRY_RUN=1; shift ;;
+    --upgrade) UPGRADE=1; shift ;;
+    --uninstall) UNINSTALL=1; shift ;;
     *) die "Unknown argument: $1" ;;
   esac
 done
+
+if [ "${UNINSTALL:-0}" -eq 1 ]; then
+  log "Uninstalling RahulChaube Runtime..."
+  rm -rf "$INSTALL_DIR"
+  ok "Removed $INSTALL_DIR"
+  exit 0
+fi
 
 detect_os() {
   local os

@@ -1,15 +1,5 @@
 /**
  * RahulChaube Runtime — API server.
- *
- * Dependency-free, Web-Standard Request/Response model. Runs on Bun.serve when
- * available, otherwise falls back to Node's http server with an adapter.
- *
- * Routes:
- *   GET  /api/health
- *   GET  /api/metrics
- *   GET  /api/openapi.json
- *   POST /api/auth/token
- *   GET  /api/protected   (Bearer auth)
  */
 
 import {
@@ -23,7 +13,20 @@ import {
   type Ctx,
   type Handler,
 } from "./middleware.ts";
-import { health, metricsHandler, info, issueToken, protectedResource, metrics } from "./routes.ts";
+import {
+  health,
+  versionHandler,
+  releasesHandler,
+  downloadHandler,
+  checksumHandler,
+  pluginsHandler,
+  templatesHandler,
+  metricsHandler,
+  info,
+  issueToken,
+  protectedResource,
+  metrics,
+} from "./routes.ts";
 import { readFileSync } from "node:fs";
 
 const PORT = Number(process.env.RAHULCHAUBE_API_PORT ?? 8787);
@@ -38,6 +41,12 @@ type Route = { method: string; pattern: string; handler: Handler; secure?: boole
 const ROUTES: Route[] = [
   { method: "GET", pattern: "/api", handler: info },
   { method: "GET", pattern: "/api/health", handler: health },
+  { method: "GET", pattern: "/api/version", handler: versionHandler },
+  { method: "GET", pattern: "/api/releases", handler: releasesHandler },
+  { method: "GET", pattern: "/api/download", handler: downloadHandler },
+  { method: "GET", pattern: "/api/checksum", handler: checksumHandler },
+  { method: "GET", pattern: "/api/plugins", handler: pluginsHandler },
+  { method: "GET", pattern: "/api/templates", handler: templatesHandler },
   { method: "GET", pattern: "/api/metrics", handler: metricsHandler },
   {
     method: "GET",
@@ -106,4 +115,3 @@ async function start(): Promise<void> {
 }
 
 start();
-

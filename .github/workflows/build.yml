@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-cli:
-    name: Build & typecheck CLI
+    name: Build & Typecheck CLI
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -22,15 +22,26 @@ jobs:
       - name: Smoke test CLI
         run: bun packages/rahulchaube-cli/bin/rahulchaube.ts --help
 
-  build-engine:
-    name: Build native engine
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+  build-website:
+    name: Build Website App Router
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
-      - name: Build (uses engine build scripts)
-        run: bun run build:debug
-        continue-on-error: true
+        with:
+          bun-version: latest
+      - name: Install dependencies
+        working-directory: website
+        run: bun install
+      - name: Build Next.js app
+        working-directory: website
+        run: bun run build
+
+  test-api:
+    name: Test API Server
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - name: Run API unit tests
+        run: bun test api/tests/health.test.ts

@@ -8,13 +8,14 @@ export const site = {
   nav: [
     { href: "/", label: "Home" },
     { href: "/download", label: "Download" },
+    { href: "/releases", label: "Releases" },
     { href: "/docs", label: "Docs" },
     { href: "/benchmarks", label: "Benchmarks" },
     { href: "/blog", label: "Blog" },
     { href: "/roadmap", label: "Roadmap" },
   ],
   social: {
-    github: "https://github.com/rahulchaube/rahulchaube-runtime",
+    github: "https://github.com/Rahulchaube1/rahulchaube-runtime",
   },
   installCommand: "curl -fsSL https://rahulchaube.space/install | bash",
 } as const;

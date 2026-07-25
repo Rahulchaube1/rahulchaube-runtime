@@ -12,6 +12,12 @@ export const metadata: Metadata = {
   },
   description: site.description,
   keywords: ["javascript", "typescript", "runtime", "bun", "node", "package manager", "bundler"],
+  alternates: {
+    canonical: site.domain,
+    types: {
+      "application/rss+xml": `${site.domain}/feed.xml`,
+    },
+  },
   openGraph: {
     title: site.name,
     description: site.description,
@@ -27,12 +33,30 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: site.name,
+    operatingSystem: "Linux, macOS, Windows",
+    applicationCategory: "DeveloperApplication",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+    },
+    description: site.description,
+  };
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="dark">
       <head>
         <link rel="icon" href="/favicon.svg" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
       </head>
-      <body>
+      <body className="bg-zinc-950 text-zinc-100 antialiased selection:bg-cyan-500 selection:text-zinc-950 font-sans">
         <Navbar />
         <main className="min-h-[70vh]">{children}</main>
         <Footer />

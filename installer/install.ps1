@@ -12,7 +12,9 @@
 [CmdletBinding()]
 param(
     [string]$Version = "",
-    [switch]$DryRun
+    [switch]$DryRun,
+    [switch]$Upgrade,
+    [switch]$Uninstall
 )
 
 $ErrorActionPreference = "Stop"
@@ -24,6 +26,13 @@ $InstallDir = if ($env:RAHULCHAUBE_INSTALL_DIR) { $env:RAHULCHAUBE_INSTALL_DIR }
 function Log($m) { Write-Host "$([char]0x25C6) $m" }
 function Ok($m)  { Write-Host "$([char]0x2714) $m" -ForegroundColor Green }
 function Err($m) { Write-Host "$([char]0x2716) $m" -ForegroundColor Red; exit 1 }
+
+if ($Uninstall) {
+    Log "Uninstalling RahulChaube Runtime..."
+    if (Test-Path $InstallDir) { Remove-Item -Recurse -Force $InstallDir -ErrorAction SilentlyContinue }
+    Ok "Removed $InstallDir"
+    exit 0
+}
 
 function Detect-Arch {
     switch ($env:PROCESSOR_ARCHITECTURE) {
