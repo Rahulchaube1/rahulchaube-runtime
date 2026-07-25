@@ -6,7 +6,7 @@ import { site } from "@/lib/site";
 import { Button } from "./ui/button";
 import { TerminalDemo } from "./terminal-demo";
 import { Logo } from "@/components/logo";
-import { Download, ArrowRight, Tag, ShieldCheck, Github, Copy, Check, Zap, Cpu, Terminal } from "lucide-react";
+import { Download, ArrowRight, Github, Copy, Check, Zap, Cpu, Terminal } from "lucide-react";
 
 export function Hero() {
   const [copied, setCopied] = useState(false);
@@ -29,17 +29,6 @@ export function Hero() {
           
           {/* Left Column — Brand & CTAs */}
           <div className="lg:col-span-7 text-left space-y-6">
-            {/* Version Badge */}
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 text-[#2FA866] dark:text-[#A8F05B] text-xs font-semibold border border-[#2FA866]/20 font-mono"
-            >
-              <Tag className="w-3.5 h-3.5" />
-              <span>v1.0.0 General Availability is Live</span>
-              <ShieldCheck className="w-3.5 h-3.5 text-[#6FCF63]" />
-            </motion.div>
 
             {/* Title & Brand Logo */}
             <motion.div
