@@ -6,7 +6,7 @@ def create_logo_image(size):
     img = Image.new("RGBA", (width, height), (0, 0, 0, 0))
     draw = ImageDraw.Draw(img)
     
-    # Outer dark rounded rect
+    # Outer dark container
     rx = int(width * 0.22)
     bg_color = (7, 26, 22, 255) # #071A16
     draw.rounded_rectangle([0, 0, width-1, height-1], radius=rx, fill=bg_color, outline=(22, 56, 48, 255), width=max(1, int(width*0.03)))
@@ -16,33 +16,42 @@ def create_logo_image(size):
     c_mid = (111, 207, 99, 255)  # #6FCF63
     c_bot = (47, 168, 102, 255)  # #2FA866
     
-    # R Stem
+    # Left Vertical Pillar (R)
     x1 = int(width * 0.19)
     y1 = int(height * 0.19)
     w1 = int(width * 0.14)
     h1 = int(height * 0.62)
-    draw.rounded_rectangle([x1, y1, x1+w1, y1+h1], radius=int(w1*0.4), fill=c_mid)
+    draw.rounded_rectangle([x1, y1, x1+w1, y1+h1], radius=int(w1*0.45), fill=c_mid)
     
-    # R Loop
-    st_w = max(2, int(width * 0.14))
+    # R Upper Loop
+    st_w = max(2, int(width * 0.13))
     cx1 = int(width * 0.33)
     cy1 = int(height * 0.19)
-    cw = int(width * 0.33)
+    cw = int(width * 0.36)
     ch = int(height * 0.31)
     draw.arc([cx1, cy1, cx1+cw, cy1+ch], start=270, end=90, fill=c_top, width=st_w)
-    draw.line([int(width*0.32), int(height*0.19)+st_w//2, int(width*0.50), int(height*0.19)+st_w//2], fill=c_top, width=st_w)
-    draw.line([int(width*0.32), int(height*0.50)-st_w//2, int(width*0.50), int(height*0.50)-st_w//2], fill=c_mid, width=st_w)
+    draw.line([int(width*0.33), int(height*0.19)+st_w//2, int(width*0.53), int(height*0.19)+st_w//2], fill=c_top, width=st_w)
+    draw.line([int(width*0.33), int(height*0.50)-st_w//2, int(width*0.53), int(height*0.50)-st_w//2], fill=c_mid, width=st_w)
     
-    # R Diagonal Leg
-    draw.line([int(width*0.42), int(height*0.47), int(width*0.62), int(height*0.81)], fill=c_bot, width=st_w)
+    # Diagonal Negative Cut Leg
+    draw.line([int(width*0.42), int(height*0.47), int(width*0.64), int(height*0.81)], fill=c_bot, width=st_w)
     
-    # C Arc
-    arc_w = max(2, int(width * 0.11))
-    c_x1 = int(width * 0.22)
+    # Large C Arc
+    arc_w = max(2, int(width * 0.10))
+    c_x1 = int(width * 0.19)
     c_y1 = int(height * 0.19)
-    c_w = int(width * 0.59)
+    c_w = int(width * 0.61)
     c_h = int(height * 0.62)
     draw.arc([c_x1, c_y1, c_x1+c_w, c_y1+c_h], start=120, end=240, fill=c_top, width=arc_w)
+    
+    # Subtle Terminal Prompt (> _) if size >= 64
+    if size >= 64:
+        px1 = int(width * 0.51)
+        py1 = int(height * 0.33)
+        pw = max(2, int(width * 0.05))
+        draw.line([px1, py1, px1+pw, py1+pw//2], fill=(7, 26, 22, 230), width=max(1, int(width*0.02)))
+        draw.line([px1+pw, py1+pw//2, px1, py1+pw], fill=(7, 26, 22, 230), width=max(1, int(width*0.02)))
+        draw.line([px1+pw+3, py1+pw, px1+pw+8, py1+pw], fill=(7, 26, 22, 230), width=max(1, int(width*0.02)))
     
     return img
 
@@ -54,9 +63,9 @@ def create_social_card():
     logo = create_logo_image(160)
     img.paste(logo, (100, 235), logo)
     
-    draw.text((300, 240), "RahulChaube Runtime", fill=(240, 246, 252, 255))
-    draw.text((300, 310), "A next-generation JavaScript & TypeScript developer platform.", fill=(139, 148, 158, 255))
-    draw.text((300, 360), "Version 2 · MIT Licensed", fill=(111, 207, 99, 255))
+    draw.text((300, 240), "RahulChaube", fill=(240, 246, 252, 255))
+    draw.text((300, 290), "RUNTIME", fill=(111, 207, 99, 255))
+    draw.text((300, 340), "High-Performance JavaScript & TypeScript Platform", fill=(139, 148, 158, 255))
     
     return img
 
