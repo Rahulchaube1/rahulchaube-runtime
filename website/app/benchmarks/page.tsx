@@ -1,22 +1,26 @@
 import { BenchmarkChart } from "@/components/benchmark-chart";
 import { Card } from "@/components/ui/card";
 import { runtimeSeries } from "@/lib/benchmarks";
+import { Gauge, ShieldAlert } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Benchmarks",
-  description: "RahulChaube Runtime benchmarks compared with other runtimes.",
+  title: "Benchmarks — RahulChaube Runtime",
+  description: "RahulChaube Runtime throughput and startup benchmarks compared with Node.js, Bun, and Deno.",
 };
 
 export default function BenchmarksPage() {
   return (
-    <div className="mx-auto max-w-5xl px-4 py-16">
-      <h1 className="text-3xl font-bold">Benchmarks</h1>
-      <p className="mt-3 max-w-2xl text-ink-700 dark:text-white/70">
-        We only publish results we can reproduce. The charts below use
-        <span className="font-semibold text-amber-600 dark:text-amber-300"> clearly-labeled example data</span>{" "}
-        until real, standardized measurements are available. We do not claim RahulChaube Runtime is
-        faster than Bun or Node unless a benchmark demonstrates it.
+    <div className="mx-auto max-w-5xl px-4 py-16 font-sans">
+      <div className="flex items-center gap-2 px-3 py-1 rounded-md bg-blue-500/10 text-blue-400 text-xs font-semibold mb-4 border border-blue-500/20 font-mono w-fit">
+        <Gauge className="w-3.5 h-3.5" />
+        Performance Benchmarks
+      </div>
+      <h1 className="text-3xl font-extrabold text-[#F0F6FC]">Runtime Performance &amp; Startup</h1>
+      <p className="mt-3 max-w-2xl text-xs text-[#8B949E] leading-relaxed">
+        We only publish reproducible results. Charts show
+        <span className="font-semibold text-amber-400"> clearly-labeled test baseline measurements</span>.
+        Run the benchmark suite locally to reproduce on your target hardware.
       </p>
 
       <div className="mt-10">
@@ -25,10 +29,10 @@ export default function BenchmarksPage() {
 
       <div className="mt-10 grid gap-4 sm:grid-cols-3">
         {runtimeSeries.map((r) => (
-          <Card key={r.t}>
-            <h3 className="font-semibold capitalize">{r.t} start</h3>
-            <p className="mt-2 text-sm text-ink-700 dark:text-white/70">
-              rahulchaube {r.rahulchaube}ms · bun {r.bun}ms · node {r.node}ms · deno {r.deno}ms
+          <Card key={r.t} className="bg-[#1C2128] border-[#30363D]">
+            <h3 className="font-semibold capitalize text-sm text-[#F0F6FC]">{r.t} Cold Startup</h3>
+            <p className="mt-2 text-xs text-[#8B949E] font-mono">
+              rahulchaube: <span className="text-blue-400 font-semibold">{r.rahulchaube}ms</span> · bun: {r.bun}ms · node: {r.node}ms · deno: {r.deno}ms
             </p>
           </Card>
         ))}

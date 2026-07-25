@@ -10,19 +10,31 @@ export default {
   theme: {
     extend: {
       colors: {
+        vscode: {
+          bg: "#0D1117",
+          subtle: "#161B22",
+          surface: "#1C2128",
+          border: "#30363D",
+          text: "#F0F6FC",
+          muted: "#8B949E",
+          accent: "#3B82F6",
+          success: "#22C55E",
+          warning: "#F59E0B",
+          danger: "#EF4444",
+        },
         brand: {
-          DEFAULT: "#a21caf",
-          accent: "#d946ef",
+          DEFAULT: "#3B82F6",
+          accent: "#60A5FA",
         },
         ink: {
-          900: "#0b0b0f",
-          800: "#14141a",
-          700: "#1f1f29",
+          900: "#0D1117",
+          800: "#161B22",
+          700: "#1C2128",
         },
       },
       fontFamily: {
-        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
-        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
+        sans: ["Inter", "Geist", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
+        mono: ["JetBrains Mono", "Fira Code", "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"],
       },
       keyframes: {
         "fade-up": {

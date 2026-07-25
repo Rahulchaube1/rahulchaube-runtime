@@ -11,13 +11,13 @@ export function DocsSidebar() {
   const slugFor = (section: string) => docs.find((d) => d.section === section)?.slug ?? "";
 
   return (
-    <aside className="w-64 shrink-0 border-r border-zinc-800/80 p-4 font-sans bg-zinc-950/40">
+    <aside className="w-64 shrink-0 border-r border-[#30363D] p-4 font-sans bg-[#0D1117]">
       <div className="mb-4">
         <SearchModal />
       </div>
 
       <nav className="space-y-1 text-xs">
-        <div className="px-3 py-1.5 text-[10px] font-bold text-zinc-500 uppercase tracking-wider">
+        <div className="px-3 py-1.5 text-[10px] font-bold text-[#8B949E] uppercase tracking-wider font-mono">
           Documentation
         </div>
         {docSections.map((section) => {
@@ -29,10 +29,10 @@ export function DocsSidebar() {
               key={section}
               href={href}
               className={cn(
-                "block rounded-xl px-3 py-2 transition-all font-medium",
+                "block rounded-lg px-3 py-2 transition-all font-medium",
                 active
-                  ? "bg-cyan-500/10 text-cyan-400 font-semibold border border-cyan-500/20"
-                  : "text-zinc-400 hover:text-white hover:bg-zinc-900"
+                  ? "bg-blue-500/10 text-blue-400 font-semibold border border-blue-500/20"
+                  : "text-[#8B949E] hover:text-[#F0F6FC] hover:bg-[#161B22]"
               )}
             >
               {section}

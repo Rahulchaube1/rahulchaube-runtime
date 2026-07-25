@@ -1,44 +1,55 @@
 import { Card } from "@/components/ui/card";
+import { CheckCircle2, Clock, Sparkles } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Roadmap",
-  description: "The public roadmap for RahulChaube Runtime.",
+  title: "Roadmap — RahulChaube Runtime",
+  description: "The public roadmap and milestone tracker for RahulChaube Runtime.",
 };
 
 const roadmap = [
-  { title: "Premium CLI", desc: "Colorful, animated, interactive command-line experience.", status: "Shipped", pct: 100 },
-  { title: "Package manager", desc: "Install, add, remove, update, why, outdated, audit, licenses.", status: "Shipped", pct: 100 },
-  { title: "Project generator", desc: "Interactive templates: react, next, express, hono, library, cli.", status: "Shipped", pct: 100 },
-  { title: "Plugin system", desc: "Stable plugin API and registry of rahulchaube-plugin-* packages.", status: "In progress", pct: 60 },
-  { title: "Dependency visualizer", desc: "Graph viewer, health report, and pruning tools.", status: "Planned", pct: 20 },
-  { title: "AI-assisted tools", desc: "explain, optimize, migrate, analyze diagnostics.", status: "Shipped", pct: 100 },
-  { title: "Observability", desc: "Tracing, profiling, and runtime metrics dashboards.", status: "Planned", pct: 10 },
+  { title: "Premium CLI Tooling", desc: "Dependency-free interactive command dispatcher, progress bars, tables, and colors.", status: "Shipped", pct: 100 },
+  { title: "Package Manager Core", desc: "install, add, remove, update, why, outdated, audit, licenses, graph, cache clean.", status: "Shipped", pct: 100 },
+  { title: "Project Scaffolding Generator", desc: "Interactive templates: react, next, express, hono, library, cli.", status: "Shipped", pct: 100 },
+  { title: "AI-Assisted Diagnostics", desc: "explain error analysis, optimize performance tips, migrate, analyze diagnostics.", status: "Shipped", pct: 100 },
+  { title: "Plugin System & Ecosystem Registry", desc: "Plugin API and discovery registry for rahulchaube-plugin-* packages.", status: "Shipped", pct: 100 },
+  { title: "Multi-OS Release Packages", desc: "Native package managers: Homebrew, Scoop, Winget, Chocolatey, APT, RPM.", status: "Shipped", pct: 100 },
+  { title: "Native C++ Addon Bindings", desc: "Native N-API C/C++ module loader and node-gyp compatibility layer.", status: "In Progress", pct: 65 },
+  { title: "Global CDN Edge Registry", desc: "High-speed tarball caching and global edge distribution network.", status: "Planned", pct: 25 },
 ];
-
-const statusColor: Record<string, string> = {
-  Shipped: "bg-green-500/20 text-green-600 dark:text-green-300",
-  "In progress": "bg-amber-500/20 text-amber-600 dark:text-amber-300",
-  Planned: "bg-black/10 text-ink-700 dark:bg-white/10 dark:text-white/70",
-};
 
 export default function RoadmapPage() {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-16">
-      <h1 className="text-3xl font-bold">Roadmap</h1>
-      <p className="mt-3 text-ink-700 dark:text-white/70">
-        A public, living roadmap. Statuses reflect the current state of the project.
-      </p>
-      <div className="mt-10 space-y-4">
+    <div className="mx-auto max-w-3xl px-4 py-16 font-sans">
+      <div className="text-center sm:text-left mb-10">
+        <h1 className="text-3xl font-extrabold text-[#F0F6FC] tracking-tight">Public Product Roadmap</h1>
+        <p className="mt-2 text-sm text-[#8B949E]">
+          Living roadmap and feature milestones. Real-time progress updates for the platform.
+        </p>
+      </div>
+
+      <div className="space-y-4">
         {roadmap.map((r) => (
-          <Card key={r.title}>
-            <div className="flex items-center justify-between">
-              <h3 className="font-semibold">{r.title}</h3>
-              <span className={`rounded-full px-3 py-1 text-xs font-medium ${statusColor[r.status]}`}>{r.status}</span>
+          <Card key={r.title} className="bg-[#1C2128] border-[#30363D] hover:border-[#484F58]">
+            <div className="flex items-center justify-between gap-4 mb-2">
+              <h3 className="font-semibold text-sm text-[#F0F6FC]">{r.title}</h3>
+              {r.status === "Shipped" ? (
+                <span className="px-2.5 py-0.5 rounded bg-green-500/10 text-green-400 text-xs font-semibold border border-green-500/20 flex items-center gap-1 font-mono shrink-0">
+                  <CheckCircle2 className="w-3 h-3" /> Shipped
+                </span>
+              ) : r.status === "In Progress" ? (
+                <span className="px-2.5 py-0.5 rounded bg-amber-500/10 text-amber-400 text-xs font-semibold border border-amber-500/20 flex items-center gap-1 font-mono shrink-0">
+                  <Clock className="w-3 h-3" /> In Progress
+                </span>
+              ) : (
+                <span className="px-2.5 py-0.5 rounded bg-blue-500/10 text-blue-400 text-xs font-semibold border border-blue-500/20 flex items-center gap-1 font-mono shrink-0">
+                  <Sparkles className="w-3 h-3" /> Planned
+                </span>
+              )}
             </div>
-            <p className="mt-2 text-sm text-ink-700 dark:text-white/70">{r.desc}</p>
-            <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-black/10 dark:bg-white/10">
-              <div className="h-full bg-brand" style={{ width: `${r.pct}%` }} />
+            <p className="text-xs text-[#8B949E] leading-relaxed mb-3">{r.desc}</p>
+            <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#161B22] border border-[#30363D]">
+              <div className="h-full bg-blue-500 transition-all duration-500" style={{ width: `${r.pct}%` }} />
             </div>
           </Card>
         ))}

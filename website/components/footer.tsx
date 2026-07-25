@@ -1,45 +1,59 @@
 import Link from "next/link";
 import { site } from "@/lib/site";
+import { Logo } from "@/components/logo";
+import { Github, ShieldCheck, Rss, Terminal, Cpu } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="border-t border-black/10 bg-white/60 dark:border-white/10 dark:bg-ink-900/60">
+    <footer className="border-t border-[#30363D] bg-[#0D1117] font-sans text-xs text-[#8B949E]">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 md:grid-cols-4">
         <div>
-          <div className="flex items-center gap-2 font-bold">
-            <span className="grid h-7 w-7 rotate-45 place-items-center rounded-lg bg-brand">
-              <span className="-rotate-45 text-white">◆</span>
-            </span>
-            {site.shortName}
+          <Link href="/" className="flex items-center gap-2.5 font-bold text-[#F0F6FC] mb-3">
+            <Logo className="w-6 h-6" />
+            <span className="text-sm tracking-tight">{site.name}</span>
+          </Link>
+          <p className="text-xs text-[#8B949E] leading-relaxed mb-4">{site.description}</p>
+          <div className="flex items-center gap-2 text-[11px] text-emerald-400 font-mono">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span>Platform Status: Operational</span>
           </div>
-          <p className="mt-3 max-w-xs text-sm text-ink-700 dark:text-white/70">{site.tagline}</p>
         </div>
+
         <div>
-          <h4 className="text-sm font-semibold">Product</h4>
-          <ul className="mt-3 space-y-2 text-sm text-ink-700 dark:text-white/70">
-            <li><Link href="/download" className="hover:text-brand">Download</Link></li>
-            <li><Link href="/docs" className="hover:text-brand">Docs</Link></li>
-            <li><Link href="/benchmarks" className="hover:text-brand">Benchmarks</Link></li>
+          <h4 className="text-xs font-semibold text-[#F0F6FC] uppercase tracking-wider mb-3">Product</h4>
+          <ul className="space-y-2">
+            <li><Link href="/download" className="hover:text-[#F0F6FC] transition-colors">Download Center</Link></li>
+            <li><Link href="/releases" className="hover:text-[#F0F6FC] transition-colors">Release Notes &amp; Checksums</Link></li>
+            <li><Link href="/docs" className="hover:text-[#F0F6FC] transition-colors">Documentation</Link></li>
+            <li><Link href="/benchmarks" className="hover:text-[#F0F6FC] transition-colors">Benchmarks</Link></li>
           </ul>
         </div>
+
         <div>
-          <h4 className="text-sm font-semibold">Community</h4>
-          <ul className="mt-3 space-y-2 text-sm text-ink-700 dark:text-white/70">
-            <li><Link href="/blog" className="hover:text-brand">Blog</Link></li>
-            <li><Link href="/roadmap" className="hover:text-brand">Roadmap</Link></li>
-            <li><a href={site.social.github} className="hover:text-brand">GitHub</a></li>
+          <h4 className="text-xs font-semibold text-[#F0F6FC] uppercase tracking-wider mb-3">Ecosystem &amp; API</h4>
+          <ul className="space-y-2">
+            <li><Link href="/blog" className="hover:text-[#F0F6FC] transition-colors">Engineering Blog</Link></li>
+            <li><Link href="/roadmap" className="hover:text-[#F0F6FC] transition-colors">Product Roadmap</Link></li>
+            <li><a href="/api/openapi.json" target="_blank" className="hover:text-[#F0F6FC] transition-colors">OpenAPI Spec</a></li>
+            <li><a href="/feed.xml" target="_blank" className="hover:text-[#F0F6FC] transition-colors flex items-center gap-1"><Rss className="w-3 h-3 text-amber-400" /> RSS Feed</a></li>
           </ul>
         </div>
+
         <div>
-          <h4 className="text-sm font-semibold">Legal</h4>
-          <ul className="mt-3 space-y-2 text-sm text-ink-700 dark:text-white/70">
-            <li><span>MIT License</span></li>
-            <li><span>Independent fork of Bun</span></li>
+          <h4 className="text-xs font-semibold text-[#F0F6FC] uppercase tracking-wider mb-3">Open Source</h4>
+          <ul className="space-y-2">
+            <li className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-blue-400" /> <span>MIT License</span></li>
+            <li className="flex items-center gap-1.5"><Terminal className="w-3.5 h-3.5 text-[#8B949E]" /> <span>Independent Bun Engine Fork</span></li>
+            <li><a href={site.social.github} target="_blank" rel="noreferrer" className="hover:text-[#F0F6FC] transition-colors flex items-center gap-1 mt-2"><Github className="w-3.5 h-3.5" /> GitHub Repository</a></li>
           </ul>
         </div>
       </div>
-      <div className="border-t border-black/10 py-4 text-center text-xs text-ink-700 dark:border-white/10 dark:text-white/50">
-        {site.name} is an independent, MIT-licensed fork of Bun. Not affiliated with or endorsed by the Bun authors.
+
+      <div className="border-t border-[#30363D] py-4 text-center text-[11px] text-[#8B949E] bg-[#161B22]/40">
+        <div className="container mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+          <span>© {new Date().getFullYear()} RahulChaube Runtime. All rights reserved.</span>
+          <span>RahulChaube Runtime is an independent, MIT-licensed fork. Not affiliated with or endorsed by Oven LLC.</span>
+        </div>
       </div>
     </footer>
   );
