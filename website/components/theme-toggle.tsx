@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Sun, Moon } from "lucide-react";
 
 export function ThemeToggle() {
-  const [dark, setDark] = useState(false);
+  const [dark, setDark] = useState(true);
 
   useEffect(() => {
     const stored = localStorage.getItem("theme");
-    const initial = stored ? stored === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const initial = stored ? stored === "dark" : true;
     setDark(initial);
     document.documentElement.classList.toggle("dark", initial);
   }, []);
@@ -21,11 +22,11 @@ export function ThemeToggle() {
 
   return (
     <button
-      aria-label="Toggle dark mode"
+      aria-label="Toggle light and dark mode"
       onClick={toggle}
-      className="rounded-lg border border-black/10 p-2 text-sm dark:border-white/10"
+      className="p-2 rounded-lg border border-zinc-200 dark:border-[#30363D] bg-zinc-100 dark:bg-[#161B22] text-zinc-700 dark:text-[#8B949E] hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-all"
     >
-      {dark ? "☀" : "🌙"}
+      {dark ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-blue-600" />}
     </button>
   );
 }

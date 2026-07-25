@@ -60,33 +60,33 @@ export function RoadmapTimeline() {
             key={idx}
             className={`p-5 rounded-xl border transition-all ${
               item.status === "completed"
-                ? "bg-[#1C2128] border-blue-500/30 shadow-lg shadow-blue-950/10"
-                : "bg-[#161B22] border-[#30363D]"
+                ? "bg-white dark:bg-[#1C2128] border-blue-500/30 shadow-sm"
+                : "bg-zinc-50 dark:bg-[#161B22] border-zinc-200 dark:border-[#30363D]"
             }`}
           >
             <div className="flex items-center justify-between mb-3 font-mono text-xs">
-              <span className="font-bold text-blue-400">{item.version}</span>
+              <span className="font-bold text-blue-600 dark:text-blue-400">{item.version}</span>
               {item.status === "completed" ? (
-                <span className="px-2 py-0.5 rounded bg-green-500/10 text-green-400 text-[10px] font-semibold border border-green-500/20 flex items-center gap-1">
+                <span className="px-2 py-0.5 rounded bg-green-500/10 text-green-600 dark:text-green-400 text-[10px] font-semibold border border-green-500/20 flex items-center gap-1">
                   <CheckCircle2 className="w-3 h-3" /> Released
                 </span>
               ) : item.status === "in-progress" ? (
-                <span className="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 text-[10px] font-semibold border border-amber-500/20 flex items-center gap-1">
+                <span className="px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[10px] font-semibold border border-amber-500/20 flex items-center gap-1">
                   <Clock className="w-3 h-3" /> Active
                 </span>
               ) : (
-                <span className="px-2 py-0.5 rounded bg-[#30363D] text-[#8B949E] text-[10px] font-semibold flex items-center gap-1">
+                <span className="px-2 py-0.5 rounded bg-zinc-200 dark:bg-[#30363D] text-zinc-700 dark:text-[#8B949E] text-[10px] font-semibold flex items-center gap-1">
                   <Sparkles className="w-3 h-3" /> Planned
                 </span>
               )}
             </div>
 
-            <h4 className="font-semibold text-sm text-[#F0F6FC] mb-3">{item.title}</h4>
+            <h4 className="font-semibold text-sm text-zinc-900 dark:text-[#F0F6FC] mb-3">{item.title}</h4>
 
-            <ul className="space-y-1.5 text-xs text-[#8B949E]">
+            <ul className="space-y-1.5 text-xs text-zinc-600 dark:text-[#8B949E]">
               {item.items.map((it, i) => (
                 <li key={i} className="flex items-start gap-1.5">
-                  <span className="text-blue-400 shrink-0">•</span>
+                  <span className="text-blue-600 dark:text-blue-400 shrink-0">•</span>
                   <span>{it}</span>
                 </li>
               ))}

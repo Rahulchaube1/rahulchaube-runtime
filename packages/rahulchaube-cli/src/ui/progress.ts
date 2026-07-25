@@ -69,7 +69,7 @@ class Progress {
     const etaStr = pct >= 1 ? "done" : `${(eta / 1000).toFixed(1)}s eta`;
     const label = b.label.padEnd(22).slice(0, 22);
     return (
-      `${colors.magenta("◆")} ${label} ` +
+      `${colors.magenta("[rahulchaube]")} ${label} ` +
       colors.cyan(bar) +
       " " +
       colors.bold(pct >= 1 ? "100%" : `${Math.round(pct * 100)}%`.padStart(4)) +

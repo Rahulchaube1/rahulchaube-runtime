@@ -10,12 +10,11 @@ BOLD="\\033[1m"
 CYAN="\\033[36m"
 GREEN="\\033[32m"
 RED="\\033[31m"
-YELLOW="\\033[33m"
 RESET="\\033[0m"
 
 echo -e "\${CYAN}\${BOLD}"
-echo "◆ RahulChaube Runtime Installer"
-echo "  Next-generation JS/TS runtime & developer platform"
+echo "RahulChaube Runtime Installer"
+echo "Next-generation JS/TS runtime & developer platform"
 echo -e "\${RESET}"
 
 # Detect OS
@@ -62,7 +61,7 @@ if command -v bun >/dev/null 2>&1; then
 elif command -v node >/dev/null 2>&1; then
   exec node --import tsx "\$@"
 else
-  echo "◆ RahulChaube Runtime requires Bun or Node.js to execute."
+  echo "RahulChaube Runtime requires Bun or Node.js to execute."
   exit 1
 fi
 EOF
@@ -96,7 +95,7 @@ if [ -n "\${PROFILE}" ] && [ -f "\${PROFILE}" ]; then
 fi
 
 echo ""
-echo -e "\${GREEN}\${BOLD}✓ RahulChaube Runtime installed successfully!\${RESET}"
+echo -e "\${GREEN}\${BOLD}[OK] RahulChaube Runtime installed successfully!\${RESET}"
 echo ""
 echo -e "To start using it right now, run:"
 echo -e "  \${BOLD}export PATH=\"\${BIN_DIR}:\$PATH\"\${RESET}"

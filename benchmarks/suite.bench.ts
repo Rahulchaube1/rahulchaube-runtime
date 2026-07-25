@@ -48,7 +48,7 @@ const results: BenchResult[] = [
   bench("fib-20", () => fib(20)),
 ];
 
-console.log("◆ RahulChaube Runtime benchmarks (local, illustrative)");
+console.log("RahulChaube Runtime benchmarks (local, illustrative)");
 console.log("machine:", process.platform, process.arch, "node?", typeof process.versions.node);
 for (const r of results) {
   console.log(

@@ -17,7 +17,7 @@ const dryRun = args.includes("--dry-run");
 const versionIdx = args.indexOf("--version");
 const version = versionIdx >= 0 ? args[versionIdx + 1] : undefined;
 
-const log = (m: string) => console.log(`\x1b[35m◆\x1b[0m ${m}`);
+const log = (m: string) => console.log(`\x1b[35m[rahulchaube]\x1b[0m ${m}`);
 const ok = (m: string) => console.log(`\x1b[32m✔\x1b[0m ${m}`);
 
 async function extract(archive: string, dest: string): Promise<void> {

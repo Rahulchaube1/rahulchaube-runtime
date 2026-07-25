@@ -93,7 +93,7 @@ Check that RahulChaube is installed correctly:
 
 \`\`\`sh
 rahulchaube --version
-# Output: ◆ rahulchaube v1.0.0
+# Output: rahulchaube v1.0.0
 \`\`\`
 `,
   },
@@ -120,7 +120,7 @@ Execute unit tests in the current workspace.
 
 \`\`\`sh
 rahulchaube test
-# Output: ✓ 12 tests passed (45ms)
+# Output: [OK] 12 tests passed (45ms)
 \`\`\`
 
 ### \`rahulchaube build [entry]\`
@@ -137,7 +137,7 @@ Install all dependencies specified in \`package.json\`.
 
 \`\`\`sh
 rahulchaube install
-# Output: ✓ Installed 110 packages (0.42s)
+# Output: [OK] Installed 110 packages (0.42s)
 \`\`\`
 
 ### \`rahulchaube add <package>\`
@@ -191,8 +191,8 @@ Diagnose environment variables, node versions, and system PATH settings.
 
 \`\`\`sh
 rahulchaube doctor
-# Output: ✓ Node.js v20.x detected
-# Output: ✓ Bun engine ready
+# Output: [OK] Node.js v20.x detected
+# Output: [OK] Bun engine ready
 # Output: Environment optimal.
 \`\`\`
 

@@ -55,13 +55,13 @@ export function DownloadTabs() {
     <div className="space-y-8 font-sans">
       {/* Category Selector */}
       <div className="flex justify-center">
-        <div className="bg-[#161B22] p-1 rounded-xl border border-[#30363D] flex gap-1">
+        <div className="bg-zinc-100 dark:bg-[#161B22] p-1 rounded-xl border border-zinc-200 dark:border-[#30363D] flex gap-1">
           <button
             onClick={() => setActiveCategory("os")}
             className={`px-5 py-2 rounded-lg font-medium text-xs transition-all flex items-center gap-2 ${
               activeCategory === "os"
                 ? "bg-blue-600 text-white shadow-sm font-semibold"
-                : "text-[#8B949E] hover:text-[#F0F6FC] hover:bg-[#1C2128]"
+                : "text-zinc-600 dark:text-[#8B949E] hover:text-zinc-900 dark:hover:text-[#F0F6FC] hover:bg-zinc-200 dark:hover:bg-[#1C2128]"
             }`}
           >
             <Terminal className="w-3.5 h-3.5" /> Operating Systems
@@ -71,7 +71,7 @@ export function DownloadTabs() {
             className={`px-5 py-2 rounded-lg font-medium text-xs transition-all flex items-center gap-2 ${
               activeCategory === "pm"
                 ? "bg-blue-600 text-white shadow-sm font-semibold"
-                : "text-[#8B949E] hover:text-[#F0F6FC] hover:bg-[#1C2128]"
+                : "text-zinc-600 dark:text-[#8B949E] hover:text-zinc-900 dark:hover:text-[#F0F6FC] hover:bg-zinc-200 dark:hover:bg-[#1C2128]"
             }`}
           >
             <Package className="w-3.5 h-3.5" /> Package Managers
@@ -90,16 +90,16 @@ export function DownloadTabs() {
                 onClick={() => setSelectedOs(opt.id as any)}
                 className={`p-4 rounded-xl border text-left transition-all flex flex-col justify-between ${
                   selectedOs === opt.id
-                    ? "bg-blue-500/10 border-blue-500/50 ring-1 ring-blue-500/50"
-                    : "bg-[#1C2128] border-[#30363D] hover:border-[#484F58]"
+                    ? "bg-blue-50 dark:bg-blue-500/10 border-blue-500/50 ring-1 ring-blue-500/50"
+                    : "bg-white dark:bg-[#1C2128] border-zinc-200 dark:border-[#30363D] hover:border-zinc-300 dark:hover:border-[#484F58]"
                 }`}
               >
-                <div className="p-2 rounded-lg bg-[#161B22] border border-[#30363D] w-fit mb-3 text-blue-400">
+                <div className="p-2 rounded-lg bg-zinc-100 dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] w-fit mb-3 text-blue-600 dark:text-blue-400">
                   <IconComp className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="font-semibold text-sm text-[#F0F6FC]">{opt.label}</div>
-                  <div className="text-[11px] text-[#8B949E] mt-0.5">{opt.badge}</div>
+                  <div className="font-semibold text-sm text-zinc-900 dark:text-[#F0F6FC]">{opt.label}</div>
+                  <div className="text-[11px] text-zinc-500 dark:text-[#8B949E] mt-0.5">{opt.badge}</div>
                 </div>
               </button>
             );
@@ -113,39 +113,39 @@ export function DownloadTabs() {
               onClick={() => setSelectedPm(opt.id as any)}
               className={`p-3 rounded-xl border text-center transition-all ${
                 selectedPm === opt.id
-                  ? "bg-blue-500/10 border-blue-500/50 ring-1 ring-blue-500/50"
-                  : "bg-[#1C2128] border-[#30363D] hover:border-[#484F58]"
+                  ? "bg-blue-50 dark:bg-blue-500/10 border-blue-500/50 ring-1 ring-blue-500/50"
+                  : "bg-white dark:bg-[#1C2128] border-zinc-200 dark:border-[#30363D] hover:border-zinc-300 dark:hover:border-[#484F58]"
               }`}
             >
-              <div className="font-semibold text-xs text-[#F0F6FC]">{opt.label}</div>
-              <div className="text-[10px] text-[#8B949E] mt-0.5">{opt.os}</div>
+              <div className="font-semibold text-xs text-zinc-900 dark:text-[#F0F6FC]">{opt.label}</div>
+              <div className="text-[10px] text-zinc-500 dark:text-[#8B949E] mt-0.5">{opt.os}</div>
             </button>
           ))}
         </div>
       )}
 
       {/* Interactive Command Display */}
-      <div className="bg-[#161B22] border border-[#30363D] rounded-xl p-5 shadow-xl relative">
-        <div className="flex items-center justify-between mb-3 text-xs text-[#8B949E] font-mono">
+      <div className="bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-xl p-5 shadow-xl relative">
+        <div className="flex items-center justify-between mb-3 text-xs text-zinc-600 dark:text-[#8B949E] font-mono">
           <span className="flex items-center gap-1.5">
-            <Layers className="w-3.5 h-3.5 text-blue-400" />
+            <Layers className="w-3.5 h-3.5 text-blue-500" />
             {activeCategory === "os"
               ? `Installation command for ${osOptions.find((o) => o.id === selectedOs)?.label}`
               : `Package installation via ${pmOptions.find((p) => p.id === selectedPm)?.label}`}
           </span>
           <button
             onClick={handleCopy}
-            className="flex items-center gap-1 text-blue-400 hover:text-blue-300 font-sans font-medium transition-colors"
+            className="flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:text-blue-500 font-sans font-medium transition-colors"
           >
-            {copied ? <Check className="w-3.5 h-3.5 text-green-400" /> : <Copy className="w-3.5 h-3.5" />}
+            {copied ? <Check className="w-3.5 h-3.5 text-green-500" /> : <Copy className="w-3.5 h-3.5" />}
             {copied ? "Copied!" : "Copy"}
           </button>
         </div>
 
         <CodeBlock code={currentCommand} lang="sh" />
 
-        <div className="mt-4 pt-3 border-t border-[#30363D] flex items-center gap-2 text-xs text-[#8B949E]">
-          <ShieldCheck className="w-4 h-4 text-green-400 shrink-0" />
+        <div className="mt-4 pt-3 border-t border-zinc-200 dark:border-[#30363D] flex items-center gap-2 text-xs text-zinc-500 dark:text-[#8B949E]">
+          <ShieldCheck className="w-4 h-4 text-green-500 shrink-0" />
           <span>All packages are signed and verified with SHA256 checksums.</span>
         </div>
       </div>

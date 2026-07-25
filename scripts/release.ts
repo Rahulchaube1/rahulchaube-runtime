@@ -17,7 +17,7 @@ const pkg = JSON.parse(
 const tag = `v${pkg.version}`;
 try {
   execSync(`git tag ${tag}`, { cwd: root, stdio: "inherit" });
-  console.log(`◆ Tagged ${tag}. Push with: git push origin ${tag}`);
+  console.log(`[release] Tagged ${tag}. Push with: git push origin ${tag}`);
 } catch {
-  console.log(`◆ Tag ${tag} already exists or git unavailable.`);
+  console.log(`[release] Tag ${tag} already exists or git unavailable.`);
 }

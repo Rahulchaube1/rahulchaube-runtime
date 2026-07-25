@@ -18,4 +18,4 @@ const next =
 
 pkg.version = next;
 writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\n");
-console.log(`◆ RahulChaube Runtime -> v${next}`);
+console.log(`[version] RahulChaube Runtime -> v${next}`);

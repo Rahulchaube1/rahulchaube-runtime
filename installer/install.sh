@@ -17,9 +17,9 @@ INSTALL_DIR="${RAHULCHAUBE_INSTALL_DIR:-$HOME/.rahulchaube/bin}"
 VERSION=""
 DRY_RUN=0
 
-log()  { printf '\033[35m◆\033[0m %s\n' "$*"; }
-ok()   { printf '\033[32m✔\033[0m %s\n' "$*"; }
-err()  { printf '\033[31m✖\033[0m %s\n' "$*" >&2; }
+log()  { printf '\033[35m[rahulchaube]\033[0m %s\n' "$*"; }
+ok()   { printf '\033[32m[OK]\033[0m %s\n' "$*"; }
+err()  { printf '\033[31m[ERR]\033[0m %s\n' "$*" >&2; }
 die()  { err "$*"; exit 1; }
 
 while [ $# -gt 0 ]; do

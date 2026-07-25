@@ -26,13 +26,13 @@ export function Button({
     primary:
       "bg-blue-600 hover:bg-blue-500 text-white font-semibold shadow-sm border border-blue-500/50 hover:shadow-blue-500/20",
     secondary:
-      "bg-[#1C2128] hover:bg-[#252C35] text-[#F0F6FC] border border-[#30363D] hover:border-[#484F58]",
+      "bg-zinc-100 dark:bg-[#1C2128] hover:bg-zinc-200 dark:hover:bg-[#252C35] text-zinc-900 dark:text-[#F0F6FC] border border-zinc-300 dark:border-[#30363D] hover:border-zinc-400 dark:hover:border-[#484F58]",
     outline:
-      "bg-transparent hover:bg-[#161B22] text-[#F0F6FC] border border-[#30363D] hover:border-[#484F58]",
+      "bg-transparent hover:bg-zinc-100 dark:hover:bg-[#161B22] text-zinc-900 dark:text-[#F0F6FC] border border-zinc-300 dark:border-[#30363D] hover:border-zinc-400 dark:hover:border-[#484F58]",
     ghost:
-      "bg-transparent hover:bg-[#161B22] text-[#8B949E] hover:text-[#F0F6FC]",
+      "bg-transparent hover:bg-zinc-100 dark:hover:bg-[#161B22] text-zinc-600 dark:text-[#8B949E] hover:text-zinc-900 dark:hover:text-[#F0F6FC]",
     icon:
-      "p-2 bg-[#161B22] hover:bg-[#1C2128] text-[#8B949E] hover:text-[#F0F6FC] border border-[#30363D]",
+      "p-2 bg-zinc-100 dark:bg-[#161B22] hover:bg-zinc-200 dark:hover:bg-[#1C2128] text-zinc-700 dark:text-[#8B949E] hover:text-zinc-900 dark:hover:text-[#F0F6FC] border border-zinc-300 dark:border-[#30363D]",
     danger:
       "bg-red-600 hover:bg-red-500 text-white border border-red-500/50",
   };

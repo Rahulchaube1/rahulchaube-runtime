@@ -11,13 +11,13 @@ export function DocsSidebar() {
   const slugFor = (section: string) => docs.find((d) => d.section === section)?.slug ?? "";
 
   return (
-    <aside className="w-64 shrink-0 border-r border-[#30363D] p-4 font-sans bg-[#0D1117]">
+    <aside className="w-64 shrink-0 border-r border-zinc-200 dark:border-[#30363D] p-4 font-sans bg-zinc-50 dark:bg-[#0D1117] transition-colors duration-200">
       <div className="mb-4">
         <SearchModal />
       </div>
 
       <nav className="space-y-1 text-xs">
-        <div className="px-3 py-1.5 text-[10px] font-bold text-[#8B949E] uppercase tracking-wider font-mono">
+        <div className="px-3 py-1.5 text-[10px] font-bold text-zinc-500 dark:text-[#8B949E] uppercase tracking-wider font-mono">
           Documentation
         </div>
         {docSections.map((section) => {
@@ -31,8 +31,8 @@ export function DocsSidebar() {
               className={cn(
                 "block rounded-lg px-3 py-2 transition-all font-medium",
                 active
-                  ? "bg-blue-500/10 text-blue-400 font-semibold border border-blue-500/20"
-                  : "text-[#8B949E] hover:text-[#F0F6FC] hover:bg-[#161B22]"
+                  ? "bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 font-semibold border border-blue-500/20"
+                  : "text-zinc-600 dark:text-[#8B949E] hover:text-zinc-900 dark:hover:text-[#F0F6FC] hover:bg-zinc-100 dark:hover:bg-[#161B22]"
               )}
             >
               {section}

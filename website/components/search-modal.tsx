@@ -62,35 +62,35 @@ export function SearchModal() {
       {/* Trigger Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#161B22] border border-[#30363D] text-[#8B949E] hover:text-[#F0F6FC] hover:border-[#484F58] text-xs transition-all w-full sm:w-64 font-sans"
+        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] text-zinc-600 dark:text-[#8B949E] hover:text-zinc-900 dark:hover:text-[#F0F6FC] hover:border-zinc-300 dark:hover:border-[#484F58] text-xs transition-all w-full sm:w-64 font-sans"
       >
-        <Search className="w-3.5 h-3.5 text-[#8B949E]" />
+        <Search className="w-3.5 h-3.5 text-zinc-500 dark:text-[#8B949E]" />
         <span className="flex-1 text-left font-medium">Search documentation...</span>
-        <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-[#1C2128] text-[10px] text-[#8B949E] border border-[#30363D] font-mono">
+        <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-zinc-200 dark:bg-[#1C2128] text-[10px] text-zinc-600 dark:text-[#8B949E] border border-zinc-300 dark:border-[#30363D] font-mono">
           <Command className="w-2.5 h-2.5" /> K
         </kbd>
       </button>
 
       {/* Modal Backdrop */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-start justify-center pt-16 sm:pt-24 px-4 font-sans">
+        <div className="fixed inset-0 z-50 bg-black/60 dark:bg-black/80 backdrop-blur-sm flex items-start justify-center pt-16 sm:pt-24 px-4 font-sans">
           <div
-            className="bg-[#161B22] border border-[#30363D] rounded-xl w-full max-w-xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150"
+            className="bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-xl w-full max-w-xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150"
             onKeyDown={handleKeyDown}
           >
             {/* Input Bar */}
-            <div className="flex items-center px-4 py-3 border-b border-[#30363D] gap-3">
-              <Search className="w-4 h-4 text-blue-400 shrink-0" />
+            <div className="flex items-center px-4 py-3 border-b border-zinc-200 dark:border-[#30363D] gap-3">
+              <Search className="w-4 h-4 text-blue-500 shrink-0" />
               <input
                 type="text"
                 autoFocus
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search documentation, commands, APIs..."
-                className="bg-transparent text-xs text-[#F0F6FC] placeholder-[#8B949E] focus:outline-none w-full font-mono"
+                className="bg-transparent text-xs text-zinc-900 dark:text-[#F0F6FC] placeholder-zinc-400 dark:placeholder-[#8B949E] focus:outline-none w-full font-mono"
               />
               {query && (
-                <button onClick={() => setQuery("")} className="text-[#8B949E] hover:text-[#F0F6FC]">
+                <button onClick={() => setQuery("")} className="text-zinc-400 dark:text-[#8B949E] hover:text-zinc-900 dark:hover:text-[#F0F6FC]">
                   <X className="w-4 h-4" />
                 </button>
               )}
@@ -99,7 +99,7 @@ export function SearchModal() {
             {/* Results List */}
             <div className="max-h-80 overflow-y-auto p-2">
               {results.length === 0 ? (
-                <div className="p-8 text-center text-xs text-[#8B949E]">
+                <div className="p-8 text-center text-xs text-zinc-500 dark:text-[#8B949E]">
                   No matching documentation found for &quot;{query}&quot;.
                 </div>
               ) : (
@@ -109,25 +109,25 @@ export function SearchModal() {
                     onClick={() => handleSelect(doc.slug)}
                     className={`w-full text-left px-3 py-2.5 rounded-lg transition-all flex items-center justify-between text-xs ${
                       selectedIndex === idx
-                        ? "bg-blue-500/10 text-blue-400 border border-blue-500/30 font-medium"
-                        : "text-[#F0F6FC] hover:bg-[#1C2128]"
+                        ? "bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/30 font-medium"
+                        : "text-zinc-900 dark:text-[#F0F6FC] hover:bg-zinc-100 dark:hover:bg-[#1C2128]"
                     }`}
                   >
                     <div className="flex items-center gap-2.5">
-                      <BookOpen className="w-4 h-4 text-[#8B949E] shrink-0" />
+                      <BookOpen className="w-4 h-4 text-zinc-400 dark:text-[#8B949E] shrink-0" />
                       <div>
                         <div className="font-semibold text-xs">{doc.title}</div>
-                        <div className="text-[10px] text-[#8B949E] font-mono">{doc.section}</div>
+                        <div className="text-[10px] text-zinc-500 dark:text-[#8B949E] font-mono">{doc.section}</div>
                       </div>
                     </div>
-                    <ChevronRight className="w-3.5 h-3.5 text-[#8B949E]" />
+                    <ChevronRight className="w-3.5 h-3.5 text-zinc-400 dark:text-[#8B949E]" />
                   </button>
                 ))
               )}
             </div>
 
             {/* Footer */}
-            <div className="px-4 py-2 border-t border-[#30363D] bg-[#0D1117] text-[10px] text-[#8B949E] flex items-center justify-between font-mono">
+            <div className="px-4 py-2 border-t border-zinc-200 dark:border-[#30363D] bg-zinc-50 dark:bg-[#0D1117] text-[10px] text-zinc-500 dark:text-[#8B949E] flex items-center justify-between font-mono">
               <span className="flex items-center gap-3">
                 <span>↑↓ Navigate</span>
                 <span>↵ Select</span>

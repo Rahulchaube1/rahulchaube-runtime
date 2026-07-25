@@ -56,7 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="bg-zinc-950 text-zinc-100 antialiased selection:bg-cyan-500 selection:text-zinc-950 font-sans">
+      <body className="bg-zinc-50 dark:bg-[#0D1117] text-zinc-900 dark:text-[#F0F6FC] antialiased selection:bg-blue-500 selection:text-white font-sans transition-colors duration-200">
         <Navbar />
         <main className="min-h-[70vh]">{children}</main>
         <Footer />

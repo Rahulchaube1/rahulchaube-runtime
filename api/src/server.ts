@@ -89,7 +89,7 @@ async function start(): Promise<void> {
   const bunServe = (globalThis as any).Bun?.serve;
   if (typeof bunServe === "function") {
     bunServe({ port: PORT, fetch: dispatch });
-    console.log(`◆ RahulChaube Runtime API listening on :${PORT} (limit ${LIMIT}/min, engine: bun)`);
+    console.log(`[RahulChaube API] Listening on :${PORT} (limit ${LIMIT}/min, engine: bun)`);
     return;
   }
 
@@ -110,7 +110,7 @@ async function start(): Promise<void> {
     nodeRes.end(Buffer.from(await res.arrayBuffer()));
   });
   server.listen(PORT, () => {
-    console.log(`◆ RahulChaube Runtime API listening on :${PORT} (limit ${LIMIT}/min, engine: node)`);
+    console.log(`[RahulChaube API] Listening on :${PORT} (limit ${LIMIT}/min, engine: node)`);
   });
 }
 
