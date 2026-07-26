@@ -1,2 +1,12 @@
-export const add = (a: number, b: number): number => a + b;
-export const multiply = (a: number, b: number): number => a * b;
+// tests/imports/math.ts — exported math utilities
+export function add(a: number, b: number): number {
+  return a + b;
+}
+
+export function multiply(a: number, b: number): number {
+  return a * b;
+}
+
+export const PI: number = 3.14159;
+
+export default { add, multiply, PI };

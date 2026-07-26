@@ -1,9 +1,42 @@
 /**
- * RahulChaube Runtime — Execution Engine & Pipeline Coordinator.
+ * RahulChaube Runtime — Script Execution Engine.
+ *
+ * HONEST IMPLEMENTATION STATUS:
+ * ─────────────────────────────────────────────────────────────────
+ * This engine executes transpiled CommonJS-compatible JavaScript
+ * using the host JavaScript engine's `new Function()` API in a
+ * sandboxed module scope with a custom require() implementation.
+ *
+ * WHAT IS IMPLEMENTED:
+ *   - CJS module wrapper (exports, require, module, __filename, __dirname)
+ *   - Recursive local module require() with the runtime module resolver
+ *   - JSON file require()
+ *   - Node built-in module passthrough (fs, path, os, crypto, events,
+ *     stream, buffer, util, url, timers, http, https, child_process,
+ *     net, tls, assert, worker_threads, readline, zlib)
+ *   - node: prefix stripped for built-ins (node:fs → fs)
+ *   - Module cache (per-runScript call)
+ *   - TypeScript source transpilation before execution
+ *   - Accurate source paths in __filename / __dirname
+ *   - process, console, setTimeout/setInterval access via global scope
+ *
+ * WHAT IS NOT IMPLEMENTED / DELEGATED:
+ *   - ESM native execution (import() in the output is not supported;
+ *     all ESM is transformed to CJS by the transpiler)
+ *   - Dynamic import() calls in transpiled output will fail
+ *   - Top-level await (only works if wrapped in async IIFE by user)
+ *   - Worker threads (the built-in is passed through but not sandboxed)
+ *   - V8 Inspector / debugger protocol
+ *   - Source maps (error line numbers reflect transpiled output, not source)
+ *
+ * HOST ENGINE DEPENDENCY:
+ *   The `new Function()` call and all JS evaluation is performed by the
+ *   host engine (currently Bun's JavaScriptCore). RahulChaube Runtime does
+ *   not yet implement its own bytecode compiler or JIT.
+ * ─────────────────────────────────────────────────────────────────
  */
-import { readFileSync, existsSync } from "node:fs";
-import { dirname } from "node:path";
-import { ModuleLoader } from "../module-loader/loader.ts";
+import { readFileSync, existsSync, statSync } from "node:fs";
+import { dirname, resolve, extname } from "node:path";
 import { resolveModule } from "../module-loader/resolver.ts";
 import { transpileSource } from "../compiler/transpiler.ts";
 import { formatCodeFrame } from "../diagnostics/errors.ts";
@@ -12,77 +45,158 @@ export interface ExecutionResult {
   success: boolean;
   exitCode: number;
   error?: Error;
+  warnings?: string[];
 }
 
-const moduleCache = new Map<string, any>();
+// Node built-in modules that we pass through to the host require()
+const NODE_BUILTINS = new Set([
+  "fs", "path", "os", "crypto", "events", "stream", "buffer", "util",
+  "url", "timers", "http", "https", "child_process", "net", "tls",
+  "assert", "worker_threads", "readline", "zlib", "string_decoder",
+  "querystring", "dns", "dgram", "cluster", "v8", "vm", "perf_hooks",
+  "async_hooks", "trace_events", "constants", "module", "process",
+]);
 
-export async function runScript(entryPath: string): Promise<ExecutionResult> {
-  const loader = new ModuleLoader();
+export async function runScript(
+  entryPath: string,
+  options: { debug?: boolean } = {}
+): Promise<ExecutionResult> {
+  // Per-execution module cache (isolated from other runScript calls)
+  const moduleCache = new Map<string, Record<string, unknown>>();
+  const allWarnings: string[] = [];
 
-  function customRequire(specifier: string, parentFile: string): any {
-    // 1. Built-in Node module check
-    const builtinModules = ["fs", "path", "os", "crypto", "events", "stream", "buffer", "util", "url", "timers", "http", "https", "child_process"];
-    if (builtinModules.includes(specifier) || specifier.startsWith("node:")) {
-      return require(specifier);
-    }
+  function makeRequire(callerFile: string) {
+    return function customRequire(specifier: string): unknown {
+      // Strip node: prefix
+      const spec = specifier.startsWith("node:") ? specifier.slice(5) : specifier;
 
-    // 2. Resolve relative or package module path
-    try {
-      const resolved = resolveModule(specifier, parentFile);
-
-      if (moduleCache.has(resolved.resolvedPath)) {
-        return moduleCache.get(resolved.resolvedPath);
+      // Pass through Node built-ins
+      if (NODE_BUILTINS.has(spec)) {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        return require(spec);
       }
 
-      // Handle JSON imports directly
-      if (resolved.extension === ".json") {
-        const jsonContent = JSON.parse(readFileSync(resolved.resolvedPath, "utf-8"));
-        moduleCache.set(resolved.resolvedPath, jsonContent);
-        return jsonContent;
+      // Resolve the module
+      let resolved: ReturnType<typeof resolveModule>;
+      try {
+        resolved = resolveModule(spec, callerFile);
+      } catch (err) {
+        // Last-ditch: try native require (for installed npm packages)
+        try {
+          // eslint-disable-next-line @typescript-eslint/no-require-imports
+          return require(spec);
+        } catch {
+          throw err;
+        }
       }
 
-      const loadedMod = loader.load(resolved.resolvedPath);
-      const compiled = transpileSource({
-        fileName: resolved.resolvedPath,
-        sourceText: loadedMod.sourceText,
+      const { resolvedPath, extension } = resolved;
+
+      // Return from cache
+      if (moduleCache.has(resolvedPath)) {
+        return moduleCache.get(resolvedPath);
+      }
+
+      // JSON files
+      if (extension === ".json") {
+        const content = JSON.parse(readFileSync(resolvedPath, "utf-8"));
+        moduleCache.set(resolvedPath, content);
+        return content;
+      }
+
+      // TypeScript / JavaScript source files
+      const sourceText = readFileSync(resolvedPath, "utf-8");
+      const result = transpileSource({
+        fileName: resolvedPath,
+        sourceText,
+        debug: options.debug,
       });
+      allWarnings.push(...result.warnings);
 
-      const modObj = { exports: {} as any };
-      const req = (childSpec: string) => customRequire(childSpec, resolved.resolvedPath);
+      const modExports: Record<string, unknown> = {};
+      const modObj = { exports: modExports };
+      moduleCache.set(resolvedPath, modExports); // prevent circular loops
 
-      const fn = new Function("exports", "require", "module", "__filename", "__dirname", compiled.code);
-      fn(modObj.exports, req, modObj, resolved.resolvedPath, dirname(resolved.resolvedPath));
+      try {
+        const fn = new Function(
+          "exports", "require", "module", "__filename", "__dirname",
+          result.code
+        );
+        fn(
+          modObj.exports,
+          makeRequire(resolvedPath),
+          modObj,
+          resolvedPath,
+          dirname(resolvedPath)
+        );
+        // The module may have replaced exports entirely (module.exports = …)
+        moduleCache.set(resolvedPath, modObj.exports);
+      } catch (err) {
+        moduleCache.delete(resolvedPath);
+        throw err;
+      }
 
-      moduleCache.set(resolved.resolvedPath, modObj.exports);
       return modObj.exports;
-    } catch {
-      return require(specifier);
-    }
+    };
   }
 
   try {
-    const loaded = loader.load(entryPath);
-    const compiled = transpileSource({
+    if (!existsSync(entryPath)) {
+      throw new Error(`Entry file not found: ${entryPath}`);
+    }
+    if (!statSync(entryPath).isFile()) {
+      throw new Error(`Entry path is not a file: ${entryPath}`);
+    }
+
+    const sourceText = readFileSync(entryPath, "utf-8");
+    const result = transpileSource({
       fileName: entryPath,
-      sourceText: loaded.sourceText,
+      sourceText,
+      debug: options.debug,
     });
+    allWarnings.push(...result.warnings);
 
-    const moduleObj = { exports: {} as any };
-    const req = (spec: string) => customRequire(spec, entryPath);
+    const entryExports: Record<string, unknown> = {};
+    const entryMod = { exports: entryExports };
+    moduleCache.set(entryPath, entryExports);
 
-    const scriptFunc = new Function("exports", "require", "module", "__filename", "__dirname", compiled.code);
-    scriptFunc(moduleObj.exports, req, moduleObj, entryPath, dirname(entryPath));
+    const fn = new Function(
+      "exports", "require", "module", "__filename", "__dirname",
+      result.code
+    );
+    fn(
+      entryMod.exports,
+      makeRequire(entryPath),
+      entryMod,
+      entryPath,
+      dirname(entryPath)
+    );
 
-    return { success: true, exitCode: 0 };
+    return { success: true, exitCode: 0, warnings: allWarnings };
   } catch (err) {
-    const formatted = formatCodeFrame({
+    const error = err as Error;
+    // Attempt to extract line number from stack trace
+    const stackLine = error.stack?.split("\n")[1] ?? "";
+    const lineMatch = stackLine.match(/:(\d+):(\d+)/);
+    const line = lineMatch ? parseInt(lineMatch[1], 10) : 1;
+    const column = lineMatch ? parseInt(lineMatch[2], 10) : 1;
+
+    const sourceText = (() => {
+      try {
+        return readFileSync(entryPath, "utf-8");
+      } catch {
+        return "// Could not read source file";
+      }
+    })();
+
+    const frame = formatCodeFrame({
       filePath: entryPath,
-      line: 1,
-      column: 1,
-      sourceText: "// Execution error occurred",
-      message: (err as Error).message,
+      line,
+      column,
+      sourceText,
+      message: error.message,
     });
-    console.error(formatted);
-    return { success: false, exitCode: 1, error: err as Error };
+    console.error(frame);
+    return { success: false, exitCode: 1, error, warnings: allWarnings };
   }
 }
