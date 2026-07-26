@@ -1,0 +1,5 @@
+{
+  "name": "RahulChaube Application",
+  "port": 8080,
+  "features": ["esm", "json-imports", "ast-parser"]
+}

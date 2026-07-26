@@ -1,5 +1,7 @@
 /**
  * RahulChaube Runtime — AST Compiler & Transpiler Pipeline.
+ *
+ * Implements TypeScript type stripping, JSX handling, and ESM -> CommonJS runtime module transformation.
  */
 import { ASTParser, Lexer, TokenType } from "../parser/ast-parser.ts";
 
@@ -68,6 +70,13 @@ export function transpileSource(opts: TranspileOptions): TranspileResult {
   }
 
   let code = outTokens.join(" ");
+
+  // Transform ESM imports to CJS require syntax for runtime execution
+  code = code.replace(/import\s+\{([^}]+)\}\s+from\s+['"]([^'"]+)['"];?/g, "const {$1} = require('$2');");
+  code = code.replace(/import\s+([a-zA-Z0-9_$]+)\s+from\s+['"]([^'"]+)['"];?/g, "const $1 = require('$2').default || require('$2');");
+  code = code.replace(/export\s+const\s+([a-zA-Z0-9_$]+)\s*=/g, "const $1 = exports.$1 =");
+  code = code.replace(/export\s+let\s+([a-zA-Z0-9_$]+)\s*=/g, "let $1 = exports.$1 =");
+  code = code.replace(/export\s+default\s+/g, "exports.default = ");
 
   // Cleanup spaces around punctuation for valid JS syntax
   code = code.replace(/\s*([;=,\(\)\{\}:])\s*/g, "$1");
