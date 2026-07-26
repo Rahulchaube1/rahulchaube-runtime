@@ -1,0 +1,8 @@
+{
+  "metric": "Cold Process Startup Time (ms)",
+  "benchmarks": [
+    { "target": "RahulChaube Runtime", "cold_start_ms": 18, "status": "Target Goal" },
+    { "target": "Node.js v20", "cold_start_ms": 35, "status": "Published Standard" },
+    { "target": "Bun v1.1", "cold_start_ms": 14, "status": "Published Standard" }
+  ]
+}

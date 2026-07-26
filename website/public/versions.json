@@ -1,0 +1,24 @@
+{
+  "latest": "1.0.0",
+  "name": "RahulChaube Runtime",
+  "releases": [
+    {
+      "version": "1.0.0",
+      "date": "2026-07-25",
+      "channel": "stable",
+      "notes": "Initial stable release of RahulChaube Runtime platform."
+    },
+    {
+      "version": "0.2.0",
+      "date": "2026-07-01",
+      "channel": "beta",
+      "notes": "Added dependency graph visualizer and doctor diagnostics."
+    },
+    {
+      "version": "0.1.0",
+      "date": "2026-06-15",
+      "channel": "alpha",
+      "notes": "Core engine integration and CLI command dispatcher."
+    }
+  ]
+}

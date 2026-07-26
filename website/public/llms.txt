@@ -1,0 +1,107 @@
+# RahulChaube Runtime — Machine Readable AI Context & Technical Specification
+
+> RahulChaube Runtime is a high-performance JavaScript & TypeScript runtime, package manager, test runner, and bundler developer platform.
+
+## System Overview
+
+- **Name**: RahulChaube Runtime
+- **Version**: 1.0.0
+- **Primary Domain**: https://www.rahulchaube.space
+- **Target OS**: Linux (x86_64, aarch64), macOS (x86_64, arm64), Windows (x64)
+- **Primary Engine**: High-performance V8/JavaScriptCore native runtime core
+- **CLI Binary**: `rahulchaube` (21 built-in commands)
+
+## Core Capabilities & Features
+
+### 1. Runtime Execution (`rahulchaube run`)
+- Native execution of `.js`, `.mjs`, `.cjs`, `.ts`, `.tsx`, and `.jsx` files without external transpilers (Babel/tsc).
+- Fast cold startup time (<20ms execution goal).
+- Web-standard API implementation (`fetch`, `Request`, `Response`, `Headers`, `WebSocket`, `Crypto`, `Blob`, `URLPattern`).
+- Full Node.js API compatibility layer (`fs`, `path`, `http`, `crypto`, `os`, `stream`, `events`, `buffer`, `util`, `child_process`).
+
+### 2. Package Management (`rahulchaube install`, `add`, `remove`, `update`, `why`, `graph`)
+- High-speed package resolution and installation.
+- Text-based lockfile resolution (`bun.lock` format compatibility).
+- Global content-addressable package caching.
+- Package dependency graph visualization (`rahulchaube graph`).
+- Dependency explanation engine (`rahulchaube why <package>`).
+- Security vulnerability audit scanner (`rahulchaube audit`).
+- Open-source dependency license auditor (`rahulchaube licenses`).
+
+### 3. Bundling & Compiling (`rahulchaube build`)
+- Production bundling for JavaScript, TypeScript, and JSX.
+- Code-splitting, tree-shaking, and minification.
+- Target formats: `browser`, `node`, `bun`.
+
+### 4. Developer Experience & Diagnostics (`rahulchaube doctor`, `explain`, `optimize`)
+- Built-in environment diagnostic suite (`rahulchaube doctor`).
+- AI-assisted error resolution assistant (`rahulchaube explain "<error>"`).
+- Source-code performance optimization scanner (`rahulchaube optimize`).
+- Project scaffolding wizard (`rahulchaube create <template> <name>`).
+- Migration tool for npm, yarn, pnpm, and bun (`rahulchaube migrate <pm>`).
+
+### 5. Plugin Ecosystem (`rahulchaube plugins`)
+- Plugin management system using `rahulchaube-plugin-*` prefix.
+- Commands: `rahulchaube plugins list`, `install`, `update`, `remove`.
+
+## Command Line Interface (21 Built-in Commands)
+
+1. `rahulchaube run <script|file>` — Execute script or TS/JS file
+2. `rahulchaube test [file]` — Run unit test suite
+3. `rahulchaube build [entry]` — Bundle source code for production
+4. `rahulchaube install` — Install dependencies from package.json
+5. `rahulchaube add <pkg>` — Add dependency to package.json
+6. `rahulchaube remove <pkg>` — Remove dependency from package.json
+7. `rahulchaube update [pkg]` — Update installed dependencies
+8. `rahulchaube audit` — Scan dependencies for security vulnerabilities
+9. `rahulchaube licenses` — Audit third-party package licenses
+10. `rahulchaube why <pkg>` — Explain dependency resolution path
+11. `rahulchaube graph` — Display ASCII dependency tree
+12. `rahulchaube create <template> [name]` — Scaffold project template
+13. `rahulchaube doctor` — Run environment health checks
+14. `rahulchaube explain <error>` — AI error diagnostic assistant
+15. `rahulchaube optimize` — Scan project for performance tips
+16. `rahulchaube migrate <pm>` — Convert project from npm/yarn/pnpm/bun
+17. `rahulchaube cache clean` — Clear package binary caches
+18. `rahulchaube plugins list` — List installed CLI plugins
+19. `rahulchaube plugins install <plugin>` — Install CLI plugin
+20. `rahulchaube plugins update` — Update all CLI plugins
+21. `rahulchaube plugins remove <plugin>` — Uninstall CLI plugin
+
+## Feature Implementation Status Matrix
+
+| Feature | Status | Notes |
+| :--- | :--- | :--- |
+| TypeScript & JSX Runtime | Implemented | Direct execution with zero tsc setup |
+| Fast Cold Startup | Implemented | Cold boot under 20ms |
+| Node.js API Layer | Implemented | Supports major npm packages |
+| Lockfile Package Manager | Implemented | Fast dependency resolution |
+| Dependency Graph Viewer | Implemented | ASCII tree via `rahulchaube graph` |
+| AI Error Diagnostic | Implemented | Via `rahulchaube explain` |
+| Production Bundler | Implemented | Minification & tree-shaking |
+| Plugin System | Implemented | `rahulchaube-plugin-*` extension model |
+| System Doctor Diagnostics | Implemented | Via `rahulchaube doctor` |
+| Web Standards APIs | Implemented | Fetch, Request, Response, Crypto, WebSocket |
+| Standalone Compiler Binaries | Experimental | Single-file executable compilation |
+| Distributed Cache Proxy | Planned | Roadmap feature for enterprise teams |
+
+## Documentation Sitemap
+
+- Home: https://www.rahulchaube.space
+- Getting Started: https://www.rahulchaube.space/docs/getting-started
+- Installation: https://www.rahulchaube.space/docs/installation
+- CLI Reference: https://www.rahulchaube.space/docs/cli
+- Package Manager: https://www.rahulchaube.space/docs/package-manager
+- Runtime API: https://www.rahulchaube.space/docs/runtime
+- Bundler: https://www.rahulchaube.space/docs/bundler
+- Plugins: https://www.rahulchaube.space/docs/plugins
+- Architecture: https://www.rahulchaube.space/docs/architecture
+- Performance Guide: https://www.rahulchaube.space/docs/performance
+- FAQ: https://www.rahulchaube.space/docs/faq
+- Benchmarks: https://www.rahulchaube.space/benchmarks
+- Downloads: https://www.rahulchaube.space/download
+- OpenAPI Specs: https://www.rahulchaube.space/api/openapi.json
+- API Documentation: https://www.rahulchaube.space/api/docs
+- Machine Readable Versioning: https://www.rahulchaube.space/versions.json
+- Machine Readable Features: https://www.rahulchaube.space/features.json
+- Machine Readable CLI: https://www.rahulchaube.space/cli.json

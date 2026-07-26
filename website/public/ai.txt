@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Sitemap: https://www.rahulchaube.space/sitemap.xml
+Documentation: https://www.rahulchaube.space/llms.txt
+API-Spec: https://www.rahulchaube.space/api/openapi.json
+Features-Spec: https://www.rahulchaube.space/features.json
+CLI-Spec: https://www.rahulchaube.space/cli.json

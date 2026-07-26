@@ -1,0 +1,8 @@
+{
+  "prefix": "rahulchaube-plugin-",
+  "plugins": [
+    { "name": "rahulchaube-plugin-react", "description": "React 19 & JSX compiler plugin", "version": "1.0.0" },
+    { "name": "rahulchaube-plugin-tailwind", "description": "Tailwind CSS v4 fast compiler plugin", "version": "1.0.0" },
+    { "name": "rahulchaube-plugin-docker", "description": "Container image generator plugin", "version": "1.0.0" }
+  ]
+}

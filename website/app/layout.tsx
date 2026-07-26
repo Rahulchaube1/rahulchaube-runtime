@@ -36,7 +36,20 @@ export const metadata: Metadata = {
     template: `%s · ${site.name}`,
   },
   description: site.description,
-  keywords: ["javascript", "typescript", "runtime", "bun", "node", "package manager", "bundler"],
+  keywords: [
+    "javascript",
+    "typescript",
+    "runtime",
+    "bun",
+    "node",
+    "package manager",
+    "bundler",
+    "rahulchaube",
+    "rahulchaube runtime",
+    "developer platform",
+    "v8",
+    "javascriptcore"
+  ],
   manifest: "/site.webmanifest",
   icons: {
     icon: [
@@ -71,18 +84,50 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const jsonLd = {
+  const jsonLdGraph = {
     "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: site.name,
-    operatingSystem: "Linux, macOS, Windows",
-    applicationCategory: "DeveloperApplication",
-    offers: {
-      "@type": "Offer",
-      price: "0",
-      priceCurrency: "USD",
-    },
-    description: site.description,
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "@id": `${site.domain}/#software`,
+        name: site.name,
+        operatingSystem: "Linux, macOS, Windows",
+        applicationCategory: "DeveloperApplication",
+        softwareVersion: "1.0.0",
+        downloadUrl: `${site.domain}/download`,
+        offers: {
+          "@type": "Offer",
+          price: "0",
+          priceCurrency: "USD",
+        },
+        description: site.description,
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${site.domain}/#website`,
+        url: site.domain,
+        name: site.name,
+        description: site.description,
+        potentialAction: {
+          "@type": "SearchAction",
+          target: `${site.domain}/docs?q={search_term_string}`,
+          "query-input": "required name=search_term_string",
+        },
+      },
+      {
+        "@type": "Organization",
+        "@id": `${site.domain}/#organization`,
+        name: site.name,
+        url: site.domain,
+        logo: `${site.domain}/logo.png`,
+      },
+      {
+        "@type": "Person",
+        "@id": `${site.domain}/#person`,
+        name: "Rahul Chaube",
+        url: "https://github.com/Rahulchaube1",
+      },
+    ],
   };
 
   return (
@@ -99,7 +144,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="manifest" href="/site.webmanifest" />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdGraph) }}
         />
       </head>
       <body className="bg-[#F4F8F6] dark:bg-[#071A16] text-zinc-900 dark:text-[#F0F6FC] antialiased selection:bg-[#2FA866] selection:text-white font-sans transition-colors duration-200 overflow-x-hidden w-full min-w-[320px]">

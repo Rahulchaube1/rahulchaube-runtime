@@ -1,0 +1,11 @@
+{
+  "title": "RahulChaube Runtime API Specifications",
+  "version": "1.0.0",
+  "openapi": "3.0.0",
+  "endpoints": [
+    { "path": "/api/health", "method": "GET", "description": "Server health status check" },
+    { "path": "/api/version", "method": "GET", "description": "Get current runtime & CLI version" },
+    { "path": "/api/releases", "method": "GET", "description": "Get official release list" },
+    { "path": "/api/openapi.json", "method": "GET", "description": "Get raw OpenAPI v3 JSON spec" }
+  ]
+}
