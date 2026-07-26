@@ -40,6 +40,7 @@ import { dirname, resolve, extname } from "node:path";
 import { resolveModule } from "../module-loader/resolver.ts";
 import { transpileSource } from "../compiler/transpiler.ts";
 import { formatCodeFrame } from "../diagnostics/errors.ts";
+import { globalModuleCache } from "../module-loader/cache.ts";
 
 export interface ExecutionResult {
   success: boolean;
@@ -105,13 +106,22 @@ export async function runScript(
       }
 
       // TypeScript / JavaScript source files
-      const sourceText = readFileSync(resolvedPath, "utf-8");
-      const result = transpileSource({
-        fileName: resolvedPath,
-        sourceText,
-        debug: options.debug,
-      });
-      allWarnings.push(...result.warnings);
+      // Check compiled code cache first (avoids re-transpilation on repeated require)
+      let compiledCode: string;
+      const cached = globalModuleCache.get(resolvedPath);
+      if (cached) {
+        compiledCode = cached.compiledCode;
+      } else {
+        const sourceText = readFileSync(resolvedPath, "utf-8");
+        const result = transpileSource({
+          fileName: resolvedPath,
+          sourceText,
+          debug: options.debug,
+        });
+        allWarnings.push(...result.warnings);
+        globalModuleCache.set(resolvedPath, sourceText, result.code);
+        compiledCode = result.code;
+      }
 
       const modExports: Record<string, unknown> = {};
       const modObj = { exports: modExports };
@@ -120,7 +130,7 @@ export async function runScript(
       try {
         const fn = new Function(
           "exports", "require", "module", "__filename", "__dirname",
-          result.code
+          compiledCode
         );
         fn(
           modObj.exports,
@@ -148,13 +158,22 @@ export async function runScript(
       throw new Error(`Entry path is not a file: ${entryPath}`);
     }
 
-    const sourceText = readFileSync(entryPath, "utf-8");
-    const result = transpileSource({
-      fileName: entryPath,
-      sourceText,
-      debug: options.debug,
-    });
-    allWarnings.push(...result.warnings);
+    // Check compiled code cache before transpiling entry file
+    let entryCompiledCode: string;
+    const entryCached = globalModuleCache.get(entryPath);
+    if (entryCached) {
+      entryCompiledCode = entryCached.compiledCode;
+    } else {
+      const sourceText = readFileSync(entryPath, "utf-8");
+      const result = transpileSource({
+        fileName: entryPath,
+        sourceText,
+        debug: options.debug,
+      });
+      allWarnings.push(...result.warnings);
+      globalModuleCache.set(entryPath, sourceText, result.code);
+      entryCompiledCode = result.code;
+    }
 
     const entryExports: Record<string, unknown> = {};
     const entryMod = { exports: entryExports };
@@ -162,7 +181,7 @@ export async function runScript(
 
     const fn = new Function(
       "exports", "require", "module", "__filename", "__dirname",
-      result.code
+      entryCompiledCode
     );
     fn(
       entryMod.exports,
