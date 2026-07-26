@@ -1,6 +1,7 @@
 import { test, expect } from "bun:test";
 import { resolve } from "node:path";
 import { writeFileSync, unlinkSync } from "node:fs";
+import { ASTParser, Lexer, TokenType } from "./parser/ast-parser.ts";
 import { resolveModule } from "./module-loader/resolver.ts";
 import { ModuleLoader } from "./module-loader/loader.ts";
 import { VirtualFS } from "./fs/virtual-fs.ts";
@@ -9,6 +10,17 @@ import { runScript } from "./engine/runner.ts";
 import { formatCodeFrame } from "./diagnostics/errors.ts";
 
 const pkgPath = resolve(process.cwd(), "packages/rahulchaube-cli/package.json");
+
+test("Stage 1: AST Lexer & Parser produces tokens and AST root", () => {
+  const code = "const num: number = 42;";
+  const lexer = new Lexer(code);
+  const tokens = lexer.tokenize();
+  expect(tokens.length).toBeGreaterThan(0);
+
+  const parser = new ASTParser();
+  const ast = parser.parse(code);
+  expect(ast.kind).toBe("Program");
+});
 
 test("Stage 2: Module Resolver resolves local file paths", () => {
   const res = resolveModule("packages/rahulchaube-cli/package.json", process.cwd());
@@ -30,10 +42,10 @@ test("Stage 4: Module Loader caches loaded modules", () => {
   expect(mod.evaluationState).toBe("loaded");
 });
 
-test("Stage 5: Transpiler strips TypeScript annotations", () => {
+test("Stage 5: AST Transpiler strips TypeScript annotations", () => {
   const tsCode = "const num: number = 42;";
   const res = transpileSource({ fileName: "test.ts", sourceText: tsCode });
-  expect(res.code).toBe("const num = 42;");
+  expect(res.code).toBe("const num=42;");
 });
 
 test("Stage 6: Runner executes script engine", async () => {
