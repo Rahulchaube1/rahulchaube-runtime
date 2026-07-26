@@ -38,7 +38,7 @@ export function Hero() {
             >
               <div className="flex items-center gap-4">
                 <img
-                  src="/rahulchaube-runtime.png"
+                  src="/rahulchaube-runtimelogo.png"
                   alt="RahulChaube Runtime Logo"
                   className="h-16 sm:h-20 w-auto object-contain shrink-0"
                 />

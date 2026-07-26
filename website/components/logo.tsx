@@ -1,5 +1,5 @@
 export function Logo({
-  className = "h-9 w-auto",
+  className = "h-10 w-auto",
 }: {
   className?: string;
   showWordmark?: boolean;
@@ -7,8 +7,8 @@ export function Logo({
 }) {
   return (
     <img
-      src="/rahulchaube-runtime.png"
-      alt="RahulChaube Runtime"
+      src="/rahulchaube-runtimelogo.png"
+      alt="RahulChaube Runtime Logo"
       className={`object-contain select-none ${className}`}
     />
   );
