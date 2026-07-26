@@ -17,12 +17,7 @@ export function Navbar() {
       <nav className="site-container h-20 flex items-center justify-between">
         {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-3 font-bold text-zinc-900 dark:text-[#F0F6FC] hover:opacity-95 transition-opacity">
-          <Logo className="w-9 h-9 shrink-0" />
-          <div className="flex flex-col text-left">
-            <span className="text-base sm:text-lg tracking-tight font-black flex items-center gap-2">
-              RahulChaube <span className="text-[11px] px-2 py-0.5 rounded-md bg-emerald-500/10 text-[#2FA866] dark:text-[#A8F05B] border border-[#2FA866]/30 font-mono font-semibold">v1.0</span>
-            </span>
-          </div>
+          <Logo className="h-10 sm:h-12 w-auto shrink-0" />
         </Link>
 
         {/* Navigation Items */}

@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { site } from "@/lib/site";
 import { Button } from "./ui/button";
 import { TerminalDemo } from "./terminal-demo";
-import { Logo } from "@/components/logo";
 import { Download, ArrowRight, Copy, Check, Zap, Cpu, Terminal } from "lucide-react";
 
 export function Hero() {
@@ -38,10 +37,11 @@ export function Hero() {
               className="space-y-4"
             >
               <div className="flex items-center gap-4">
-                <Logo className="w-14 h-14 sm:w-16 sm:h-16 shrink-0" />
-                <h1 className="text-display-fluid font-black tracking-tight text-zinc-900 dark:text-[#F0F6FC]">
-                  {site.name}
-                </h1>
+                <img
+                  src="/rahulchaube-runtime.png"
+                  alt="RahulChaube Runtime Logo"
+                  className="h-16 sm:h-20 w-auto object-contain shrink-0"
+                />
               </div>
               <p className="text-body-fluid text-zinc-600 dark:text-[#8B949E] leading-relaxed max-w-2xl font-medium">
                 {site.tagline}

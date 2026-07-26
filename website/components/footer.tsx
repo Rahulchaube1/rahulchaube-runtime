@@ -10,8 +10,7 @@ export function Footer() {
         {/* Brand Column */}
         <div className="md:col-span-1 space-y-4">
           <Link href="/" className="flex items-center gap-3 font-bold text-zinc-900 dark:text-[#F0F6FC]">
-            <Logo className="w-8 h-8" />
-            <span className="text-base sm:text-lg tracking-tight font-black">{site.name}</span>
+            <Logo className="h-10 w-auto" />
           </Link>
           <p className="text-sm text-zinc-600 dark:text-[#8B949E] leading-relaxed">
             High-performance developer platform for JavaScript &amp; TypeScript.
