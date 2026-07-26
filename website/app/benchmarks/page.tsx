@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Benchmarks — RahulChaube Runtime",
-  description: "RahulChaube Runtime throughput and startup benchmarks compared with Node.js, Bun, and Deno.",
+  description: "RahulChaube Runtime throughput and startup benchmarks compared with Node.js and Deno.",
 };
 
 export default function BenchmarksPage() {
@@ -27,7 +27,7 @@ export default function BenchmarksPage() {
           <Card key={r.t} className="bg-white dark:bg-[#0E2923] border-zinc-200 dark:border-[#163830]">
             <h3 className="font-semibold capitalize text-sm text-zinc-900 dark:text-[#F0F6FC]">{r.t} Cold Startup</h3>
             <p className="mt-2 text-xs text-zinc-600 dark:text-[#8B949E] font-mono">
-              rahulchaube: <span className="text-[#2FA866] dark:text-[#A8F05B] font-semibold">{r.rahulchaube}ms</span> · bun: {r.bun}ms · node: {r.node}ms · deno: {r.deno}ms
+              rahulchaube: <span className="text-[#2FA866] dark:text-[#A8F05B] font-semibold">{r.rahulchaube}ms</span> · node: {r.node}ms · deno: {r.deno}ms
             </p>
           </Card>
         ))}

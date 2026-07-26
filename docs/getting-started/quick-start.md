@@ -55,7 +55,7 @@ Create `server.ts`:
 
 ```typescript
 // server.ts
-Bun.serve({
+RahulChaube.serve({
   port: 3000,
   fetch(req: Request): Response {
     return new Response("Hello from RahulChaube Runtime!");

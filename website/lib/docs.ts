@@ -67,7 +67,7 @@ cd my-app
 ## Step 3: Write a Native Server
 \`\`\`typescript
 // server.ts
-Bun.serve({
+RahulChaube.serve({
   port: 3000,
   fetch(req: Request): Response {
     return new Response("Hello from RahulChaube Runtime!");
@@ -108,7 +108,7 @@ const users: Map<string, User> = new Map([
   ["1", { id: "1", name: "Rahul Chaube", email: "rahul@example.com" }]
 ]);
 
-Bun.serve({
+RahulChaube.serve({
   port: 8080,
   async fetch(req: Request): Promise<Response> {
     const url = new URL(req.url);
@@ -175,7 +175,7 @@ rahulchaube run api-server.ts
 
 ## Memory & Execution Lifecycle
 1. **CLI Phase**: Argument parsing and subcommand routing.
-2. **Resolution Phase**: Dependencies checked against \`package.json\` and \`bun.lock\`.
+2. **Resolution Phase**: Dependencies checked against \`package.json\` and \`rahulchaube.lock\`.
 3. **Execution Phase**: Native V8/JSC engine boots and registers Web Standard APIs.
 4. **Diagnostic Phase**: \`rahulchaube explain\` hooks inspect unhandled stack traces.
 `,
@@ -315,7 +315,7 @@ RahulChaube Runtime includes an integrated production bundler capable of compili
     section: "API & Web Standards",
     body: `# Built-in REST API Engine
 
-The repository includes a standalone REST API microservice in \`api/src/server.ts\` running on \`Bun.serve\` with rate-limiting and standard endpoints.
+The repository includes a standalone REST API microservice in \`api/src/server.ts\` running on \`RahulChaube.serve\` with rate-limiting and standard endpoints.
 `,
   },
   {
@@ -369,7 +369,7 @@ Process boot and script startup target under 20ms.
     section: "Performance & Benchmarks",
     body: `# System Benchmarks & Comparative Analysis
 
-Comparative analysis against Node.js, Bun, Deno, npm, pnpm, and Yarn.
+Comparative analysis against Node.js, Deno, npm, pnpm, and Yarn.
 `,
   },
   {

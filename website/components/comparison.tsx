@@ -7,25 +7,24 @@ interface ComparisonRow {
   npm: boolean | string;
   pnpm: boolean | string;
   yarn: boolean | string;
-  bun: boolean | string;
   deno: boolean | string;
 }
 
 const matrix: ComparisonRow[] = [
-  { feature: "Runtime Engine", rahulchaube: true, node: true, npm: false, pnpm: false, yarn: false, bun: true, deno: true },
-  { feature: "Package Manager", rahulchaube: true, node: false, npm: true, pnpm: true, yarn: true, bun: true, deno: true },
-  { feature: "Built-in Bundler", rahulchaube: true, node: false, npm: false, pnpm: false, yarn: false, bun: true, deno: true },
-  { feature: "Test Runner", rahulchaube: true, node: "v18+", npm: false, pnpm: false, yarn: false, bun: true, deno: true },
-  { feature: "Integrated CLI", rahulchaube: true, node: false, npm: true, pnpm: true, yarn: true, bun: true, deno: true },
-  { feature: "Plugin System", rahulchaube: true, node: "Planned", npm: false, pnpm: false, yarn: "v2+", bun: true, deno: false },
-  { feature: "Workspace Support", rahulchaube: true, node: false, npm: true, pnpm: true, yarn: true, bun: true, deno: true },
-  { feature: "Native Watch Mode", rahulchaube: true, node: "v18.11+", npm: false, pnpm: false, yarn: false, bun: true, deno: true },
-  { feature: "Template Scaffolding", rahulchaube: true, node: false, npm: "npx", pnpm: "pnpm dlx", yarn: "yarn create", bun: true, deno: "deno init" },
-  { feature: "Native TypeScript", rahulchaube: true, node: "v22.6+", npm: false, pnpm: false, yarn: false, bun: true, deno: true },
-  { feature: "Native JSX / TSX", rahulchaube: true, node: false, npm: false, pnpm: false, yarn: false, bun: true, deno: true },
-  { feature: "Performance Goal", rahulchaube: "<20ms Goal", node: "~35ms", npm: "N/A", pnpm: "N/A", yarn: "N/A", bun: "<15ms", deno: "<25ms" },
-  { feature: "Universal Configuration", rahulchaube: true, node: false, npm: false, pnpm: false, yarn: false, bun: true, deno: true },
-  { feature: "Developer Experience", rahulchaube: "Unified", node: "Fragmented", npm: "CLI Only", pnpm: "CLI Only", yarn: "CLI Only", bun: "Unified", deno: "Unified" },
+  { feature: "Runtime Engine", rahulchaube: true, node: true, npm: false, pnpm: false, yarn: false, deno: true },
+  { feature: "Package Manager", rahulchaube: true, node: false, npm: true, pnpm: true, yarn: true, deno: true },
+  { feature: "Built-in Bundler", rahulchaube: true, node: false, npm: false, pnpm: false, yarn: false, deno: true },
+  { feature: "Test Runner", rahulchaube: true, node: "v18+", npm: false, pnpm: false, yarn: false, deno: true },
+  { feature: "Integrated CLI", rahulchaube: true, node: false, npm: true, pnpm: true, yarn: true, deno: true },
+  { feature: "Plugin System", rahulchaube: true, node: "Planned", npm: false, pnpm: false, yarn: "v2+", deno: false },
+  { feature: "Workspace Support", rahulchaube: true, node: false, npm: true, pnpm: true, yarn: true, deno: true },
+  { feature: "Native Watch Mode", rahulchaube: true, node: "v18.11+", npm: false, pnpm: false, yarn: false, deno: true },
+  { feature: "Template Scaffolding", rahulchaube: true, node: false, npm: "npx", pnpm: "pnpm dlx", yarn: "yarn create", deno: "deno init" },
+  { feature: "Native TypeScript", rahulchaube: true, node: "v22.6+", npm: false, pnpm: false, yarn: false, deno: true },
+  { feature: "Native JSX / TSX", rahulchaube: true, node: false, npm: false, pnpm: false, yarn: false, deno: true },
+  { feature: "Performance Goal", rahulchaube: "<20ms Goal", node: "~35ms", npm: "N/A", pnpm: "N/A", yarn: "N/A", deno: "<25ms" },
+  { feature: "Universal Configuration", rahulchaube: true, node: false, npm: false, pnpm: false, yarn: false, deno: true },
+  { feature: "Developer Experience", rahulchaube: "Unified", node: "Fragmented", npm: "CLI Only", pnpm: "CLI Only", yarn: "CLI Only", deno: "Unified" },
 ];
 
 function RenderCell({ val }: { val: boolean | string }) {
@@ -43,13 +42,11 @@ function RenderCell({ val }: { val: boolean | string }) {
 
 export function ComparisonSection() {
   return (
-    <section className="site-container py-24 lg:py-32 font-sans border-t border-zinc-200 dark:border-[#163830]">
+    <section className="site-container py-24 lg:py-32 font-sans border-t border-zinc-200 dark:border-[#163830] transition-colors duration-200">
       <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-        <h2 className="text-h2-fluid font-black text-zinc-900 dark:text-[#F0F6FC]">
-          Feature Comparison
-        </h2>
+        <h2 className="text-h2-fluid font-black text-zinc-900 dark:text-[#F0F6FC]">Platform Comparison</h2>
         <p className="text-body-fluid text-zinc-600 dark:text-[#8B949E]">
-          Compare RahulChaube Runtime capabilities against traditional JavaScript runtimes and package managers.
+          How RahulChaube Runtime compares against existing developer tools and runtimes.
         </p>
       </div>
 
@@ -63,7 +60,6 @@ export function ComparisonSection() {
               <th className="py-4.5 px-4 font-bold text-sm sm:text-base">npm</th>
               <th className="py-4.5 px-4 font-bold text-sm sm:text-base">pnpm</th>
               <th className="py-4.5 px-4 font-bold text-sm sm:text-base">Yarn</th>
-              <th className="py-4.5 px-4 font-bold text-sm sm:text-base">Bun</th>
               <th className="py-4.5 px-4 font-bold text-sm sm:text-base">Deno</th>
             </tr>
           </thead>
@@ -78,7 +74,6 @@ export function ComparisonSection() {
                 <td className="py-4 px-4"><RenderCell val={row.npm} /></td>
                 <td className="py-4 px-4"><RenderCell val={row.pnpm} /></td>
                 <td className="py-4 px-4"><RenderCell val={row.yarn} /></td>
-                <td className="py-4 px-4"><RenderCell val={row.bun} /></td>
                 <td className="py-4 px-4"><RenderCell val={row.deno} /></td>
               </tr>
             ))}

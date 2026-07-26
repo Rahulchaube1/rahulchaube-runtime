@@ -39,7 +39,7 @@ Handles argument parsing, sub-command routing, terminal styling, diagnostic insp
 Executes JavaScript and TypeScript natively with Web Standard APIs (`fetch`, `Request`, `Response`, `WebSocket`, `Crypto`).
 
 ### 3. Package Resolution Engine
-Uses content-addressable storage to link downloaded dependencies into workspace `node_modules` and maintains `bun.lock` compatibility.
+Uses content-addressable storage to link downloaded dependencies into workspace `node_modules` and maintains `rahulchaube.lock` lockfile compatibility.
 
 ### 4. Plugin Ecosystem
 Enables custom CLI extensions named using the `rahulchaube-plugin-*` prefix pattern.

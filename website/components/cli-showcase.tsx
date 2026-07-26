@@ -5,7 +5,7 @@ const examples = [
   { cmd: "rahulchaube install", out: "Installed 110 packages in 0.42s", ok: true },
   { cmd: "rahulchaube add react", out: "Added react@19.0.0 to package.json", ok: true },
   { cmd: "rahulchaube run dev", out: "Dev server listening on http://localhost:3000 (18ms)", ok: true },
-  { cmd: "rahulchaube doctor", out: "Node.js v20.x, Bun Engine ready, Environment optimal", ok: true },
+  { cmd: "rahulchaube doctor", out: "Node.js v20.x, RahulChaube Engine ready, Environment optimal", ok: true },
   { cmd: "rahulchaube explain \"Cannot find module 'react'\"", out: "AI Diagnostic: Package missing. Run 'rahulchaube add react' to fix.", ok: false },
 ];
 

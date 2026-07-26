@@ -4,18 +4,18 @@
 
 ## Comprehensive Feature Comparison
 
-| Capability | RahulChaube Runtime | Node.js | Bun | Deno | npm | pnpm | Status |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Native TypeScript & JSX** | Yes | No | Yes | Yes | N/A | N/A | Implemented |
-| **Fast Process Boot (<20ms)** | Yes | No | Yes | Yes | N/A | N/A | Implemented Goal |
-| **Built-in Package Manager** | Yes | No | Yes | Yes | Yes | Yes | Implemented |
-| **Built-in Production Bundler** | Yes | No | Yes | No | No | No | Implemented |
-| **ASCII Dependency Graph (`graph`)** | Yes | No | No | No | No | No | Implemented |
-| **AI Error Assistant (`explain`)** | Yes | No | No | No | No | No | Implemented |
-| **Environment Doctor (`doctor`)** | Yes | No | No | No | No | No | Implemented |
-| **Node.js API Compatibility** | Yes | Native | High | Partial | N/A | N/A | Implemented |
-| **Standalone Binary Compiler** | Partial | Third-party | Yes | Yes | N/A | N/A | 🧪 Experimental |
-| **Distributed Proxy Cache** | No | N/A | N/A | N/A | N/A | N/A | 🚧 Planned |
+| Capability | RahulChaube Runtime | Node.js | Deno | npm | pnpm | Status |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Native TypeScript & JSX** | Yes | No | Yes | N/A | N/A | Implemented |
+| **Fast Process Boot (<20ms)** | Yes | No | Yes | N/A | N/A | Implemented Goal |
+| **Built-in Package Manager** | Yes | No | Yes | Yes | Yes | Implemented |
+| **Built-in Production Bundler** | Yes | No | No | No | No | Implemented |
+| **ASCII Dependency Graph (`graph`)** | Yes | No | No | No | No | Implemented |
+| **AI Error Assistant (`explain`)** | Yes | No | No | No | No | Implemented |
+| **Environment Doctor (`doctor`)** | Yes | No | No | No | No | Implemented |
+| **Node.js API Compatibility** | Yes | Native | Partial | N/A | N/A | Implemented |
+| **Standalone Binary Compiler** | Partial | Third-party | Yes | N/A | N/A | 🧪 Experimental |
+| **Distributed Proxy Cache** | No | N/A | N/A | N/A | N/A | 🚧 Planned |
 
 ---
 

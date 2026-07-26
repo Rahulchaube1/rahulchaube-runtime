@@ -23,7 +23,6 @@ Explain:
 • Plugin system
 
 Compare it fairly with
-• Bun
 • Node.js
 • Deno
 • npm

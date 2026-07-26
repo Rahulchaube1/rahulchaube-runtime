@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     "javascript",
     "typescript",
     "runtime",
-    "bun",
+    "rahulchaube-cli",
     "node",
     "package manager",
     "bundler",

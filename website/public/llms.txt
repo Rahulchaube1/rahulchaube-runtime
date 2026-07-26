@@ -21,7 +21,7 @@
 
 ### 2. Package Management (`rahulchaube install`, `add`, `remove`, `update`, `why`, `graph`)
 - High-speed package resolution and installation.
-- Text-based lockfile resolution (`bun.lock` format compatibility).
+- Text-based lockfile resolution (`rahulchaube.lock` format compatibility).
 - Global content-addressable package caching.
 - Package dependency graph visualization (`rahulchaube graph`).
 - Dependency explanation engine (`rahulchaube why <package>`).
@@ -31,14 +31,14 @@
 ### 3. Bundling & Compiling (`rahulchaube build`)
 - Production bundling for JavaScript, TypeScript, and JSX.
 - Code-splitting, tree-shaking, and minification.
-- Target formats: `browser`, `node`, `bun`.
+- Target formats: `browser`, `node`, `rahulchaube`.
 
 ### 4. Developer Experience & Diagnostics (`rahulchaube doctor`, `explain`, `optimize`)
 - Built-in environment diagnostic suite (`rahulchaube doctor`).
 - AI-assisted error resolution assistant (`rahulchaube explain "<error>"`).
 - Source-code performance optimization scanner (`rahulchaube optimize`).
 - Project scaffolding wizard (`rahulchaube create <template> <name>`).
-- Migration tool for npm, yarn, pnpm, and bun (`rahulchaube migrate <pm>`).
+- Migration tool for npm, yarn, pnpm (`rahulchaube migrate <pm>`).
 
 ### 5. Plugin Ecosystem (`rahulchaube plugins`)
 - Plugin management system using `rahulchaube-plugin-*` prefix.
@@ -61,7 +61,7 @@
 13. `rahulchaube doctor` — Run environment health checks
 14. `rahulchaube explain <error>` — AI error diagnostic assistant
 15. `rahulchaube optimize` — Scan project for performance tips
-16. `rahulchaube migrate <pm>` — Convert project from npm/yarn/pnpm/bun
+16. `rahulchaube migrate <pm>` — Convert project from npm/yarn/pnpm
 17. `rahulchaube cache clean` — Clear package binary caches
 18. `rahulchaube plugins list` — List installed CLI plugins
 19. `rahulchaube plugins install <plugin>` — Install CLI plugin

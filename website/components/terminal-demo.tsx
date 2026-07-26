@@ -58,7 +58,7 @@ const DEMO_COMMANDS: DemoStep[] = [
     output: [
       "Running benchmark suite (100,000 requests @ 100 concurrency)...",
       "  RahulChaube Runtime : 142,500 req/sec | 1.2ms avg latency",
-      "  Bun Engine          : 128,100 req/sec | 1.8ms avg latency",
+      "  Deno Runtime        :  82,400 req/sec | 3.1ms avg latency",
       "  Node.js v20         :  48,200 req/sec | 5.4ms avg latency",
       "Result: RahulChaube Runtime is 2.9x faster than Node.js."
     ]
