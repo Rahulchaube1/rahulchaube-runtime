@@ -79,8 +79,7 @@ function showHelp() {
   log.plain(`  ${colors.cyan("--json")}        ${colors.dim("Emit JSON output")}`);
   log.plain(`  ${colors.cyan("--no-color")}    ${colors.dim("Disable colors")}`);
   log.plain("");
-  log.plain(colors.dim("RahulChaube Runtime is an MIT-licensed fork of the Bun project."));
-  log.plain(colors.dim("Not affiliated with or endorsed by the Bun authors."));
+  log.plain(colors.dim("RahulChaube Runtime — High-performance developer platform."));
 }
 
 function parseFlags(argv: string[]): { args: string[]; flags: Record<string, unknown> } {
