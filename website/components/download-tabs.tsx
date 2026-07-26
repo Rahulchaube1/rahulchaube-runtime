@@ -43,9 +43,9 @@ export function DownloadTabs() {
   };
 
   return (
-    <div className="space-y-6 font-sans">
+    <div className="space-y-8 font-sans max-w-5xl mx-auto">
       {/* Tabs Bar */}
-      <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-9 gap-1.5 p-1.5 rounded-xl bg-zinc-100 dark:bg-[#0A1F1B] border border-zinc-200 dark:border-[#163830]">
+      <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-9 gap-2 p-2 rounded-2xl bg-zinc-100 dark:bg-[#0A1F1B] border border-zinc-200 dark:border-[#163830]">
         {tabs.map((t) => {
           const IconComp = t.icon;
           const isActive = selectedTab === t.id;
@@ -53,13 +53,13 @@ export function DownloadTabs() {
             <button
               key={t.id}
               onClick={() => setSelectedTab(t.id as any)}
-              className={`px-2 py-2 rounded-lg text-xs font-semibold transition-all flex items-center justify-center gap-1.5 ${
+              className={`px-3 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 ${
                 isActive
-                  ? "bg-[#2FA866] text-white shadow-sm"
+                  ? "bg-[#2FA866] text-white shadow-md"
                   : "text-zinc-600 dark:text-[#8B949E] hover:text-zinc-900 dark:hover:text-[#F0F6FC] hover:bg-zinc-200 dark:hover:bg-[#0E2923]"
               }`}
             >
-              <IconComp className="w-3.5 h-3.5 shrink-0" />
+              <IconComp className="w-4 h-4 shrink-0" />
               <span className="truncate">{t.label}</span>
             </button>
           );
@@ -67,29 +67,29 @@ export function DownloadTabs() {
       </div>
 
       {/* Command Box */}
-      <div className="bg-white dark:bg-[#0E2923] border border-zinc-200 dark:border-[#163830] rounded-xl p-6 shadow-xl relative">
-        <div className="flex items-center justify-between mb-3 text-xs text-zinc-600 dark:text-[#8B949E] font-mono">
-          <span className="flex items-center gap-2">
+      <div className="bg-white dark:bg-[#0E2923] border border-zinc-200 dark:border-[#163830] rounded-2xl p-8 shadow-xl relative space-y-4">
+        <div className="flex items-center justify-between text-xs sm:text-sm text-zinc-600 dark:text-[#8B949E] font-mono">
+          <span className="flex items-center gap-2.5 font-bold">
             <Terminal className="w-4 h-4 text-[#2FA866] dark:text-[#A8F05B]" />
             Installation command for <strong className="text-zinc-900 dark:text-[#F0F6FC]">{tabs.find((t) => t.id === selectedTab)?.label}</strong>
           </span>
           <button
             onClick={handleCopy}
-            className="flex items-center gap-1 text-[#2FA866] dark:text-[#A8F05B] hover:underline font-sans font-semibold transition-colors"
+            className="flex items-center gap-1.5 text-[#2FA866] dark:text-[#A8F05B] hover:underline font-sans font-bold transition-colors"
           >
-            {copied ? <Check className="w-3.5 h-3.5 text-[#6FCF63]" /> : <Copy className="w-3.5 h-3.5" />}
+            {copied ? <Check className="w-4 h-4 text-[#6FCF63]" /> : <Copy className="w-4 h-4" />}
             {copied ? "Copied!" : "Copy"}
           </button>
         </div>
 
         <CodeBlock code={currentCommand} lang="sh" />
 
-        <div className="mt-4 pt-4 border-t border-zinc-200 dark:border-[#163830] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-zinc-500 dark:text-[#8B949E]">
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-[#6FCF63] shrink-0" />
-            <span>Official release binaries verified with SHA-256 checksums.</span>
+        <div className="pt-4 border-t border-zinc-200 dark:border-[#163830] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs sm:text-sm text-zinc-500 dark:text-[#8B949E]">
+          <div className="flex items-center gap-2.5">
+            <ShieldCheck className="w-5 h-5 text-[#6FCF63] shrink-0" />
+            <span className="font-medium">Official release binaries verified with SHA-256 checksums.</span>
           </div>
-          <span className="font-mono text-[11px]">rahulchaube-runtime-v1.0.0</span>
+          <span className="font-mono text-xs font-bold">rahulchaube-runtime-v1.0.0</span>
         </div>
       </div>
     </div>

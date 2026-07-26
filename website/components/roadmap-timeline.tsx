@@ -53,44 +53,46 @@ export const roadmapData: RoadmapMilestone[] = [
 
 export function RoadmapTimeline() {
   return (
-    <div className="space-y-6 font-sans">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="space-y-8 font-sans">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         {roadmapData.map((item, idx) => (
           <div
             key={idx}
-            className={`p-5 rounded-xl border transition-all ${
+            className={`p-8 rounded-2xl border transition-all hover-card-lift flex flex-col justify-between space-y-6 ${
               item.status === "completed"
-                ? "bg-white dark:bg-[#1C2128] border-blue-500/30 shadow-sm"
-                : "bg-zinc-50 dark:bg-[#161B22] border-zinc-200 dark:border-[#30363D]"
+                ? "bg-white dark:bg-[#0E2923] border-[#2FA866]/40 shadow-md"
+                : "bg-zinc-50 dark:bg-[#0A1F1B] border-zinc-200 dark:border-[#163830]"
             }`}
           >
-            <div className="flex items-center justify-between mb-3 font-mono text-xs">
-              <span className="font-bold text-blue-600 dark:text-blue-400">{item.version}</span>
-              {item.status === "completed" ? (
-                <span className="px-2 py-0.5 rounded bg-green-500/10 text-green-600 dark:text-green-400 text-[10px] font-semibold border border-green-500/20 flex items-center gap-1">
-                  <CheckCircle2 className="w-3 h-3" /> Released
-                </span>
-              ) : item.status === "in-progress" ? (
-                <span className="px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[10px] font-semibold border border-amber-500/20 flex items-center gap-1">
-                  <Clock className="w-3 h-3" /> Active
-                </span>
-              ) : (
-                <span className="px-2 py-0.5 rounded bg-zinc-200 dark:bg-[#30363D] text-zinc-700 dark:text-[#8B949E] text-[10px] font-semibold flex items-center gap-1">
-                  <Sparkles className="w-3 h-3" /> Planned
-                </span>
-              )}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between font-mono text-xs sm:text-sm">
+                <span className="font-bold text-[#2FA866] dark:text-[#A8F05B]">{item.version}</span>
+                {item.status === "completed" ? (
+                  <span className="px-2.5 py-1 rounded-md bg-emerald-500/10 text-[#2FA866] dark:text-[#A8F05B] text-xs font-bold border border-[#2FA866]/30 flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3.5 h-3.5" /> Released
+                  </span>
+                ) : item.status === "in-progress" ? (
+                  <span className="px-2.5 py-1 rounded-md bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-bold border border-amber-500/30 flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5" /> Active
+                  </span>
+                ) : (
+                  <span className="px-2.5 py-1 rounded-md bg-zinc-200 dark:bg-[#163830] text-zinc-700 dark:text-[#8B949E] text-xs font-bold flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5" /> Planned
+                  </span>
+                )}
+              </div>
+
+              <h4 className="font-extrabold text-lg sm:text-xl text-zinc-900 dark:text-[#F0F6FC]">{item.title}</h4>
+
+              <ul className="space-y-2 text-sm sm:text-base text-zinc-600 dark:text-[#8B949E]">
+                {item.items.map((it, i) => (
+                  <li key={i} className="flex items-start gap-2">
+                    <span className="text-[#2FA866] dark:text-[#A8F05B] font-bold shrink-0 mt-0.5">•</span>
+                    <span className="leading-relaxed">{it}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
-
-            <h4 className="font-semibold text-sm text-zinc-900 dark:text-[#F0F6FC] mb-3">{item.title}</h4>
-
-            <ul className="space-y-1.5 text-xs text-zinc-600 dark:text-[#8B949E]">
-              {item.items.map((it, i) => (
-                <li key={i} className="flex items-start gap-1.5">
-                  <span className="text-blue-600 dark:text-blue-400 shrink-0">•</span>
-                  <span>{it}</span>
-                </li>
-              ))}
-            </ul>
           </div>
         ))}
       </div>

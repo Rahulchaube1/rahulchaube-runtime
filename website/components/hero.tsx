@@ -19,105 +19,105 @@ export function Hero() {
   };
 
   return (
-    <section className="relative overflow-hidden border-b border-zinc-200 dark:border-[#163830] py-16 lg:py-24 font-sans bg-[#F4F8F6] dark:bg-[#071A16] transition-colors duration-200">
+    <section className="relative overflow-hidden border-b border-zinc-200 dark:border-[#163830] py-20 lg:py-32 font-sans bg-[#F4F8F6] dark:bg-[#071A16] transition-colors duration-200 min-h-[85vh] flex items-center">
       {/* Background Subtle Grid */}
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
-      <div className="absolute top-0 right-1/4 -z-10 w-96 h-96 bg-emerald-500/10 dark:bg-emerald-600/10 rounded-full blur-3xl" />
+      <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:32px_32px]" />
+      <div className="absolute top-0 right-1/4 -z-10 w-[30rem] h-[30rem] bg-emerald-500/10 dark:bg-emerald-600/10 rounded-full blur-3xl" />
 
-      <div className="mx-auto max-w-6xl px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      <div className="site-container w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           
           {/* Left Column — Brand & CTAs */}
-          <div className="lg:col-span-7 text-left space-y-6">
+          <div className="lg:col-span-6 text-left space-y-8">
 
             {/* Title & Brand Logo */}
             <motion.div
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="space-y-3"
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="space-y-4"
             >
-              <div className="flex items-center gap-3">
-                <Logo className="w-12 h-12 shrink-0" />
-                <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-[#F0F6FC] leading-tight">
+              <div className="flex items-center gap-4">
+                <Logo className="w-14 h-14 sm:w-16 sm:h-16 shrink-0" />
+                <h1 className="text-display-fluid font-black tracking-tight text-zinc-900 dark:text-[#F0F6FC]">
                   {site.name}
                 </h1>
               </div>
-              <p className="text-lg sm:text-xl text-zinc-600 dark:text-[#8B949E] leading-relaxed max-w-xl font-medium">
+              <p className="text-body-fluid text-zinc-600 dark:text-[#8B949E] leading-relaxed max-w-2xl font-medium">
                 {site.tagline}
               </p>
             </motion.div>
 
             {/* Quick Install Bar */}
             <motion.div
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="bg-white dark:bg-[#0A1F1B] border border-zinc-300 dark:border-[#163830] rounded-xl p-3 flex items-center justify-between font-mono text-xs max-w-lg shadow-sm"
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="bg-white dark:bg-[#0A1F1B] border border-zinc-300 dark:border-[#163830] rounded-2xl p-4 flex items-center justify-between font-mono text-sm max-w-xl shadow-md"
             >
-              <div className="flex items-center gap-2 overflow-x-auto text-zinc-800 dark:text-[#F0F6FC] pr-2">
-                <span className="text-[#2FA866] shrink-0">$</span>
-                <span className="truncate">{installCmd}</span>
+              <div className="flex items-center gap-3 overflow-x-auto text-zinc-800 dark:text-[#F0F6FC] pr-3">
+                <span className="text-[#2FA866] shrink-0 font-bold">$</span>
+                <span className="truncate font-semibold">{installCmd}</span>
               </div>
               <button
                 onClick={handleCopy}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-[#0E2923] hover:bg-zinc-200 dark:hover:bg-[#163830] text-zinc-800 dark:text-[#F0F6FC] transition-colors shrink-0 font-sans font-semibold text-[11px]"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-zinc-100 dark:bg-[#0E2923] hover:bg-zinc-200 dark:hover:bg-[#163830] text-zinc-800 dark:text-[#F0F6FC] transition-colors shrink-0 font-sans font-bold text-xs"
               >
-                {copied ? <Check className="w-3.5 h-3.5 text-[#6FCF63]" /> : <Copy className="w-3.5 h-3.5" />}
+                {copied ? <Check className="w-4 h-4 text-[#6FCF63]" /> : <Copy className="w-4 h-4" />}
                 <span>{copied ? "Copied" : "Copy"}</span>
               </button>
             </motion.div>
 
             {/* Action Buttons */}
             <motion.div
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="flex flex-wrap items-center gap-3 pt-2"
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="flex flex-wrap items-center gap-4 pt-2"
             >
               <Button
                 onClick={() => (window.location.href = "/download")}
-                size="lg"
+                size="xl"
                 variant="primary"
               >
-                <Download className="w-4 h-4" /> Download v1.0.0
+                <Download className="w-5 h-5" /> Download v1.0.0
               </Button>
 
               <Button
                 variant="secondary"
-                size="lg"
+                size="xl"
                 onClick={() => (window.location.href = "/docs")}
               >
-                Documentation <ArrowRight className="w-4 h-4" />
+                Documentation <ArrowRight className="w-5 h-5" />
               </Button>
             </motion.div>
           </div>
 
           {/* Right Column — Interactive Terminal & Feature Cards */}
-          <div className="lg:col-span-5 relative space-y-4">
+          <div className="lg:col-span-6 relative space-y-6">
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
+              initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
             >
               <TerminalDemo />
             </motion.div>
 
             {/* Floating Badges */}
             <motion.div
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="grid grid-cols-3 gap-2 font-mono text-[11px]"
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="grid grid-cols-3 gap-3 font-mono text-xs"
             >
-              <div className="p-2.5 rounded-lg bg-white dark:bg-[#0A1F1B] border border-zinc-200 dark:border-[#163830] flex items-center justify-center gap-1.5 text-zinc-700 dark:text-[#8B949E]">
-                <Zap className="w-3.5 h-3.5 text-[#2FA866]" /> &lt;20ms
+              <div className="p-3.5 rounded-xl bg-white dark:bg-[#0A1F1B] border border-zinc-200 dark:border-[#163830] flex items-center justify-center gap-2 text-zinc-800 dark:text-[#F0F6FC] font-semibold shadow-sm">
+                <Zap className="w-4 h-4 text-[#2FA866]" /> &lt;20ms
               </div>
-              <div className="p-2.5 rounded-lg bg-white dark:bg-[#0A1F1B] border border-zinc-200 dark:border-[#163830] flex items-center justify-center gap-1.5 text-zinc-700 dark:text-[#8B949E]">
-                <Cpu className="w-3.5 h-3.5 text-[#6FCF63]" /> TS &amp; JSX
+              <div className="p-3.5 rounded-xl bg-white dark:bg-[#0A1F1B] border border-zinc-200 dark:border-[#163830] flex items-center justify-center gap-2 text-zinc-800 dark:text-[#F0F6FC] font-semibold shadow-sm">
+                <Cpu className="w-4 h-4 text-[#6FCF63]" /> TS &amp; JSX
               </div>
-              <div className="p-2.5 rounded-lg bg-white dark:bg-[#0A1F1B] border border-zinc-200 dark:border-[#163830] flex items-center justify-center gap-1.5 text-zinc-700 dark:text-[#8B949E]">
-                <Terminal className="w-3.5 h-3.5 text-[#A8F05B]" /> 21 CLI
+              <div className="p-3.5 rounded-xl bg-white dark:bg-[#0A1F1B] border border-zinc-200 dark:border-[#163830] flex items-center justify-center gap-2 text-zinc-800 dark:text-[#F0F6FC] font-semibold shadow-sm">
+                <Terminal className="w-4 h-4 text-[#A8F05B]" /> 21 CLI
               </div>
             </motion.div>
           </div>

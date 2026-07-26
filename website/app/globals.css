@@ -29,10 +29,55 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Fluid Typography Classes using clamp() */
+.text-display-fluid {
+  font-size: clamp(3.25rem, 5.5vw, 5.25rem);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+}
+
+.text-h1-fluid {
+  font-size: clamp(2.5rem, 4vw, 4.25rem);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+}
+
+.text-h2-fluid {
+  font-size: clamp(2.125rem, 3.25vw, 3.25rem);
+  line-height: 1.18;
+  letter-spacing: -0.025em;
+}
+
+.text-h3-fluid {
+  font-size: clamp(1.5rem, 2.25vw, 2.25rem);
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+}
+
+.text-body-fluid {
+  font-size: clamp(1.125rem, 1.4vw, 1.25rem);
+  line-height: 1.6;
+}
+
+.text-sub-fluid {
+  font-size: clamp(0.9375rem, 1vw, 1.0625rem);
+  line-height: 1.5;
+}
+
+/* Professional Container Utility (Max Width 1650px) */
+.site-container {
+  width: 100%;
+  max-width: 1650px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: clamp(1rem, 3vw, 4rem);
+  padding-right: clamp(1rem, 3vw, 4rem);
+}
+
 /* Custom Scrollbars */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
 }
 
 html:not(.dark) ::-webkit-scrollbar-track {
@@ -41,7 +86,7 @@ html:not(.dark) ::-webkit-scrollbar-track {
 
 html:not(.dark) ::-webkit-scrollbar-thumb {
   background: #C4D6CE;
-  border-radius: 4px;
+  border-radius: 5px;
 }
 
 html.dark ::-webkit-scrollbar-track {
@@ -50,10 +95,25 @@ html.dark ::-webkit-scrollbar-track {
 
 html.dark ::-webkit-scrollbar-thumb {
   background: #163830;
-  border-radius: 4px;
+  border-radius: 5px;
 }
 
 ::selection {
   background: #2FA866;
   color: #FFFFFF;
+}
+
+/* Hardware Accelerated Micro-Interactions & Focus States */
+@media (prefers-reduced-motion: no-preference) {
+  .hover-card-lift {
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .hover-card-lift:hover {
+    transform: translateY(-3px);
+  }
+}
+
+:focus-visible {
+  outline: 2px solid #2FA866;
+  outline-offset: 2px;
 }

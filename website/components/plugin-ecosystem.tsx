@@ -1,6 +1,6 @@
 "use client";
 
-import { Puzzle, ArrowRight, Check, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 const PLUGINS = [
   {
@@ -10,7 +10,7 @@ const PLUGINS = [
     downloads: "14.2k/mo"
   },
   {
-    name: "@rahulchaube/plugin-[#2FA866]",
+    name: "@rahulchaube/plugin-tailwind",
     description: "Native Tailwind CSS JIT compiler plugin for instant styling resolution.",
     version: "v1.0.0",
     downloads: "28.9k/mo"
@@ -31,40 +31,40 @@ const PLUGINS = [
 
 export function PluginEcosystem() {
   return (
-    <section className="mx-auto max-w-6xl px-4 py-20 font-sans border-t border-zinc-200 dark:border-[#163830]">
-      <div className="text-center max-w-2xl mx-auto mb-16">
-        <h2 className="text-3xl font-extrabold text-zinc-900 dark:text-[#F0F6FC] tracking-tight">
+    <section className="site-container py-24 lg:py-32 font-sans border-t border-zinc-200 dark:border-[#163830]">
+      <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
+        <h2 className="text-h2-fluid font-black text-zinc-900 dark:text-[#F0F6FC]">
           Plugin Ecosystem
         </h2>
-        <p className="mt-2 text-sm text-zinc-600 dark:text-[#8B949E]">
+        <p className="text-body-fluid text-zinc-600 dark:text-[#8B949E]">
           Extend RahulChaube Runtime capabilities with official plugins for frameworks, databases, and compilers.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {PLUGINS.map((plugin) => (
           <div
             key={plugin.name}
-            className="p-6 rounded-xl bg-white dark:bg-[#0E2923] border border-zinc-200 dark:border-[#163830] shadow-sm flex flex-col justify-between space-y-4 hover:border-[#2FA866]/50 transition-all"
+            className="p-8 rounded-2xl bg-white dark:bg-[#0E2923] border border-zinc-200 dark:border-[#163830] shadow-md flex flex-col justify-between space-y-6 hover-card-lift hover:border-[#2FA866]/60"
           >
-            <div className="space-y-2">
+            <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="font-mono text-xs font-bold text-zinc-900 dark:text-[#F0F6FC]">
+                <span className="font-mono text-sm sm:text-base font-bold text-zinc-900 dark:text-[#F0F6FC]">
                   {plugin.name}
                 </span>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-[#2FA866] dark:text-[#A8F05B] border border-[#2FA866]/20">
+                <span className="text-xs font-mono px-2.5 py-1 rounded-md bg-emerald-500/10 text-[#2FA866] dark:text-[#A8F05B] border border-[#2FA866]/30 font-semibold">
                   {plugin.version}
                 </span>
               </div>
-              <p className="text-xs text-zinc-600 dark:text-[#8B949E] leading-relaxed">
+              <p className="text-sm sm:text-base text-zinc-600 dark:text-[#8B949E] leading-relaxed">
                 {plugin.description}
               </p>
             </div>
 
-            <div className="flex items-center justify-between pt-2 border-t border-zinc-100 dark:border-[#163830] text-[11px] text-zinc-500 dark:text-[#8B949E]">
-              <span>Downloads: {plugin.downloads}</span>
-              <a href="/docs" className="text-[#2FA866] dark:text-[#A8F05B] font-semibold hover:underline flex items-center gap-1">
-                Docs <ArrowRight className="w-3 h-3" />
+            <div className="flex items-center justify-between pt-4 border-t border-zinc-100 dark:border-[#163830] text-xs sm:text-sm text-zinc-500 dark:text-[#8B949E]">
+              <span>Downloads: <strong className="text-zinc-900 dark:text-[#F0F6FC]">{plugin.downloads}</strong></span>
+              <a href="/docs" className="text-[#2FA866] dark:text-[#A8F05B] font-bold hover:underline flex items-center gap-1.5">
+                Docs <ArrowRight className="w-4 h-4" />
               </a>
             </div>
           </div>

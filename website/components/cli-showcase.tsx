@@ -11,26 +11,26 @@ const examples = [
 
 export function CliShowcase() {
   return (
-    <section className="mx-auto max-w-4xl px-4 py-20 font-sans border-t border-zinc-200 dark:border-[#30363D] transition-colors duration-200">
-      <div className="text-center max-w-2xl mx-auto mb-10">
-        <h2 className="text-3xl font-extrabold text-zinc-900 dark:text-[#F0F6FC]">Designed for Developer Happiness</h2>
-        <p className="mt-2 text-sm text-zinc-600 dark:text-[#8B949E]">
+    <section className="site-container py-24 lg:py-32 font-sans border-t border-zinc-200 dark:border-[#163830] transition-colors duration-200">
+      <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
+        <h2 className="text-h2-fluid font-black text-zinc-900 dark:text-[#F0F6FC]">Designed for Developer Flow</h2>
+        <p className="text-body-fluid text-zinc-600 dark:text-[#8B949E]">
           Every CLI command is scannable, informative, and outputs structured reports.
         </p>
       </div>
 
-      <div className="space-y-3 font-mono text-xs">
+      <div className="space-y-4 font-mono text-xs sm:text-sm max-w-4xl mx-auto">
         {examples.map((e) => (
-          <Card key={e.cmd} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-white dark:bg-[#161B22] border-zinc-200 dark:border-[#30363D] hover:border-zinc-300 dark:hover:border-[#484F58]">
-            <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-semibold shrink-0">
-              <Terminal className="w-4 h-4 text-zinc-500 dark:text-[#8B949E]" />
-              <span className="px-2.5 py-1 rounded-md bg-zinc-100 dark:bg-[#1C2128] border border-zinc-200 dark:border-[#30363D] text-zinc-900 dark:text-[#F0F6FC]">{e.cmd}</span>
+          <Card key={e.cmd} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl bg-white dark:bg-[#0E2923] border-zinc-200 dark:border-[#163830] hover:border-[#2FA866]/50 shadow-sm hover-card-lift">
+            <div className="flex items-center gap-3 text-blue-600 dark:text-blue-400 font-bold shrink-0">
+              <Terminal className="w-5 h-5 text-zinc-500 dark:text-[#8B949E]" />
+              <span className="px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-[#0A1F1B] border border-zinc-200 dark:border-[#163830] text-zinc-900 dark:text-[#F0F6FC]">{e.cmd}</span>
             </div>
-            <div className="flex items-center gap-2 text-zinc-600 dark:text-[#8B949E]">
+            <div className="flex items-center gap-2.5 text-zinc-600 dark:text-[#8B949E] font-semibold">
               {e.ok ? (
-                <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />
+                <CheckCircle2 className="w-5 h-5 text-[#2FA866] shrink-0" />
               ) : (
-                <AlertCircle className="w-4 h-4 text-amber-500 shrink-0" />
+                <AlertCircle className="w-5 h-5 text-amber-500 shrink-0" />
               )}
               <span>{e.out}</span>
             </div>
