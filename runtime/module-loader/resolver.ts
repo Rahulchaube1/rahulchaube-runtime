@@ -15,11 +15,13 @@ export interface ResolveResult {
 }
 
 export function resolveModule(specifier: string, parentPath: string): ResolveResult {
-  const isRelative = specifier.startsWith("./") || specifier.startsWith("../");
+  const isExplicitRelative = specifier.startsWith("./") || specifier.startsWith("../");
   const isAbsolute = specifier.startsWith("/") || specifier.match(/^[a-zA-Z]:[\\/]/);
+  const directPath = resolve(parentPath, specifier);
+  const isDirectFile = existsSync(directPath) && statSync(directPath).isFile();
 
-  if (isRelative || isAbsolute) {
-    const basePath = isAbsolute ? specifier : resolve(dirname(parentPath), specifier);
+  if (isExplicitRelative || isAbsolute || isDirectFile) {
+    const basePath = isAbsolute ? specifier : (isDirectFile ? directPath : resolve(dirname(parentPath), specifier));
 
     // 1. Direct file match
     if (existsSync(basePath) && statSync(basePath).isFile()) {

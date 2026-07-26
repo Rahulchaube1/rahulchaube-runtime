@@ -18,7 +18,7 @@ export function transpileSource(opts: TranspileOptions): TranspileResult {
   let code = opts.sourceText;
 
   // 1. Strip type annotations and interfaces using fast regex pass
-  code = code.replace(/:\s*(?:string|number|boolean|any|void|unknown|never|object|Record<[^>]+>|Array<[^>]+>|\w+)(?=[=,;\)\n\r])/g, "");
+  code = code.replace(/:\s*(?:string|number|boolean|any|void|unknown|never|object|Record<[^>]+>|Array<[^>]+>|\w+)(?=\s*[=,;\)\n\r])/g, "");
   code = code.replace(/interface\s+\w+\s*\{[\s\S]*?\}/g, "");
   code = code.replace(/type\s+\w+\s*=[\s\S]*?;/g, "");
 
