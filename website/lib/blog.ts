@@ -14,14 +14,14 @@ export const posts: Post[] = [
     slug: "introducing-rahulchaube-runtime",
     title: "Introducing RahulChaube Runtime",
     description:
-      "Why we built an independent, MIT-licensed JavaScript runtime and developer platform on top of a proven engine.",
+      "Why we built an independent JavaScript runtime and developer platform on top of a proven engine.",
     date: "2026-07-15",
     tags: ["announcement", "runtime"],
     category: "News",
     author: "RahulChaube Team",
     body: `# Introducing RahulChaube Runtime
 
-RahulChaube Runtime is an **independent, MIT-licensed fork** of Bun. It is not
+RahulChaube Runtime is an **independent software platform**. It is not
 the official Bun, and is not affiliated with or endorsed by the Bun authors.
 
 ## Goals

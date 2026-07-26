@@ -13,7 +13,7 @@ export const roadmapData: RoadmapMilestone[] = [
     title: "Runtime Core & Engine Integration",
     status: "completed",
     items: [
-      "Fork Bun engine and establish independent MIT identity",
+      "Establish independent engine architecture and brand identity",
       "Implement command surface dispatcher in TypeScript",
       "Scaffold basic CLI commands (run, install, build)",
     ],

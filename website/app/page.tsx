@@ -26,9 +26,9 @@ export default function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div className="p-6 rounded-2xl bg-white dark:bg-[#0E2923] border border-zinc-200 dark:border-[#163830] shadow-sm">
               <div className="text-2xl sm:text-3xl font-black text-zinc-900 dark:text-[#F0F6FC] flex items-center justify-center gap-2 font-mono">
-                <ShieldCheck className="w-6 h-6 text-[#A8F05B]" /> MIT
+                <ShieldCheck className="w-6 h-6 text-[#A8F05B]" /> v1.0
               </div>
-              <div className="text-sm text-zinc-600 dark:text-[#8B949E] mt-2 font-medium">Open Source License</div>
+              <div className="text-sm text-zinc-600 dark:text-[#8B949E] mt-2 font-medium">Enterprise Platform</div>
             </div>
             <div className="p-6 rounded-2xl bg-white dark:bg-[#0E2923] border border-zinc-200 dark:border-[#163830] shadow-sm">
               <div className="text-2xl sm:text-3xl font-black text-[#2FA866] dark:text-[#A8F05B] flex items-center justify-center gap-2 font-mono">

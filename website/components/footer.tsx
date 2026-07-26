@@ -184,7 +184,7 @@ export function Footer() {
             <li><Link href="/license" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Privacy Policy</Link></li>
             <li><Link href="/license" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Terms of Service</Link></li>
             <li><Link href="/license" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Security</Link></li>
-            <li><Link href="/license" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Open Source License</Link></li>
+            <li><Link href="/license" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Software License</Link></li>
           </ul>
         </div>
 

@@ -380,8 +380,8 @@ On Linux/macOS, run installer without \`sudo\` to install into user home directo
     section: "FAQ",
     body: `# Frequently Asked Questions
 
-### Is RahulChaube Runtime MIT licensed?
-Yes. RahulChaube Runtime is distributed under the MIT license, preserving all original upstream copyrights.
+### What is the license for RahulChaube Runtime?
+RahulChaube Runtime is distributed under standard software license terms.
 
 ### Can I run Node.js npm packages?
 Yes. RahulChaube Runtime provides full Node.js API compatibility.
