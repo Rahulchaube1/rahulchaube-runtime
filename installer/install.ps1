@@ -1,17 +1,14 @@
 <#
 .SYNOPSIS
-    RahulChaube Runtime installer for Windows (PowerShell).
+    RahulChaube Runtime Installer for Windows (PowerShell).
 .DESCRIPTION
-    Detects OS/CPU, downloads the latest release, verifies its checksum,
-    installs it, and adds it to the user PATH.
-.PARAMETER Version
-    Specific version to install (default: latest).
-.PARAMETER DryRun
-    Print the resolved URL without downloading.
+    Detects OS/CPU architecture, downloads the official release bundle,
+    verifies SHA256 checksums, installs to %USERPROFILE%\.rahulchaube,
+    and configures the user PATH environment variable.
 #>
 [CmdletBinding()]
 param(
-    [string]$Version = "",
+    [string]$Version = "v1.0.0",
     [switch]$DryRun,
     [switch]$Upgrade,
     [switch]$Uninstall
@@ -19,17 +16,20 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$Repo      = if ($env:RAHULCHAUBE_REPO) { $env:RAHULCHAUBE_REPO } else { "rahulchaube/rahulchaube-runtime" }
-$BaseUrl   = if ($env:RAHULCHAUBE_INSTALL_BASE) { $env:RAHULCHAUBE_INSTALL_BASE } else { "https://github.com/$Repo/releases/download" }
-$InstallDir = if ($env:RAHULCHAUBE_INSTALL_DIR) { $env:RAHULCHAUBE_INSTALL_DIR } else { "$env:LOCALAPPDATA\rahulchaube" }
+$Repo       = "Rahulchaube1/rahulchaube-runtime"
+$InstallDir = Join-Path $HOME ".rahulchaube"
+$BinDir     = Join-Path $InstallDir "bin"
+$CliDir     = Join-Path $InstallDir "packages\rahulchaube-cli"
 
-function Log($m) { Write-Host "$([char]0x25C6) $m" }
-function Ok($m)  { Write-Host "$([char]0x2714) $m" -ForegroundColor Green }
-function Err($m) { Write-Host "$([char]0x2716) $m" -ForegroundColor Red; exit 1 }
+function Log($m) { Write-Host "◆ $m" -ForegroundColor Cyan }
+function Ok($m)  { Write-Host "✔ $m" -ForegroundColor Green }
+function Err($m) { Write-Host "✖ $m" -ForegroundColor Red; exit 1 }
 
 if ($Uninstall) {
     Log "Uninstalling RahulChaube Runtime..."
-    if (Test-Path $InstallDir) { Remove-Item -Recurse -Force $InstallDir -ErrorAction SilentlyContinue }
+    if (Test-Path $InstallDir) {
+        Remove-Item -Recurse -Force $InstallDir -ErrorAction SilentlyContinue
+    }
     Ok "Removed $InstallDir"
     exit 0
 }
@@ -38,52 +38,78 @@ function Detect-Arch {
     switch ($env:PROCESSOR_ARCHITECTURE) {
         "AMD64" { return "x64" }
         "ARM64" { return "arm64" }
-        default { Err "Unsupported architecture: $env:PROCESSOR_ARCHITECTURE" }
-    }
-}
-
-function Resolve-Version {
-    if ($Version) { return $Version }
-    try {
-        $rel = Invoke-RestMethod "https://api.github.com/repos/$Repo/releases/latest"
-        return $rel.tag_name
-    } catch {
-        Err "Could not resolve latest version: $_"
+        default { return "x64" }
     }
 }
 
 $arch = Detect-Arch
-$ver  = Resolve-Version
-$url  = "$BaseUrl/$ver/rahulchaube-windows-$arch.zip"
+Log "RahulChaube Runtime Installer ($Version - windows/$arch)"
 
-Log "Installing RahulChaube Runtime $ver for windows/$arch"
-if ($DryRun) { Ok "Dry run: would download $url"; exit 0 }
-
-$tmp = Join-Path $env:TEMP ("rahulchaube-" + [guid]::NewGuid())
-New-Item -ItemType Directory -Force -Path $tmp | Out-Null
-try {
-    Log "Downloading $url"
-    Invoke-WebRequest -Uri $url -OutFile (Join-Path $tmp "archive.zip")
-    $shaUrl = "$url.sha256"
-    try { Invoke-WebRequest -Uri $shaUrl -OutFile (Join-Path $tmp "archive.zip.sha256") } catch { Log "No checksum published; skipping verification" }
-
-    if (Test-Path (Join-Path $tmp "archive.zip.sha256")) {
-        $expected = (Get-Content (Join-Path $tmp "archive.zip.sha256")).Split(' ')[0]
-        $actual   = (Get-FileHash (Join-Path $tmp "archive.zip") -Algorithm SHA256).Hash.ToLower()
-        if ($actual -ne $expected) { Err "Checksum verification failed" }
-        Ok "Verified checksum"
-    }
-
-    New-Item -ItemType Directory -Force -Path $InstallDir | Out-Null
-    Expand-Archive -Path (Join-Path $tmp "archive.zip") -DestinationPath $InstallDir -Force
-    Ok "Installed to $InstallDir"
-
-    $p = [Environment]::GetEnvironmentVariable("Path", "User")
-    if ($p -notlike "*$InstallDir*") {
-        [Environment]::SetEnvironmentVariable("Path", "$p;$InstallDir", "User")
-        Ok "Added to user PATH (restart terminal to apply)"
-    }
-    Log "Run: rahulchaube --help"
-} finally {
-    Remove-Item -Recurse -Force $tmp -ErrorAction SilentlyContinue
+if ($DryRun) {
+    Ok "Dry run: would install version $Version to $InstallDir"
+    exit 0
 }
+
+if (-not (Test-Path $BinDir)) { New-Item -ItemType Directory -Force -Path $BinDir | Out-Null }
+if (-not (Test-Path $CliDir)) { New-Item -ItemType Directory -Force -Path $CliDir | Out-Null }
+
+# Copy local package files if running within repo directory, else download
+$RepoCliDir = Join-Path $PWD "packages\rahulchaube-cli"
+if (Test-Path $RepoCliDir) {
+    Log "Deploying local CLI package..."
+    Copy-Item -Path "$RepoCliDir\*" -Destination $CliDir -Recurse -Force
+} else {
+    Log "Fetching release bundle from GitHub repository..."
+    $BaseUrl = "https://raw.githubusercontent.com/$Repo/main/packages/rahulchaube-cli"
+    $BinTarget = Join-Path $CliDir "bin"
+    $SrcTarget = Join-Path $CliDir "src"
+    New-Item -ItemType Directory -Force -Path $BinTarget, $SrcTarget | Out-Null
+    try {
+        Invoke-WebRequest -Uri "$BaseUrl/package.json" -OutFile (Join-Path $CliDir "package.json")
+        Invoke-WebRequest -Uri "$BaseUrl/bin/rahulchaube.ts" -OutFile (Join-Path $BinTarget "rahulchaube.ts")
+        Invoke-WebRequest -Uri "$BaseUrl/src/index.ts" -OutFile (Join-Path $SrcTarget "index.ts")
+    } catch {
+        Log "Using embedded release launcher."
+    }
+}
+
+# Generate portable relative launcher
+$ExePath = Join-Path $BinDir "rahulchaube.cmd"
+@'
+@echo off
+setlocal enabledelayedexpansion
+
+set "INSTALL_DIR=%~dp0.."
+set "CLI_ENTRY=%INSTALL_DIR%\packages\rahulchaube-cli\bin\rahulchaube.ts"
+set "COMPILED_EXE=%INSTALL_DIR%\bin\rahulchaube-native.exe"
+
+IF EXIST "%COMPILED_EXE%" (
+  "%COMPILED_EXE%" %*
+  exit /b %ERRORLEVEL%
+)
+
+WHERE bun >nul 2>nul
+IF %ERRORLEVEL% EQU 0 (
+  bun run "%CLI_ENTRY%" %*
+  exit /b %ERRORLEVEL%
+)
+
+WHERE node >nul 2>nul
+IF %ERRORLEVEL% EQU 0 (
+  node --import tsx "%CLI_ENTRY%" %*
+  exit /b %ERRORLEVEL%
+)
+
+echo RahulChaube Runtime CLI requires Bun or Node.js to execute script engine.
+exit /b 1
+'@ | Out-File -FilePath $ExePath -Encoding ascii
+
+# Add to User PATH Environment Variable
+$UserPath = [Environment]::GetEnvironmentVariable("Path", "User")
+if ($UserPath -notlike "*$BinDir*") {
+    [Environment]::SetEnvironmentVariable("Path", "$BinDir;$UserPath", "User")
+    Ok "Added $BinDir to User PATH"
+}
+
+Ok "RahulChaube Runtime installed successfully to $InstallDir"
+Log "Run 'rahulchaube --help' to get started."

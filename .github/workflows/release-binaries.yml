@@ -22,6 +22,9 @@ jobs:
           - target: rahulchaube-linux-arm64
             os: ubuntu-latest
             artifact_name: rahulchaube-linux-arm64.tar.gz
+          - target: rahulchaube-darwin-x64
+            os: macos-latest
+            artifact_name: rahulchaube-darwin-x64.tar.gz
           - target: rahulchaube-darwin-arm64
             os: macos-latest
             artifact_name: rahulchaube-darwin-arm64.tar.gz
@@ -35,31 +38,49 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Build CLI Package
+      - name: Build CLI Package & Typecheck
         run: |
           cd packages/rahulchaube-cli
           bun install
           bun run typecheck
 
-      - name: Generate Binary Archive & Checksum
+      - name: Bundle CLI Release Distribution & Generate Checksum
         shell: bash
         run: |
-          mkdir -p dist
-          echo "Building binary archive for ${{ matrix.target }}"
-          echo "RahulChaube Runtime Binary Placeholder for ${{ matrix.target }}" > dist/rahulchaube
+          mkdir -p dist/packages/rahulchaube-cli
+          mkdir -p dist/bin
+
+          cp -r packages/rahulchaube-cli/* dist/packages/rahulchaube-cli/
+
           if [[ "${{ matrix.os }}" == "windows-latest" ]]; then
-            7z a dist/${{ matrix.artifact_name }} dist/rahulchaube
+            cat << 'EOF' > dist/bin/rahulchaube.cmd
+          @echo off
+          setlocal enabledelayedexpansion
+          set "INSTALL_DIR=%~dp0.."
+          set "CLI_ENTRY=%INSTALL_DIR%\packages\rahulchaube-cli\bin\rahulchaube.ts"
+          bun run "%CLI_ENTRY%" %*
+          EOF
+            cd dist
+            7z a ${{ matrix.artifact_name }} bin packages
+            sha256sum ${{ matrix.artifact_name }} > ${{ matrix.artifact_name }}.sha256
           else
-            tar -czf dist/${{ matrix.artifact_name }} -C dist rahulchaube
+            cat << 'EOF' > dist/bin/rahulchaube
+          #!/usr/bin/env bash
+          INSTALL_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+          CLI_ENTRY="${INSTALL_DIR}/packages/rahulchaube-cli/bin/rahulchaube.ts"
+          exec bun run "${CLI_ENTRY}" "$@"
+          EOF
+            chmod +x dist/bin/rahulchaube
+            cd dist
+            tar -czf ${{ matrix.artifact_name }} bin packages
+            sha256sum ${{ matrix.artifact_name }} > ${{ matrix.artifact_name }}.sha256
           fi
-          cd dist
-          sha256sum ${{ matrix.artifact_name }} > ${{ matrix.artifact_name }}.sha256
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.target }}
-          path: dist/*
+          path: dist/*.tar.gz* dist/*.zip*
 
   create-release:
     needs: build-binaries
@@ -72,7 +93,7 @@ jobs:
         with:
           path: release-assets
 
-      - name: Create GitHub Release
+      - name: Create GitHub Release with Auto Changelog
         uses: softprops/action-gh-release@v2
         with:
           files: release-assets/**/*
