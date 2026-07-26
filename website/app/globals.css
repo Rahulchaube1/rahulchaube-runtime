@@ -3,12 +3,15 @@
 @tailwind utilities;
 
 :root {
-  --font-sans: "Geist", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-mono: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+  --font-sora: "Sora", sans-serif;
+  --font-space-grotesk: "Space Grotesk", sans-serif;
+  --font-inter: "Inter", sans-serif;
+  --font-geist-mono: "Geist Mono", monospace;
 }
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 /* Light Mode Defaults */
@@ -24,44 +27,82 @@ html.dark body {
 }
 
 body {
-  font-family: var(--font-sans);
+  font-family: var(--font-inter), Inter, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Typography Family Classes */
+.font-hero {
+  font-family: var(--font-sora), Sora, sans-serif;
+}
+
+.font-title {
+  font-family: var(--font-space-grotesk), "Space Grotesk", sans-serif;
+}
+
+.font-sans {
+  font-family: var(--font-inter), Inter, sans-serif;
+}
+
+.font-mono {
+  font-family: var(--font-geist-mono), "Geist Mono", monospace;
 }
 
 /* Fluid Typography Classes using clamp() */
 .text-display-fluid {
-  font-size: clamp(3.25rem, 5.5vw, 5.25rem);
-  line-height: 1.08;
+  font-family: var(--font-sora), Sora, sans-serif;
+  font-size: clamp(2.25rem, 5vw, 5.25rem);
+  line-height: 1.1;
   letter-spacing: -0.035em;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .text-h1-fluid {
-  font-size: clamp(2.5rem, 4vw, 4.25rem);
+  font-family: var(--font-sora), Sora, sans-serif;
+  font-size: clamp(2rem, 3.8vw, 4.25rem);
   line-height: 1.12;
   letter-spacing: -0.03em;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .text-h2-fluid {
-  font-size: clamp(2.125rem, 3.25vw, 3.25rem);
-  line-height: 1.18;
+  font-family: var(--font-space-grotesk), "Space Grotesk", sans-serif;
+  font-size: clamp(1.75rem, 3vw, 3.25rem);
+  line-height: 1.2;
   letter-spacing: -0.025em;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .text-h3-fluid {
-  font-size: clamp(1.5rem, 2.25vw, 2.25rem);
-  line-height: 1.25;
+  font-family: var(--font-space-grotesk), "Space Grotesk", sans-serif;
+  font-size: clamp(1.25rem, 2vw, 2.25rem);
+  line-height: 1.28;
   letter-spacing: -0.015em;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .text-body-fluid {
-  font-size: clamp(1.125rem, 1.4vw, 1.25rem);
+  font-family: var(--font-inter), Inter, sans-serif;
+  font-size: clamp(1rem, 1.3vw, 1.25rem);
   line-height: 1.6;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .text-sub-fluid {
-  font-size: clamp(0.9375rem, 1vw, 1.0625rem);
+  font-family: var(--font-inter), Inter, sans-serif;
+  font-size: clamp(0.875rem, 1vw, 1.0625rem);
   line-height: 1.5;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 /* Professional Container Utility (Max Width 1650px) */
@@ -72,12 +113,21 @@ body {
   margin-right: auto;
   padding-left: clamp(1rem, 3vw, 4rem);
   padding-right: clamp(1rem, 3vw, 4rem);
+  box-sizing: border-box;
+}
+
+/* Mobile Word Truncation & Icon Box Alignment Protections */
+@media (max-width: 640px) {
+  h1, h2, h3, h4, p, span, div {
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
 }
 
 /* Custom Scrollbars */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
 }
 
 html:not(.dark) ::-webkit-scrollbar-track {
@@ -86,7 +136,7 @@ html:not(.dark) ::-webkit-scrollbar-track {
 
 html:not(.dark) ::-webkit-scrollbar-thumb {
   background: #C4D6CE;
-  border-radius: 5px;
+  border-radius: 4px;
 }
 
 html.dark ::-webkit-scrollbar-track {
@@ -95,7 +145,7 @@ html.dark ::-webkit-scrollbar-track {
 
 html.dark ::-webkit-scrollbar-thumb {
   background: #163830;
-  border-radius: 5px;
+  border-radius: 4px;
 }
 
 ::selection {

@@ -1,8 +1,33 @@
 import type { Metadata } from "next";
+import { Sora, Space_Grotesk, Inter, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { site } from "@/lib/site";
+
+const sora = Sora({
+  subsets: ["latin"],
+  variable: "--font-sora",
+  display: "swap",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-space-grotesk",
+  display: "swap",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const geistMono = Geist_Mono({
+  subsets: ["latin"],
+  variable: "--font-geist-mono",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.domain),
@@ -61,7 +86,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   };
 
   return (
-    <html lang="en" suppressHydrationWarning className="dark">
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`dark ${sora.variable} ${spaceGrotesk.variable} ${inter.variable} ${geistMono.variable}`}
+    >
       <head>
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
@@ -73,9 +102,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="bg-[#F4F8F6] dark:bg-[#071A16] text-zinc-900 dark:text-[#F0F6FC] antialiased selection:bg-[#2FA866] selection:text-white font-sans transition-colors duration-200">
+      <body className="bg-[#F4F8F6] dark:bg-[#071A16] text-zinc-900 dark:text-[#F0F6FC] antialiased selection:bg-[#2FA866] selection:text-white font-sans transition-colors duration-200 overflow-x-hidden w-full min-w-[320px]">
         <Navbar />
-        <main className="min-h-[70vh]">{children}</main>
+        <main className="min-h-[70vh] w-full overflow-x-hidden">{children}</main>
         <Footer />
       </body>
     </html>
