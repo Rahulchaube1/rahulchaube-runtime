@@ -52,6 +52,13 @@ mkdir -p "\${CLI_DIR}"
 
 if [ -d "packages/rahulchaube-cli" ]; then
   cp -r packages/rahulchaube-cli/* "\${CLI_DIR}/" 2>/dev/null || true
+else
+  echo -e "\${CYAN}Downloading RahulChaube Runtime release bundle...\${RESET}"
+  RELEASE_URL="https://raw.githubusercontent.com/Rahulchaube1/rahulchaube-runtime/main/packages/rahulchaube-cli"
+  mkdir -p "\${CLI_DIR}/bin" "\${CLI_DIR}/src"
+  curl -fsSL "\${RELEASE_URL}/package.json" -o "\${CLI_DIR}/package.json" 2>/dev/null || true
+  curl -fsSL "\${RELEASE_URL}/bin/rahulchaube.ts" -o "\${CLI_DIR}/bin/rahulchaube.ts" 2>/dev/null || true
+  curl -fsSL "\${RELEASE_URL}/src/index.ts" -o "\${CLI_DIR}/src/index.ts" 2>/dev/null || true
 fi
 
 cat << 'EOF' > "\${BIN_DIR}/rahulchaube"
