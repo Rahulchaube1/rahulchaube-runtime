@@ -13,71 +13,74 @@ import { VirtualFS } from "../../../../runtime/fs/virtual-fs.ts";
 import { transpileSource } from "../../../../runtime/compiler/transpiler.ts";
 import { runScript } from "../../../../runtime/engine/runner.ts";
 import { formatCodeFrame } from "../../../../runtime/diagnostics/errors.ts";
+import { FileWatcher } from "../../../../runtime/watcher/watcher.ts";
 import { runEngine } from "../engine/bun.ts";
 
 export async function run(args: string[], flags: Record<string, unknown>): Promise<number> {
   const target = args[0];
   if (!target) {
     log.error("No script or file target specified.");
-    log.info("Usage: rahulchaube run <file.ts | script>");
+    log.info("Usage: rahulchaube run <file.ts | script> [--watch]");
     return 1;
   }
+
+  const isWatch = Boolean(flags.watch || flags.w);
 
   // If target is a local file, run native pipeline
   const absPath = resolve(process.cwd(), target);
   if (existsSync(absPath) || target.endsWith(".ts") || target.endsWith(".js") || target.endsWith(".tsx")) {
     log.debug(`[Stage 1: CLI] Subcommand 'run' received target: ${colors.bold(target)}`);
 
-    try {
-      // Stage 2: Module Resolver
-      log.debug(`[Stage 2: Resolver] Resolving module specifier '${target}'...`);
-      const res = resolveModule(target, process.cwd());
-      log.debug(`[Stage 2: Resolver] Resolved -> ${res.resolvedPath} (ext: ${res.extension})`);
+    const executeOnce = async (): Promise<number> => {
+      try {
+        const res = resolveModule(target, process.cwd());
+        const vfs = new VirtualFS();
+        const rawText = vfs.readFile(res.resolvedPath);
 
-      // Stage 3: Virtual FS
-      log.debug(`[Stage 3: Virtual FS] Reading file into memory cache...`);
-      const vfs = new VirtualFS();
-      const rawText = vfs.readFile(res.resolvedPath);
-      log.debug(`[Stage 3: Virtual FS] Read ${rawText.length} bytes from disk`);
+        const loader = new ModuleLoader();
+        const loaded = loader.load(res.resolvedPath);
 
-      // Stage 4: Module Loader
-      log.debug(`[Stage 4: Loader] Loading dependency graph and checking circular imports...`);
-      const loader = new ModuleLoader();
-      const loaded = loader.load(res.resolvedPath);
-      log.debug(`[Stage 4: Loader] Loaded module graph with ${loaded.dependencies.length} dependencies`);
-
-      // Stage 5: Transpiler
-      log.debug(`[Stage 5: Transpiler] Stripping TypeScript annotations and comments...`);
-      const transpiled = transpileSource({
-        fileName: res.resolvedPath,
-        sourceText: loaded.sourceText,
-        minify: Boolean(flags.minify),
-      });
-      log.debug(`[Stage 5: Transpiler] Compiled code size: ${transpiled.code.length} characters`);
-
-      // Stage 6: Runner
-      log.debug(`[Stage 6: Runner] Executing script engine...`);
-      const result = await runScript(res.resolvedPath);
-
-      if (!result.success && result.error) {
-        // Stage 7: Diagnostics
-        log.debug(`[Stage 7: Diagnostics] Formatting error code frame...`);
-        const diag = formatCodeFrame({
-          filePath: res.resolvedPath,
-          line: 1,
-          column: 1,
+        transpileSource({
+          fileName: res.resolvedPath,
           sourceText: loaded.sourceText,
-          message: result.error.message,
+          minify: Boolean(flags.minify),
         });
-        log.plain(diag);
+
+        const result = await runScript(res.resolvedPath);
+
+        if (!result.success && result.error) {
+          const diag = formatCodeFrame({
+            filePath: res.resolvedPath,
+            line: 1,
+            column: 1,
+            sourceText: loaded.sourceText,
+            message: result.error.message,
+          });
+          log.plain(diag);
+          return 1;
+        }
+
+        return 0;
+      } catch (err) {
+        log.error(`[Stage 7: Diagnostics] Execution failed: ${(err as Error).message}`);
         return 1;
       }
+    };
 
-      return 0;
-    } catch (err) {
-      log.error(`[Stage 7: Diagnostics] Execution failed: ${(err as Error).message}`);
-      return 1;
+    const exitCode = await executeOnce();
+
+    if (isWatch) {
+      log.info(`${colors.cyan(icons.info)} Watch mode active. Monitoring file changes…`);
+      const watcher = new FileWatcher(absPath, async (_evt, filename) => {
+        log.info(`${colors.yellow(icons.lightning)} Change detected in ${filename || target}. Re-executing…`);
+        await executeOnce();
+      });
+      watcher.start();
+      // Keep process alive in watch mode
+      return new Promise(() => {});
     }
+
+    return exitCode;
   }
 
   // Fallback for package.json scripts
