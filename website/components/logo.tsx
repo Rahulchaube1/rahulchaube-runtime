@@ -1,12 +1,22 @@
-import Image from "next/image";
-
 export function Logo({
   className = "w-9 h-9",
   showWordmark = false,
+  useFullBanner = false,
 }: {
   className?: string;
   showWordmark?: boolean;
+  useFullBanner?: boolean;
 }) {
+  if (useFullBanner) {
+    return (
+      <img
+        src="/rahulchaube-runtime.png"
+        alt="RahulChaube Runtime"
+        className={`h-9 w-auto object-contain ${className}`}
+      />
+    );
+  }
+
   return (
     <div className="inline-flex items-center gap-3 select-none">
       <img
