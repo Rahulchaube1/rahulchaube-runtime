@@ -21,9 +21,26 @@ if (-not (Test-Path $BinDir)) {
 }
 
 $ExePath = Join-Path $BinDir "rahulchaube.cmd"
+$CliPath = Join-Path $PWD "packages\rahulchaube-cli\bin\rahulchaube.ts"
+
 @'
 @echo off
-echo RahulChaube Runtime v1.0.0
+setlocal enabledelayedexpansion
+
+WHERE bun >nul 2>nul
+IF %ERRORLEVEL% EQU 0 (
+  bun run "C:\Users\Rahul Chaube\Downloads\runtime\packages\rahulchaube-cli\bin\rahulchaube.ts" %*
+  exit /b %ERRORLEVEL%
+)
+
+WHERE node >nul 2>nul
+IF %ERRORLEVEL% EQU 0 (
+  node --import tsx "C:\Users\Rahul Chaube\Downloads\runtime\packages\rahulchaube-cli\bin\rahulchaube.ts" %*
+  exit /b %ERRORLEVEL%
+)
+
+echo RahulChaube Runtime CLI launcher requires Bun or Node.js to execute.
+exit /b 1
 '@ | Out-File -FilePath $ExePath -Encoding ascii
 
 # Add to User PATH Environment Variable if not already present
@@ -35,7 +52,6 @@ if ($UserPath -notlike "*$BinDir*") {
 
 Write-Host ""
 Write-Host "[OK] RahulChaube Runtime installed successfully!" -ForegroundColor Green
-Write-Host "Restart your PowerShell terminal or run: \$env:Path += ';$BinDir'" -ForegroundColor Gray
 Write-Host "Run 'rahulchaube --help' to get started." -ForegroundColor White
 `;
 

@@ -50,7 +50,15 @@ mkdir -p "\${BIN_DIR}"
 
 cat << 'EOF' > "\${BIN_DIR}/rahulchaube"
 #!/usr/bin/env bash
-echo "RahulChaube Runtime v1.0.0"
+# RahulChaube Runtime CLI Launcher
+if command -v bun >/dev/null 2>&1; then
+  exec bun run "\${HOME}/.rahulchaube/packages/rahulchaube-cli/bin/rahulchaube.ts" "\$@"
+elif command -v node >/dev/null 2>&1; then
+  exec node --import tsx "\${HOME}/.rahulchaube/packages/rahulchaube-cli/bin/rahulchaube.ts" "\$@"
+else
+  echo "RahulChaube Runtime CLI launcher requires Bun or Node.js to execute."
+  exit 1
+fi
 EOF
 chmod +x "\${BIN_DIR}/rahulchaube"
 

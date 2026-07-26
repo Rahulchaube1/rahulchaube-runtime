@@ -14,7 +14,7 @@ RESET="\\033[0m"
 
 echo -e "\${CYAN}\${BOLD}"
 echo "RahulChaube Runtime Installer"
-echo "Next-generation JS/TS runtime & developer platform"
+echo "High-performance JS/TS runtime & developer platform"
 echo -e "\${RESET}"
 
 # Detect OS
@@ -23,7 +23,7 @@ case "\$OS" in
   linux*)  PLATFORM="linux" ;;
   darwin*) PLATFORM="darwin" ;;
   *)
-    echo -e "\${RED}Error: Unsupported operating system '\$OS'. RahulChaube Runtime supports Linux and macOS.\${RESET}"
+    echo -e "\${RED}Error: Unsupported operating system '\$OS'. Supported: Linux, macOS.\${RESET}"
     exit 1
     ;;
 esac
@@ -48,24 +48,20 @@ echo -e "Installing version: \${BOLD}\${VERSION}\${RESET}"
 
 mkdir -p "\${BIN_DIR}"
 
-DOWNLOAD_URL="https://github.com/Rahulchaube1/rahulchaube-runtime/releases/download/\${VERSION}/rahulchaube-\${PLATFORM}-\${ARCH}.tar.gz"
-
-echo -e "\${CYAN}Downloading RahulChaube Runtime binary...\${RESET}"
-
-# Create CLI shim script
 cat << 'EOF' > "\${BIN_DIR}/rahulchaube"
 #!/usr/bin/env bash
 # RahulChaube Runtime CLI Launcher
-if command -v node >/dev/null 2>&1; then
-  exec node "$@"
+if command -v bun >/dev/null 2>&1; then
+  exec bun run "\${HOME}/.rahulchaube/packages/rahulchaube-cli/bin/rahulchaube.ts" "\$@"
+elif command -v node >/dev/null 2>&1; then
+  exec node --import tsx "\${HOME}/.rahulchaube/packages/rahulchaube-cli/bin/rahulchaube.ts" "\$@"
 else
-  echo "RahulChaube Runtime execution engine ready."
-  exit 0
+  echo "RahulChaube Runtime CLI launcher requires Bun or Node.js to execute."
+  exit 1
 fi
 EOF
 chmod +x "\${BIN_DIR}/rahulchaube"
 
-# Add to PATH shell configs
 SHELL_NAME="\$(basename "\${SHELL:-bash}")"
 PROFILE=""
 
@@ -94,11 +90,8 @@ fi
 
 echo ""
 echo -e "\${GREEN}\${BOLD}[OK] RahulChaube Runtime installed successfully!\${RESET}"
-echo ""
-echo -e "To start using it right now, run:"
 echo -e "  \${BOLD}export PATH=\"\${BIN_DIR}:\$PATH\"\${RESET}"
 echo -e "  \${BOLD}rahulchaube --help\${RESET}"
-echo ""
 `;
 
 export function GET() {
