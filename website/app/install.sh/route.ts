@@ -42,21 +42,33 @@ esac
 VERSION="v1.0.0"
 INSTALL_DIR="\${HOME}/.rahulchaube"
 BIN_DIR="\${INSTALL_DIR}/bin"
+CLI_DIR="\${INSTALL_DIR}/packages/rahulchaube-cli"
 
 echo -e "Detected: \${BOLD}\${PLATFORM}-\${ARCH}\${RESET}"
 echo -e "Installing version: \${BOLD}\${VERSION}\${RESET}"
 
 mkdir -p "\${BIN_DIR}"
+mkdir -p "\${CLI_DIR}"
+
+if [ -d "packages/rahulchaube-cli" ]; then
+  cp -r packages/rahulchaube-cli/* "\${CLI_DIR}/" 2>/dev/null || true
+fi
 
 cat << 'EOF' > "\${BIN_DIR}/rahulchaube"
 #!/usr/bin/env bash
-# RahulChaube Runtime CLI Launcher
-if command -v bun >/dev/null 2>&1; then
-  exec bun run "\${HOME}/.rahulchaube/packages/rahulchaube-cli/bin/rahulchaube.ts" "\$@"
+# RahulChaube Runtime Portable CLI Launcher
+INSTALL_DIR="\$(cd "\$(dirname "\$0")/.." && pwd)"
+CLI_ENTRY="\${INSTALL_DIR}/packages/rahulchaube-cli/bin/rahulchaube.ts"
+COMPILED_EXE="\${INSTALL_DIR}/bin/rahulchaube-native"
+
+if [ -x "\${COMPILED_EXE}" ]; then
+  exec "\${COMPILED_EXE}" "\$@"
+elif command -v bun >/dev/null 2>&1; then
+  exec bun run "\${CLI_ENTRY}" "\$@"
 elif command -v node >/dev/null 2>&1; then
-  exec node --import tsx "\${HOME}/.rahulchaube/packages/rahulchaube-cli/bin/rahulchaube.ts" "\$@"
+  exec node --import tsx "\${CLI_ENTRY}" "\$@"
 else
-  echo "RahulChaube Runtime CLI launcher requires Bun or Node.js to execute."
+  echo "RahulChaube Runtime CLI requires Bun or Node.js to execute script engine."
   exit 1
 fi
 EOF

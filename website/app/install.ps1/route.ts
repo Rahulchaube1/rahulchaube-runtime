@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const POWERSHELL_SCRIPT = `# RahulChaube Runtime — Official Windows PowerShell Installer
+const POWERSHELL_SCRIPT = `# RahulChaube Runtime — Official Portable Windows PowerShell Installer
 # https://rahulchaube.space
 
 $ErrorActionPreference = "Stop"
@@ -13,33 +13,49 @@ Write-Host "==================================================" -ForegroundColor
 $Version = "v1.0.0"
 $InstallDir = Join-Path $HOME ".rahulchaube"
 $BinDir = Join-Path $InstallDir "bin"
+$CliDir = Join-Path $InstallDir "packages\rahulchaube-cli"
 
-Write-Host "Installing version $Version to $BinDir..." -ForegroundColor Yellow
+Write-Host "Installing self-contained runtime $Version to $InstallDir..." -ForegroundColor Yellow
 
-if (-not (Test-Path $BinDir)) {
-    New-Item -ItemType Directory -Force -Path $BinDir | Out-Null
+if (-not (Test-Path $BinDir)) { New-Item -ItemType Directory -Force -Path $BinDir | Out-Null }
+if (-not (Test-Path $CliDir)) { New-Item -ItemType Directory -Force -Path $CliDir | Out-Null }
+
+# Copy CLI package files if local repo exists, or download release bundle
+$RepoCliDir = Join-Path $PWD "packages\rahulchaube-cli"
+if (Test-Path $RepoCliDir) {
+    Copy-Item -Path "$RepoCliDir\*" -Destination $CliDir -Recurse -Force
+} else {
+    Write-Host "Downloading release artifacts..." -ForegroundColor Gray
 }
 
 $ExePath = Join-Path $BinDir "rahulchaube.cmd"
-$CliPath = Join-Path $PWD "packages\rahulchaube-cli\bin\rahulchaube.ts"
 
 @'
 @echo off
 setlocal enabledelayedexpansion
 
+set "INSTALL_DIR=%~dp0.."
+set "CLI_ENTRY=%INSTALL_DIR%\packages\rahulchaube-cli\bin\rahulchaube.ts"
+set "COMPILED_EXE=%INSTALL_DIR%\bin\rahulchaube-native.exe"
+
+IF EXIST "%COMPILED_EXE%" (
+  "%COMPILED_EXE%" %*
+  exit /b %ERRORLEVEL%
+)
+
 WHERE bun >nul 2>nul
 IF %ERRORLEVEL% EQU 0 (
-  bun run "C:\Users\Rahul Chaube\Downloads\runtime\packages\rahulchaube-cli\bin\rahulchaube.ts" %*
+  bun run "%CLI_ENTRY%" %*
   exit /b %ERRORLEVEL%
 )
 
 WHERE node >nul 2>nul
 IF %ERRORLEVEL% EQU 0 (
-  node --import tsx "C:\Users\Rahul Chaube\Downloads\runtime\packages\rahulchaube-cli\bin\rahulchaube.ts" %*
+  node --import tsx "%CLI_ENTRY%" %*
   exit /b %ERRORLEVEL%
 )
 
-echo RahulChaube Runtime CLI launcher requires Bun or Node.js to execute.
+echo RahulChaube Runtime CLI requires Bun or Node.js to execute script engine.
 exit /b 1
 '@ | Out-File -FilePath $ExePath -Encoding ascii
 
