@@ -19,7 +19,8 @@ $ErrorActionPreference = "Stop"
 $Repo       = "Rahulchaube1/rahulchaube-runtime"
 $InstallDir = Join-Path $HOME ".rahulchaube"
 $BinDir     = Join-Path $InstallDir "bin"
-$CliDir     = Join-Path $InstallDir "packages\rahulchaube-cli"
+$PackagesDir = Join-Path $InstallDir "packages"
+$CliDir = Join-Path $PackagesDir "rahulchaube-cli"
 
 function Log($m) { Write-Host "◆ $m" -ForegroundColor Cyan }
 function Ok($m)  { Write-Host "✔ $m" -ForegroundColor Green }
@@ -54,7 +55,8 @@ if (-not (Test-Path $BinDir)) { New-Item -ItemType Directory -Force -Path $BinDi
 if (-not (Test-Path $CliDir)) { New-Item -ItemType Directory -Force -Path $CliDir | Out-Null }
 
 # Copy local package files if running within repo directory, else download
-$RepoCliDir = Join-Path $PWD "packages\rahulchaube-cli"
+$RepoPackages = Join-Path $PWD "packages"
+$RepoCliDir = Join-Path $RepoPackages "rahulchaube-cli"
 if (Test-Path $RepoCliDir) {
     Log "Deploying local CLI package..."
     Copy-Item -Path "$RepoCliDir\*" -Destination $CliDir -Recurse -Force

@@ -13,17 +13,19 @@ Write-Host "==================================================" -ForegroundColor
 $Version = "v1.0.0"
 $InstallDir = Join-Path $HOME ".rahulchaube"
 $BinDir = Join-Path $InstallDir "bin"
-$CliDir = Join-Path $InstallDir "packages\rahulchaube-cli"
+$PackagesDir = Join-Path $InstallDir "packages"
+$CliDir = Join-Path $PackagesDir "rahulchaube-cli"
 
 Write-Host "Installing self-contained runtime $Version to $InstallDir..." -ForegroundColor Yellow
 
 if (-not (Test-Path $BinDir)) { New-Item -ItemType Directory -Force -Path $BinDir | Out-Null }
 if (-not (Test-Path $CliDir)) { New-Item -ItemType Directory -Force -Path $CliDir | Out-Null }
 
-$RepoCliDir = Join-Path $PWD "packages\rahulchaube-cli"
+$RepoPackages = Join-Path $PWD "packages"
+$RepoCliDir = Join-Path $RepoPackages "rahulchaube-cli"
 if (Test-Path $RepoCliDir) {
     Write-Host "[OK] Copying CLI engine from local distribution..." -ForegroundColor Gray
-    Copy-Item -Path "$RepoCliDir\*" -Destination $CliDir -Recurse -Force
+    Copy-Item -Path "$RepoCliDir\\*" -Destination $CliDir -Recurse -Force
 } else {
     Write-Host "[OK] Downloading RahulChaube Runtime release bundle..." -ForegroundColor Gray
     $ReleaseUrl = "https://raw.githubusercontent.com/Rahulchaube1/rahulchaube-runtime/main/packages/rahulchaube-cli"
