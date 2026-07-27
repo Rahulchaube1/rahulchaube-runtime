@@ -162,10 +162,9 @@ export function transpileSource(opts: TranspileOptions): TranspileResult {
   // ──────────────────────────────────────────────────────────────
   // Pass 11: ESM exports → CJS exports.*
   // ──────────────────────────────────────────────────────────────
-  // export * from "mod" — not yet implemented
+  // export * from "mod" -> Object.assign(exports, require("mod"))
   src = src.replace(/^\s*export\s+\*\s+from\s+(['"][^'"]+['"])\s*;?\s*$/gm, (_m, mod) => {
-    warnings.push(`export * from ${mod} is not yet supported and was dropped`);
-    return `/* export * from ${mod} — not supported */`;
+    return `Object.assign(exports, require(${mod}));`;
   });
   // export default expr
   src = src.replace(/^\s*export\s+default\s+/gm, "exports.default = ");
@@ -200,6 +199,9 @@ export function transpileSource(opts: TranspileOptions): TranspileResult {
     return `class ${name}`;
   });
 
+  // Strip TypeScript visibility & property modifiers
+  src = src.replace(/\b(public|private|protected|override|readonly)\s+/g, "");
+
   // ──────────────────────────────────────────────────────────────
   // Pass 12: TypeScript type annotation stripping
   // IMPORTANT: Run AFTER enum transform so enum object values aren't stripped
@@ -218,9 +220,8 @@ export function transpileSource(opts: TranspileOptions): TranspileResult {
   // Remove generic type parameters on function declarations: fn<T>(
   src = src.replace(/(\b(?:async\s+)?function\s+\w+)<[^>()]*>\s*\(/g, "$1(");
 
-  // Remove generic type arguments in call expressions: foo<string>(
-  // Pattern: identifier<SimpleType>(  — only safe for simple type args
-  src = src.replace(/(\b\w+)<([\w\s,\[\]|&]+)>\s*\(/g, "$1(");
+  // Remove generic type arguments in call expressions: foo<string>( or foo<Record<a,b>>(
+  src = src.replace(/(\b\w+)<(?:[^<>]|<[^<>]*>)+>\s*\(/g, "$1(");
 
   // ──────────────────────────────────────────────────────────────
   // Pass 13: Register exported names
@@ -417,7 +418,7 @@ function stripTypeAnnotations(src: string): string {
 
   // Return type annotations: ): Type {  or  ): Type =>
   src = src.replace(
-    /\)\s*:\s*(?:Promise<[^>]+>|[\w<>\[\]|&\s,{}:]+?)\s*(=>|\{)/g,
+    /\)\s*:\s*(?:Promise<[^>\n]+>|[\w<>\[\]|&\s,]+?)\s*(=>|\{)/g,
     ") $1"
   );
 
@@ -434,18 +435,20 @@ function stripTypeAnnotations(src: string): string {
   );
 
   // Class field type annotations: fieldName: Type = val; or fieldName: Type;
+  const kwList = "(?!function|const|let|var|return|import|export|async|class|if|else|try|catch|for|while|interface|type)";
   src = src.replace(
-    /^\s*(?:readonly\s+)?(\w+)\s*:\s*(?:[\w.<>\[\]|&\s,{}:]+?)\s*=\s*([^;\n]+);/gm,
+    new RegExp(`^\\s*(?:readonly\\s+)?\\b${kwList}(\\w+)\\b\\s*:\\s*(?:[\\w.<>\\[\\]|&\\s,{}:]+?)\\s*=\\s*([^;\\n]+);`, "gm"),
     "$1 = $2;"
   );
   src = src.replace(
-    /^\s*(?:readonly\s+)?(\w+)\s*:\s*(?:[\w.<>\[\]|&\s,{}:]+?);/gm,
+    new RegExp(`^\\s*(?:readonly\\s+)?\\b${kwList}(\\w+)\\b\\s*:\\s*(?:[\\w.<>\\[\\]|&\\s,{}:]+?);`, "gm"),
     "$1;"
   );
 
   // Function parameter type annotations with optional union/parentheses/generics
+  const builtInObjects = "(?!JSON\\.|Object\\.|Math\\.|Array\\.|String\\.|Number\\.|Console\\.|Reflect\\.|Symbol\\.)";
   src = src.replace(
-    /(\b(?:\.\.\.)?\w+\b)\s*\??\s*:\s*(?:readonly\s+)?(?:(?:\([^)]+\)(?:\[\])*)|(?:(?:string|number|boolean|any|void|never|unknown|object|null|undefined|symbol|bigint|Function)|(?:[A-Z][\w.]*(?:<[\s\S]*?>)?(?:\[\])*)))(?:\s*[|&]\s*(?:(?:\([^)]+\)(?:\[\])*)|(?:[A-Z][\w.]*|string|number|boolean|any|Function)(?:<[\s\S]*?>)?(?:\[\])*))*/g,
+    new RegExp(`(\\b(?:\\.\\.\\.)?\\w+\\b)[ \\t]*\\??[ \\t]*:[ \\t]*(?:readonly[ \\t]+)?${builtInObjects}(?:(?:\\([^)]+\\)(?:\\[\\])*)|(?:(?:string|number|boolean|any|void|never|unknown|object|null|undefined|symbol|bigint|Function)|(?:[A-Z]\\w*(?:<[\\s\\S]*?>)?(?:\\[\\])*)))(?:[ \\t]*[|&][ \\t]*(?:(?:\\([^)]+\\)(?:\\[\\])*)|(?:[A-Z]\\w*|string|number|boolean|any|Function)(?:<[\\s\\S]*?>)?(?:\\[\\])*))*`, "g"),
     "$1"
   );
 

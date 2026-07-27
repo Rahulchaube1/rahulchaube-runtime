@@ -149,6 +149,12 @@ test("TS: Transpiler converts ESM export named declarations", () => {
   expect(res.code).toContain("exports.run = run;");
 });
 
+test("TS: Transpiler converts ESM export * from 'mod'", () => {
+  const code = `export * from "./helpers";`;
+  const res = transpileSource({ fileName: "test.ts", sourceText: code });
+  expect(res.code).toContain('Object.assign(exports, require("./helpers"));');
+});
+
 test("TS: Transpiler handles import.meta.url stub", () => {
   const code = `const myUrl = import.meta.url;`;
   const res = transpileSource({ fileName: "test.ts", sourceText: code });

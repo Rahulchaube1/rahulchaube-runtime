@@ -1,0 +1,63 @@
+name: RahulChaube Runtime CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-matrix:
+    name: Test & Validate (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install Dependencies
+        run: bun install
+
+      - name: Run Unit & Integration Test Suite
+        run: bun test tests/
+
+      - name: Run Compatibility Matrix Command
+        run: bun run packages/rahulchaube-cli/src/index.ts compatibility
+
+      - name: Run Stress Tests
+        run: bun test tests/stress.test.ts
+
+      - name: Run Crash Resilience Tests
+        run: bun test tests/crash.test.ts
+
+      - name: Run Real Benchmarks
+        run: bun run benchmarks/runner.ts
+
+  build-release:
+    name: Generate Binary Release Artifacts
+    needs: test-matrix
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Generate Release Artifacts
+        run: bun run installer/build-release.ts
+
+      - name: Upload Release Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: rahulchaube-release-artifacts
+          path: dist/

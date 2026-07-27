@@ -28,6 +28,9 @@ import { migrate } from "./commands/migrate.ts";
 import { analyze } from "./commands/analyze.ts";
 import { plugins } from "./commands/plugins.ts";
 
+import { profileCommand } from "./commands/profile.ts";
+import { compatibilityCommand } from "./commands/compatibility.ts";
+
 const VERSION = "1.0.0";
 
 type CommandFn = (args: string[], flags: Record<string, unknown>) => Promise<number>;
@@ -40,6 +43,8 @@ const COMMANDS: Record<string, { fn: CommandFn; summary: string; group: string }
   run: { fn: run, summary: "Run a script", group: "Execute" },
   test: { fn: test, summary: "Run the test suite", group: "Execute" },
   build: { fn: build, summary: "Bundle your project", group: "Execute" },
+  profile: { fn: profileCommand, summary: "Profile script execution", group: "Execute" },
+  compatibility: { fn: compatibilityCommand, summary: "Run compatibility test matrix", group: "Execute" },
   create: { fn: create, summary: "Scaffold a new project", group: "Project" },
   doctor: { fn: doctor, summary: "Diagnose & repair environment", group: "Maintenance" },
   audit: { fn: audit, summary: "Scan for vulnerabilities", group: "Maintenance" },
