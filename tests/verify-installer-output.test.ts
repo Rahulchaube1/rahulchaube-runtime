@@ -10,8 +10,8 @@ test("Installer Verification: GET() route returns correct lines without embedded
 
   expect(text).toContain('$PackagesDir = Join-Path $InstallDir "packages"');
   expect(text).toContain('$CliDir = Join-Path $PackagesDir "rahulchaube-cli"');
-  expect(text).toContain('$RepoPackages = Join-Path $PWD "packages"');
-  expect(text).toContain('$RepoCliDir = Join-Path $RepoPackages "rahulchaube-cli"');
+  expect(text).toContain('$RuntimeDir = Join-Path $InstallDir "runtime"');
+  expect(text).toContain('Copy-Item -Path "$candidateRuntime\\*" -Destination $RuntimeDir');
   expect(text).not.toContain("packages\nrahulchaube-cli");
   expect(text).not.toContain("packages\r\nahulchaube-cli");
 });

@@ -23,84 +23,29 @@ if (-not (Test-Path $BinDir)) { New-Item -ItemType Directory -Force -Path $BinDi
 if (-not (Test-Path $RuntimeDir)) { New-Item -ItemType Directory -Force -Path $RuntimeDir | Out-Null }
 if (-not (Test-Path $CliDir)) { New-Item -ItemType Directory -Force -Path $CliDir | Out-Null }
 
-$RepoRuntimeDir = Join-Path $PWD "runtime"
-if (Test-Path $RepoRuntimeDir) {
-    Write-Host "[OK] Deploying self-contained runtime engine..." -ForegroundColor Gray
-    Copy-Item -Path "$RepoRuntimeDir/*" -Destination $RuntimeDir -Recurse -Force
+# Deploy self-contained runtime engine & CLI package
+$SearchLocations = @(
+    $PWD,
+    "c:\\Users\\Rahul Chaube\\Downloads\\runtime",
+    "$HOME\\Downloads\\runtime",
+    "$HOME\\Downloads\\rahulchaube-runtime"
+)
+
+foreach ($loc in $SearchLocations) {
+    $candidateRuntime = Join-Path $loc "runtime"
+    if (Test-Path $candidateRuntime) {
+        Write-Host "[OK] Deploying runtime engine from $candidateRuntime..." -ForegroundColor Gray
+        Copy-Item -Path "$candidateRuntime\\*" -Destination $RuntimeDir -Recurse -Force
+        break
+    }
 }
 
-$RepoPackages = Join-Path $PWD "packages"
-$RepoCliDir = Join-Path $RepoPackages "rahulchaube-cli"
-if (Test-Path $RepoCliDir) {
-    Write-Host "[OK] Deploying local CLI package..." -ForegroundColor Gray
-    Copy-Item -Path "$RepoCliDir/*" -Destination $CliDir -Recurse -Force
-} else {
-    Write-Host "[OK] Downloading RahulChaube Runtime release bundle..." -ForegroundColor Gray
-    $BaseUrl = "https://raw.githubusercontent.com/Rahulchaube1/rahulchaube-runtime/main"
-    
-    # Create runtime subdirectories
-    $RuntimeDirs = @(
-        "cache", "compiler", "concurrency", "diagnostics", "engine",
-        "fs", "hmr", "module-loader", "package-manager", "parser",
-        "permissions", "plugins", "profiler", "registry", "scheduler",
-        "watcher", "worker"
-    )
-    foreach ($d in $RuntimeDirs) {
-        New-Item -ItemType Directory -Force -Path (Join-Path $RuntimeDir $d) | Out-Null
-    }
-
-    $RuntimeFiles = @(
-        "index.ts",
-        "cache/persistent-cache.ts",
-        "compiler/transpiler.ts", "compiler/incremental.ts",
-        "concurrency/worker-pool.ts",
-        "diagnostics/errors.ts",
-        "engine/runner.ts",
-        "fs/virtual-fs.ts",
-        "hmr/engine.ts",
-        "module-loader/loader.ts", "module-loader/resolver.ts", "module-loader/cache.ts",
-        "package-manager/installer.ts", "package-manager/lockfile.ts",
-        "permissions/manager.ts",
-        "plugins/loader.ts",
-        "profiler/index.ts",
-        "registry/client.ts",
-        "scheduler/timers.ts", "scheduler/microtasks.ts", "scheduler/events.ts",
-        "watcher/watcher.ts",
-        "worker/worker.ts"
-    )
-    foreach ($f in $RuntimeFiles) {
-        try {
-            Invoke-WebRequest -Uri "$BaseUrl/runtime/$f" -OutFile (Join-Path $RuntimeDir $f) -UseBasicParsing
-        } catch {}
-    }
-
-    # Create CLI subdirectories
-    $CliBinTarget = Join-Path $CliDir "bin"
-    $CliSrcTarget = Join-Path $CliDir "src"
-    $CliUiTarget  = Join-Path $CliSrcTarget "ui"
-    $CliUtilTarget = Join-Path $CliSrcTarget "util"
-    $CliCmdTarget = Join-Path $CliSrcTarget "commands"
-
-    New-Item -ItemType Directory -Force -Path $CliBinTarget, $CliSrcTarget, $CliUiTarget, $CliUtilTarget, $CliCmdTarget | Out-Null
-
-    $CliFiles = @(
-        "package.json",
-        "bin/rahulchaube.ts",
-        "src/index.ts",
-        "src/ui/colors.ts", "src/ui/icons.ts", "src/ui/logger.ts", "src/ui/banner.ts", "src/ui/spinner.ts",
-        "src/util/fs.ts",
-        "src/engine/bun.ts",
-        "src/commands/install.ts", "src/commands/add.ts", "src/commands/remove.ts", "src/commands/update.ts",
-        "src/commands/run.ts", "src/commands/test.ts", "src/commands/build.ts", "src/commands/create.ts",
-        "src/commands/doctor.ts", "src/commands/audit.ts", "src/commands/licenses.ts", "src/commands/graph.ts",
-        "src/commands/why.ts", "src/commands/outdated.ts", "src/commands/cache.ts", "src/commands/benchmark.ts",
-        "src/commands/explain.ts", "src/commands/optimize.ts", "src/commands/migrate.ts", "src/commands/analyze.ts",
-        "src/commands/plugins.ts", "src/commands/profile.ts", "src/commands/compatibility.ts"
-    )
-    foreach ($f in $CliFiles) {
-        try {
-            Invoke-WebRequest -Uri "$BaseUrl/packages/rahulchaube-cli/$f" -OutFile (Join-Path $CliDir $f) -UseBasicParsing
-        } catch {}
+foreach ($loc in $SearchLocations) {
+    $candidateCli = Join-Path $loc "packages\\rahulchaube-cli"
+    if (Test-Path $candidateCli) {
+        Write-Host "[OK] Deploying CLI package from $candidateCli..." -ForegroundColor Gray
+        Copy-Item -Path "$candidateCli\\*" -Destination $CliDir -Recurse -Force
+        break
     }
 }
 
