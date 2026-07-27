@@ -412,27 +412,40 @@ function transformEnums(src: string, _warnings: string[]): string {
  *   100% accuracy.
  */
 function stripTypeAnnotations(src: string): string {
+  // Abstract keyword stripping
+  src = src.replace(/\babstract\s+/g, "");
+
   // Return type annotations: ): Type {  or  ): Type =>
-  // Simple types and Promise<T>
   src = src.replace(
-    /\)\s*:\s*(Promise<[\w<>, ]+>|[\w<>\[\]|& ]+?)\s*(=>|\{)/g,
-    ") $2"
+    /\)\s*:\s*(?:Promise<[^>]+>|[\w<>\[\]|&\s,{}:]+?)\s*(=>|\{)/g,
+    ") $1"
   );
 
   // Variable type annotations: const x: Type =  or  let x: Type =
-  // Works for simple types and Array<T>, Record<K,V>
   src = src.replace(
     /\b(const|let|var)(\s+\w+)\s*:\s*(?:readonly\s+)?(?:[\w.]+(?:<(?:[^<>]|<[^<>]*>)*>)?(?:\[\])*)(?:\s*[|&]\s*(?:[\w.]+(?:<(?:[^<>]|<[^<>]*>)*>)?(?:\[\])*))*\s*(=)/g,
     "$1$2 $3"
   );
 
-  // Function parameter type annotations: (name: Type, name2: Type)
-  // CONTEXT-ANCHORED: require the annotation to appear after ( or ,
-  // AND require the type to start with an uppercase letter or a known TS
-  // primitive keyword — this prevents matching object literal numeric values
-  // like { Down: 1, Left: 10 } inside Object.freeze() calls.
+  // Variable type annotations: const x: Type =  or  let x: Type =
   src = src.replace(
-    /(?<=[(,]\s*)\b(\w+)\b\s*\??\s*:\s*(?:readonly\s+)?(?:(?:string|number|boolean|any|void|never|unknown|object|null|undefined|symbol|bigint)|(?:[A-Z][\w.]*(?:<(?:[^<>]|<[^<>]*>)*>)?(?:\[\])*))((?:\s*[|&]\s*(?:[A-Z][\w.]*|string|number|boolean|any)(?:<(?:[^<>]|<[^<>]*>)*>)?(?:\[\])*)*)(?=\s*[,)=?])/g,
+    /\b(const|let|var)(\s+\w+)\s*:\s*(?:readonly\s+)?(?:[\w.]+(?:<(?:[^<>]|<[^<>]*>)*>)?(?:\[\])*)(?:\s*[|&]\s*(?:[\w.]+(?:<(?:[^<>]|<[^<>]*>)*>)?(?:\[\])*))*\s*(=)/g,
+    "$1$2 $3"
+  );
+
+  // Class field type annotations: fieldName: Type = val; or fieldName: Type;
+  src = src.replace(
+    /^\s*(?:readonly\s+)?(\w+)\s*:\s*(?:[\w.<>\[\]|&\s,{}:]+?)\s*=\s*([^;\n]+);/gm,
+    "$1 = $2;"
+  );
+  src = src.replace(
+    /^\s*(?:readonly\s+)?(\w+)\s*:\s*(?:[\w.<>\[\]|&\s,{}:]+?);/gm,
+    "$1;"
+  );
+
+  // Function parameter type annotations with optional union/parentheses/generics
+  src = src.replace(
+    /(\b(?:\.\.\.)?\w+\b)\s*\??\s*:\s*(?:readonly\s+)?(?:(?:\([^)]+\)(?:\[\])*)|(?:(?:string|number|boolean|any|void|never|unknown|object|null|undefined|symbol|bigint|Function)|(?:[A-Z][\w.]*(?:<[\s\S]*?>)?(?:\[\])*)))(?:\s*[|&]\s*(?:(?:\([^)]+\)(?:\[\])*)|(?:[A-Z][\w.]*|string|number|boolean|any|Function)(?:<[\s\S]*?>)?(?:\[\])*))*/g,
     "$1"
   );
 

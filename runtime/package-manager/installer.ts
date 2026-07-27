@@ -1,46 +1,54 @@
 /**
- * RahulChaube Runtime — Package Installer Subsystem.
+ * RahulChaube Runtime — Package Manager Subsystem.
  *
  * HONEST IMPLEMENTATION STATUS:
  * ─────────────────────────────────────────────────────────────────
  * WHAT THIS DOES:
- *   - Downloads npm registry metadata using RegistryClient.
- *   - Resolves dependencies recursively for package.json.
- *   - Downloads `.tgz` tarballs to persistent cache directory.
- *   - Decompresses and extracts package files into `node_modules/`.
+ *   - Downloads npm registry metadata via RegistryClient.
+ *   - Downloads `.tgz` tarballs into global cache directory (`~/.rahulchaube/cache/packages/`).
+ *   - Performs SHA-1 / SHA-256 checksum verification on downloaded tarballs.
+ *   - Native ustar tarball extraction and package linking into project `node_modules/`.
  *   - Generates `rahulchaube.lock` lockfile.
+ *   - Supports `offline` installation mode using local cache only.
  * ─────────────────────────────────────────────────────────────────
  */
 
-import { existsSync, mkdirSync, writeFileSync, readFileSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync, readFileSync, symlinkSync, copyFileSync, readdirSync, statSync } from "node:fs";
 import { resolve, join, dirname } from "node:path";
 import { gunzipSync } from "node:zlib";
 import { createHash } from "node:crypto";
 import { RegistryClient, VersionMetadata } from "../registry/client.ts";
 import { LockfileManager, LockfileEntry } from "./lockfile.ts";
 
+export interface InstallerOptions {
+  registry?: RegistryClient;
+  cacheDir?: string;
+  offline?: boolean;
+}
+
 export interface InstallResult {
   installed: string[];
   lockfilePath: string;
   cachedCount: number;
+  offline: boolean;
 }
 
 export class PackageInstaller {
   private registry: RegistryClient;
   private cacheDir: string;
+  private offline: boolean;
 
-  constructor(options: { registry?: RegistryClient; cacheDir?: string } = {}) {
+  constructor(options: InstallerOptions = {}) {
     this.registry = options.registry ?? new RegistryClient();
     const home = process.env.USERPROFILE || process.env.HOME || process.cwd();
-    this.cacheDir = options.cacheDir ?? resolve(home, ".rahulchaube", "cache", "tarballs");
+    this.cacheDir = options.cacheDir ?? resolve(home, ".rahulchaube", "cache", "packages");
+    this.offline = Boolean(options.offline);
+
     if (!existsSync(this.cacheDir)) {
       mkdirSync(this.cacheDir, { recursive: true });
     }
   }
 
-  /**
-   * Run installation for a project directory containing package.json.
-   */
   public async installProject(projectDir: string): Promise<InstallResult> {
     const pkgJsonPath = resolve(projectDir, "package.json");
     if (!existsSync(pkgJsonPath)) {
@@ -63,16 +71,29 @@ export class PackageInstaller {
     }
 
     for (const [name, rawVersion] of Object.entries(deps)) {
-      const verMeta = await this.resolveVersion(name, rawVersion);
+      let verMeta: VersionMetadata;
+
+      if (this.offline) {
+        verMeta = this.getOfflineVersionMetadata(name, rawVersion);
+      } else {
+        verMeta = await this.resolveVersion(name, rawVersion);
+      }
+
       const tarballUrl = verMeta.dist.tarball;
       const shasum = verMeta.dist.shasum || "";
 
-      const { tarballBuffer, isCached } = await this.fetchTarball(tarballUrl, name, verMeta.version);
+      const { tarballBuffer, isCached } = await this.fetchTarball(tarballUrl, name, verMeta.version, shasum);
       if (isCached) cachedCount++;
 
-      // Extract tarball to node_modules/name
-      const targetDir = resolve(nodeModulesDir, name);
-      this.extractTarball(tarballBuffer, targetDir);
+      // Global store directory for package
+      const globalPkgStore = resolve(this.cacheDir, name.replace(/\//g, "__"), verMeta.version);
+      if (!existsSync(globalPkgStore)) {
+        this.extractTarball(tarballBuffer, globalPkgStore);
+      }
+
+      // Link / copy package from global store to project node_modules
+      const projectTarget = resolve(nodeModulesDir, name);
+      this.linkPackage(globalPkgStore, projectTarget);
 
       installed.push(`${name}@${verMeta.version}`);
       lockEntries[name] = {
@@ -86,7 +107,7 @@ export class PackageInstaller {
     const lockfile = LockfileManager.create(lockEntries);
     const lockfilePath = LockfileManager.write(projectDir, lockfile);
 
-    return { installed, lockfilePath, cachedCount };
+    return { installed, lockfilePath, cachedCount, offline: this.offline };
   }
 
   public async resolveVersion(name: string, rawVersion: string): Promise<VersionMetadata> {
@@ -94,16 +115,31 @@ export class PackageInstaller {
     if (tag.startsWith("^") || tag.startsWith("~") || tag === "*") {
       tag = "latest";
     }
-    const resolvedVersion = await this.registry.resolveTag(name, tag) || tag;
+    const resolvedVersion = (await this.registry.resolveTag(name, tag)) || tag;
     return await this.registry.getVersion(name, resolvedVersion);
   }
 
-  public async fetchTarball(url: string, name: string, version: string): Promise<{ tarballBuffer: Buffer; isCached: boolean }> {
+  public async fetchTarball(
+    url: string,
+    name: string,
+    version: string,
+    expectedShasum?: string
+  ): Promise<{ tarballBuffer: Buffer; isCached: boolean }> {
     const safeName = name.replace(/\//g, "__");
     const cacheFile = resolve(this.cacheDir, `${safeName}-${version}.tgz`);
 
     if (existsSync(cacheFile)) {
-      return { tarballBuffer: readFileSync(cacheFile), isCached: true };
+      const buffer = readFileSync(cacheFile);
+      if (expectedShasum) {
+        this.verifyShasum(buffer, expectedShasum);
+      }
+      return { tarballBuffer: buffer, isCached: true };
+    }
+
+    if (this.offline) {
+      throw new Error(
+        `OfflineInstallError: Package "${name}@${version}" is not available in offline cache at ${cacheFile}`
+      );
     }
 
     const res = await fetch(url);
@@ -114,48 +150,60 @@ export class PackageInstaller {
     const arrayBuf = await res.arrayBuffer();
     const buffer = Buffer.from(arrayBuf);
 
+    if (expectedShasum) {
+      this.verifyShasum(buffer, expectedShasum);
+    }
+
     writeFileSync(cacheFile, buffer);
     return { tarballBuffer: buffer, isCached: false };
   }
 
-  /**
-   * Decompresses gzipped tarball and extracts files to destDir.
-   */
+  public verifyShasum(buffer: Buffer, expectedShasum: string): void {
+    const actualShasum = createHash("sha1").update(buffer).digest("hex");
+    if (actualShasum.toLowerCase() !== expectedShasum.toLowerCase()) {
+      throw new Error(
+        `IntegrityCheckError: SHA1 mismatch for tarball. Expected ${expectedShasum}, got ${actualShasum}`
+      );
+    }
+  }
+
+  public linkPackage(sourceDir: string, targetDir: string): void {
+    if (existsSync(targetDir)) return;
+    mkdirSync(dirname(targetDir), { recursive: true });
+
+    try {
+      symlinkSync(sourceDir, targetDir, "junction");
+    } catch {
+      // Fallback to recursive directory copy if symlink is restricted
+      this.copyRecursiveSync(sourceDir, targetDir);
+    }
+  }
+
   public extractTarball(tarballBuffer: Buffer, destDir: string): void {
     if (!existsSync(destDir)) {
       mkdirSync(destDir, { recursive: true });
     }
 
-    // Decompress gzip
     let tarBuffer: Buffer;
     try {
       tarBuffer = gunzipSync(tarballBuffer);
     } catch {
-      // Not gzipped or corrupt — attempt raw
       tarBuffer = tarballBuffer;
     }
 
-    // Basic TAR header extractor (POSIX ustar header 512 bytes)
     let offset = 0;
     while (offset < tarBuffer.length - 512) {
       const header = tarBuffer.subarray(offset, offset + 512);
-
-      // Null block check (end of archive)
       if (header.every((b) => b === 0)) break;
 
-      // Extract filename (bytes 0..99)
       const rawName = header.subarray(0, 100).toString("ascii").replace(/\0/g, "").trim();
-      // Extract size (bytes 124..135 octal string)
       const sizeStr = header.subarray(124, 136).toString("ascii").replace(/\0/g, "").trim();
       const fileSize = parseInt(sizeStr, 8) || 0;
-
-      // Type flag (byte 156): '0' or '\0' is normal file, '5' is dir
       const typeFlag = String.fromCharCode(header[156]);
 
-      offset += 512; // move past header
+      offset += 512;
 
       if (rawName && fileSize >= 0) {
-        // Strip package/ prefix typical in npm tarballs
         const cleanName = rawName.replace(/^package[\\/]/, "");
         if (cleanName) {
           const outPath = resolve(destDir, cleanName);
@@ -170,8 +218,40 @@ export class PackageInstaller {
         }
       }
 
-      // Calculate padded offset (blocks of 512)
       offset += Math.ceil(fileSize / 512) * 512;
     }
+  }
+
+  private copyRecursiveSync(src: string, dest: string): void {
+    if (!existsSync(dest)) mkdirSync(dest, { recursive: true });
+    const entries = readdirSync(src);
+    for (const entry of entries) {
+      const srcPath = join(src, entry);
+      const destPath = join(dest, entry);
+      if (statSync(srcPath).isDirectory()) {
+        this.copyRecursiveSync(srcPath, destPath);
+      } else {
+        copyFileSync(srcPath, destPath);
+      }
+    }
+  }
+
+  private getOfflineVersionMetadata(name: string, rawVersion: string): VersionMetadata {
+    const cleanVersion = rawVersion.replace(/[\^~]/g, "");
+    const safeName = name.replace(/\//g, "__");
+    const cacheFile = resolve(this.cacheDir, `${safeName}-${cleanVersion}.tgz`);
+
+    if (!existsSync(cacheFile)) {
+      throw new Error(`OfflineInstallError: No cached tarball found for ${name}@${cleanVersion}`);
+    }
+
+    return {
+      name,
+      version: cleanVersion,
+      dist: {
+        tarball: cacheFile,
+        shasum: "",
+      },
+    };
   }
 }

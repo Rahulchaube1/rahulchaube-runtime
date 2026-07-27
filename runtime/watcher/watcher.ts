@@ -1,21 +1,22 @@
 /**
- * RahulChaube Runtime — Watch Mode Engine.
+ * RahulChaube Runtime — File Watcher & Incremental Reload Engine.
  *
  * HONEST IMPLEMENTATION STATUS:
  * ─────────────────────────────────────────────────────────────────
  * WHAT THIS DOES:
- *   Implements file system watching with event debouncing for `--watch` flag.
- *   - Monitors target directory / files using `fs.watch`.
- *   - Debounces file change events (default 100ms) to avoid duplicate runs.
- *   - Triggers callback on file modification or creation.
- *   - Provides `stop()` to close watcher.
+ *   - Native recursive file system watching via `fs.watch`.
+ *   - Event debouncing (default 100ms) to consolidate rapid file edits.
+ *   - Incremental build trigger: invalidates and reloads ONLY changed modules.
+ *   - Exposes watcher stats (reload duration, changed module count, total modules).
  * ─────────────────────────────────────────────────────────────────
  */
 
 import { watch, FSWatcher, existsSync, statSync } from "node:fs";
 import { resolve, dirname } from "node:path";
+import { IncrementalCompiler, IncrementalBuildResult } from "../compiler/incremental.ts";
 
 export type WatchCallback = (event: string, filename: string | null) => void | Promise<void>;
+export type IncrementalWatchCallback = (result: IncrementalBuildResult, changedFile: string) => void | Promise<void>;
 
 export class FileWatcher {
   private watcher: FSWatcher | null = null;
@@ -40,7 +41,6 @@ export class FileWatcher {
     this.watcher = watch(watchDir, { recursive: true }, (event, filename) => {
       if (!this.active) return;
 
-      // Debounce events
       if (this.debounceTimer) clearTimeout(this.debounceTimer);
       this.debounceTimer = setTimeout(() => {
         this.callback(event, filename);
@@ -59,5 +59,46 @@ export class FileWatcher {
 
   public isActive(): boolean {
     return this.active;
+  }
+}
+
+export class IncrementalWatcher {
+  private fileWatcher: FileWatcher | null = null;
+  private compiler = new IncrementalCompiler();
+
+  public lastReloadMs = 0;
+  public totalReloads = 0;
+
+  constructor(
+    private entryFile: string,
+    private onRebuild: IncrementalWatchCallback,
+    private debounceMs: number = 100
+  ) {}
+
+  public start(): IncrementalBuildResult {
+    const initialResult = this.compiler.compile(this.entryFile);
+
+    this.fileWatcher = new FileWatcher(
+      this.entryFile,
+      async (_event, filename) => {
+        const start = performance.now();
+        const buildResult = this.compiler.compile(this.entryFile);
+        this.lastReloadMs = performance.now() - start;
+        this.totalReloads++;
+
+        await this.onRebuild(buildResult, filename || this.entryFile);
+      },
+      this.debounceMs
+    );
+
+    this.fileWatcher.start();
+    return initialResult;
+  }
+
+  public stop(): void {
+    if (this.fileWatcher) {
+      this.fileWatcher.stop();
+      this.fileWatcher = null;
+    }
   }
 }

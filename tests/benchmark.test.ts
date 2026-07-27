@@ -3,7 +3,7 @@ import { runAllBenchmarks } from "../benchmarks/suite.ts";
 
 test("BenchmarkSuite: runs all real execution benchmarks", async () => {
   const results = await runAllBenchmarks();
-  expect(results.length).toBe(5);
+  expect(results.length).toBe(6);
 
   for (const res of results) {
     expect(res.durationMs).toBeGreaterThan(0);
