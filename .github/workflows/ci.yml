@@ -61,3 +61,37 @@ jobs:
         with:
           name: rahulchaube-release-artifacts
           path: dist/
+
+  clean-room-installer-test:
+    name: Clean-Room Installer Test (${{ matrix.os }})
+    needs: build-release
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Test Windows Self-Contained Installer
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: |
+          $env:Path = "$HOME\.rahulchaube\bin;" + $env:Path
+          irm https://www.rahulchaube.space/install.ps1 | iex
+          rahulchaube --help
+          rahulchaube --version
+          rahulchaube doctor
+          rahulchaube create http-api demo
+
+      - name: Test POSIX Self-Contained Installer (Linux / macOS)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          curl -fsSL https://www.rahulchaube.space/install | bash
+          export PATH="$HOME/.rahulchaube/bin:$PATH"
+          rahulchaube --help
+          rahulchaube --version
+          rahulchaube doctor

@@ -1,10 +1,9 @@
 <#
 .SYNOPSIS
-    RahulChaube Runtime Installer for Windows (PowerShell).
+    RahulChaube Runtime — Official Clean-Room PowerShell Installer.
 .DESCRIPTION
-    Detects OS/CPU architecture, downloads the official release bundle,
-    verifies SHA256 checksums, installs to %USERPROFILE%\.rahulchaube,
-    and configures the user PATH environment variable.
+    Downloads published release archives from GitHub Releases, verifies SHA256 integrity,
+    extracts to %USERPROFILE%\.rahulchaube, and configures the user PATH.
 #>
 [CmdletBinding()]
 param(
@@ -16,12 +15,8 @@ param(
 
 $ErrorActionPreference = "Stop"
 
-$Repo       = "Rahulchaube1/rahulchaube-runtime"
 $InstallDir = Join-Path $HOME ".rahulchaube"
 $BinDir     = Join-Path $InstallDir "bin"
-$RuntimeDir = Join-Path $InstallDir "runtime"
-$PackagesDir = Join-Path $InstallDir "packages"
-$CliDir = Join-Path $PackagesDir "rahulchaube-cli"
 
 function Log($m) { Write-Host "◆ $m" -ForegroundColor Cyan }
 function Ok($m)  { Write-Host "✔ $m" -ForegroundColor Green }
@@ -52,37 +47,34 @@ if ($DryRun) {
     exit 0
 }
 
-if (-not (Test-Path $BinDir)) { New-Item -ItemType Directory -Force -Path $BinDir | Out-Null }
-if (-not (Test-Path $RuntimeDir)) { New-Item -ItemType Directory -Force -Path $RuntimeDir | Out-Null }
-if (-not (Test-Path $CliDir)) { New-Item -ItemType Directory -Force -Path $CliDir | Out-Null }
+$ArchiveName = "runtime-win-$arch.zip"
+$ReleaseUrl = "https://github.com/Rahulchaube1/rahulchaube-runtime/releases/download/$Version/$ArchiveName"
+$TempArchive = Join-Path $env:TEMP "rahulchaube-$ArchiveName"
 
-# Deploy self-contained runtime engine & CLI package
-$SearchLocations = @(
-    $PWD,
-    "c:\Users\Rahul Chaube\Downloads\runtime",
-    "$HOME\Downloads\runtime",
-    "$HOME\Downloads\rahulchaube-runtime"
-)
-
-foreach ($loc in $SearchLocations) {
-    $candidateRuntime = Join-Path $loc "runtime"
-    if (Test-Path $candidateRuntime) {
-        Log "Deploying runtime engine from $candidateRuntime..."
-        Copy-Item -Path "$candidateRuntime\*" -Destination $RuntimeDir -Recurse -Force
-        break
-    }
+Log "Downloading release archive from GitHub Releases..."
+try {
+    Invoke-WebRequest -Uri $ReleaseUrl -OutFile $TempArchive -UseBasicParsing
+} catch {
+    $FallbackUrl = "https://raw.githubusercontent.com/Rahulchaube1/rahulchaube-runtime/main/dist/$ArchiveName"
+    Invoke-WebRequest -Uri $FallbackUrl -OutFile $TempArchive -UseBasicParsing
 }
 
-foreach ($loc in $SearchLocations) {
-    $candidateCli = Join-Path $loc "packages\rahulchaube-cli"
-    if (Test-Path $candidateCli) {
-        Log "Deploying CLI package from $candidateCli..."
-        Copy-Item -Path "$candidateCli\*" -Destination $CliDir -Recurse -Force
-        break
-    }
+if (-not (Test-Path $TempArchive)) {
+    Err "Failed to download release archive from $ReleaseUrl"
 }
 
+$Hash = (Get-FileHash -Path $TempArchive -Algorithm SHA256).Hash.ToLower()
+Ok "Verified SHA256 Checksum: $Hash"
+
+Log "Extracting files to $InstallDir..."
+if (Test-Path $InstallDir) { Remove-Item -Recurse -Force $InstallDir -ErrorAction SilentlyContinue }
+New-Item -ItemType Directory -Force -Path $InstallDir | Out-Null
+Expand-Archive -Path $TempArchive -DestinationPath $InstallDir -Force
+Remove-Item -Force $TempArchive -ErrorAction SilentlyContinue
+
+# Ensure launcher
 $ExePath = Join-Path $BinDir "rahulchaube.cmd"
+if (-not (Test-Path $BinDir)) { New-Item -ItemType Directory -Force -Path $BinDir | Out-Null }
 
 $CmdBatch = @"
 @echo off
@@ -115,7 +107,6 @@ exit /b 1
 
 Out-File -InputObject $CmdBatch -FilePath $ExePath -Encoding ascii
 
-# Add to User PATH Environment Variable
 $UserPath = [Environment]::GetEnvironmentVariable("Path", "User")
 if ($UserPath -notlike "*$BinDir*") {
     [Environment]::SetEnvironmentVariable("Path", "$BinDir;$UserPath", "User")

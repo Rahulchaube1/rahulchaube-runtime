@@ -30,6 +30,8 @@ import { plugins } from "./commands/plugins.ts";
 
 import { profileCommand } from "./commands/profile.ts";
 import { compatibilityCommand } from "./commands/compatibility.ts";
+import { upgradeCommand } from "./commands/upgrade.ts";
+import { uninstallCommand } from "./commands/uninstall.ts";
 
 const VERSION = "1.0.0";
 
@@ -53,6 +55,8 @@ const COMMANDS: Record<string, { fn: CommandFn; summary: string; group: string }
   why: { fn: why, summary: "Why is a dependency installed?", group: "Maintenance" },
   outdated: { fn: outdated, summary: "List outdated dependencies", group: "Maintenance" },
   "cache": { fn: cache, summary: "Clean package caches", group: "Maintenance" },
+  upgrade: { fn: upgradeCommand, summary: "Self-update to latest release", group: "Maintenance" },
+  uninstall: { fn: uninstallCommand, summary: "Uninstall RahulChaube Runtime", group: "Maintenance" },
   benchmark: { fn: benchmark, summary: "Run performance benchmarks", group: "Performance" },
   explain: { fn: explain, summary: "Explain an error or concept", group: "AI Tools" },
   optimize: { fn: optimize, summary: "Suggest performance fixes", group: "AI Tools" },

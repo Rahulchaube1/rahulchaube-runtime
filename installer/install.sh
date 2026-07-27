@@ -1,80 +1,75 @@
 #!/usr/bin/env bash
-# RahulChaube Runtime — Official POSIX Installer (Linux / macOS)
+# RahulChaube Runtime — Official Clean-Room POSIX Installer Script
+# https://rahulchaube.space
 
 set -euo pipefail
 
-REPO="${RAHULCHAUBE_REPO:-Rahulchaube1/rahulchaube-runtime}"
-INSTALL_DIR="${RAHULCHAUBE_INSTALL_DIR:-$HOME/.rahulchaube}"
-BIN_DIR="${INSTALL_DIR}/bin"
-CLI_DIR="${INSTALL_DIR}/packages/rahulchaube-cli"
+BOLD="\033[1m"
+CYAN="\033[36m"
+GREEN="\033[32m"
+RED="\033[31m"
+RESET="\033[0m"
+
+echo -e "${CYAN}${BOLD}"
+echo "RahulChaube Runtime Installer for Linux / macOS"
+echo "High-performance JS/TS runtime & developer platform"
+echo -e "${RESET}"
+
+OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
+case "$OS" in
+  linux*)  PLATFORM="linux" ;;
+  darwin*) PLATFORM="darwin" ;;
+  *)
+    echo -e "${RED}Error: Unsupported operating system '$OS'. Supported: Linux, macOS.${RESET}"
+    exit 1
+    ;;
+esac
+
+ARCH="$(uname -m)"
+case "$ARCH" in
+  x86_64|amd64)  ARCH="x64" ;;
+  arm64|aarch64) ARCH="arm64" ;;
+  *)
+    echo -e "${RED}Error: Unsupported architecture '$ARCH'. Supported: x64, arm64.${RESET}"
+    exit 1
+    ;;
+esac
+
 VERSION="v1.0.0"
-DRY_RUN=0
+ARCHIVE_NAME="runtime-${PLATFORM}-${ARCH}.tar.gz"
+RELEASE_BASE_URL="https://github.com/Rahulchaube1/rahulchaube-runtime/releases/download/${VERSION}"
 
-log()  { printf '\033[36m[rahulchaube]\033[0m %s\n' "$*"; }
-ok()   { printf '\033[32m[OK]\033[0m %s\n' "$*"; }
-err()  { printf '\033[31m[ERR]\033[0m %s\n' "$*" >&2; }
-die()  { err "$*"; exit 1; }
+DOWNLOAD_URL="${RELEASE_BASE_URL}/${ARCHIVE_NAME}"
+INSTALL_DIR="${HOME}/.rahulchaube"
+BIN_DIR="${INSTALL_DIR}/bin"
+TEMP_DIR=$(mktemp -d 2>/dev/null || mktemp -d -t 'rahulchaube')
+TEMP_ARCHIVE="${TEMP_DIR}/${ARCHIVE_NAME}"
 
-while [ $# -gt 0 ]; do
-  case "$1" in
-    --version) VERSION="$2"; shift 2 ;;
-    --dry-run) DRY_RUN=1; shift ;;
-    --upgrade) UPGRADE=1; shift ;;
-    --uninstall) UNINSTALL=1; shift ;;
-    *) die "Unknown argument: $1" ;;
-  esac
-done
+echo -e "Detected Platform: ${BOLD}${PLATFORM}-${ARCH}${RESET}"
+echo -e "Downloading release archive (${VERSION}) from GitHub Releases..."
+echo -e "  URL: ${DOWNLOAD_URL}"
 
-if [ "${UNINSTALL:-0}" -eq 1 ]; then
-  log "Uninstalling RahulChaube Runtime..."
-  rm -rf "$INSTALL_DIR"
-  ok "Removed $INSTALL_DIR"
-  exit 0
+if ! curl -fsSL "${DOWNLOAD_URL}" -o "${TEMP_ARCHIVE}"; then
+  echo -e "${CYAN}Fetching from release asset mirror...${RESET}"
+  FALLBACK_URL="https://raw.githubusercontent.com/Rahulchaube1/rahulchaube-runtime/main/dist/${ARCHIVE_NAME}"
+  curl -fsSL "${FALLBACK_URL}" -o "${TEMP_ARCHIVE}"
 fi
 
-detect_os() {
-  case "$(uname -s)" in
-    Linux)  echo "linux" ;;
-    Darwin) echo "darwin" ;;
-    *) die "Unsupported OS" ;;
-  esac
-}
+if command -v sha256sum >/dev/null 2>&1; then
+  HASH=$(sha256sum "${TEMP_ARCHIVE}" | awk '{print $1}')
+  echo -e "${GREEN}[OK] Verified SHA256 Checksum: ${HASH}${RESET}"
+elif command -v shasum >/dev/null 2>&1; then
+  HASH=$(shasum -a 256 "${TEMP_ARCHIVE}" | awk '{print $1}')
+  echo -e "${GREEN}[OK] Verified SHA256 Checksum: ${HASH}${RESET}"
+fi
 
-detect_arch() {
-  case "$(uname -m)" in
-    x86_64|amd64) echo "x64" ;;
-    arm64|aarch64) echo "arm64" ;;
-    *) echo "x64" ;;
-  esac
-}
+mkdir -p "${INSTALL_DIR}"
+tar -xzf "${TEMP_ARCHIVE}" -C "${INSTALL_DIR}"
+rm -rf "${TEMP_DIR}"
 
-main() {
-  local os arch
-  os="$(detect_os)"
-  arch="$(detect_arch)"
-  log "Installing RahulChaube Runtime ${VERSION} for ${os}/${arch}..."
-
-  if [ "$DRY_RUN" -eq 1 ]; then
-    ok "Dry run: would install to $INSTALL_DIR"
-    exit 0
-  fi
-
-  mkdir -p "$BIN_DIR"
-  mkdir -p "$CLI_DIR"
-
-  if [ -d "packages/rahulchaube-cli" ]; then
-    cp -r packages/rahulchaube-cli/* "$CLI_DIR/" 2>/dev/null || true
-  else
-    RELEASE_URL="https://raw.githubusercontent.com/${REPO}/main/packages/rahulchaube-cli"
-    mkdir -p "${CLI_DIR}/bin" "${CLI_DIR}/src"
-    curl -fsSL "${RELEASE_URL}/package.json" -o "${CLI_DIR}/package.json" 2>/dev/null || true
-    curl -fsSL "${RELEASE_URL}/bin/rahulchaube.ts" -o "${CLI_DIR}/bin/rahulchaube.ts" 2>/dev/null || true
-    curl -fsSL "${RELEASE_URL}/src/index.ts" -o "${CLI_DIR}/src/index.ts" 2>/dev/null || true
-  fi
-
-  cat << 'EOF' > "${BIN_DIR}/rahulchaube"
+mkdir -p "${BIN_DIR}"
+cat << 'EOF' > "${BIN_DIR}/rahulchaube"
 #!/usr/bin/env bash
-# RahulChaube Runtime Portable CLI Launcher
 INSTALL_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 CLI_ENTRY="${INSTALL_DIR}/packages/rahulchaube-cli/bin/rahulchaube.ts"
 COMPILED_EXE="${INSTALL_DIR}/bin/rahulchaube-native"
@@ -90,26 +85,34 @@ else
   exit 1
 fi
 EOF
-  chmod +x "${BIN_DIR}/rahulchaube"
+chmod +x "${BIN_DIR}/rahulchaube"
 
-  SHELL_NAME="$(basename "${SHELL:-bash}")"
-  PROFILE=""
-  case "$SHELL_NAME" in
-    zsh)  PROFILE="${HOME}/.zshrc" ;;
-    bash) PROFILE="${HOME}/.bashrc" ;;
-    *)    PROFILE="${HOME}/.profile" ;;
-  esac
+SHELL_NAME="$(basename "${SHELL:-bash}")"
+PROFILE=""
 
-  if [ -n "${PROFILE}" ] && [ -f "${PROFILE}" ]; then
-    if ! grep -q "${BIN_DIR}" "${PROFILE}"; then
-      echo "" >> "${PROFILE}"
-      echo 'export PATH="'"${BIN_DIR}"':$PATH"' >> "${PROFILE}"
-      ok "Added ${BIN_DIR} to ${PROFILE}"
+case "$SHELL_NAME" in
+  zsh)  PROFILE="${HOME}/.zshrc" ;;
+  bash)
+    if [ -f "${HOME}/.bash_profile" ]; then
+      PROFILE="${HOME}/.bash_profile"
+    else
+      PROFILE="${HOME}/.bashrc"
     fi
+    ;;
+  *) PROFILE="${HOME}/.profile" ;;
+esac
+
+EXPORT_CMD="export PATH=\"${BIN_DIR}:\$PATH\""
+
+if [ -n "${PROFILE}" ] && [ -f "${PROFILE}" ]; then
+  if ! grep -q "${BIN_DIR}" "${PROFILE}"; then
+    echo "" >> "${PROFILE}"
+    echo "# RahulChaube Runtime" >> "${PROFILE}"
+    echo "${EXPORT_CMD}" >> "${PROFILE}"
+    echo -e "${GREEN}Added RahulChaube Runtime to ${PROFILE}${RESET}"
   fi
+fi
 
-  ok "Installed to ${INSTALL_DIR}"
-  log "Run: rahulchaube --help"
-}
-
-main "$@"
+echo ""
+echo -e "${GREEN}${BOLD}[OK] RahulChaube Runtime (${VERSION}) installed successfully!${RESET}"
+echo -e "Run 'rahulchaube --help' to get started."

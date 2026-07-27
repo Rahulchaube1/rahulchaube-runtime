@@ -5,9 +5,37 @@
 ![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)
 ![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-darkgreen.svg)
 
-**RahulChaube Runtime** is an all-in-one JavaScript & TypeScript runtime and developer platform. It ships as an executable binary called `rahulchaube`.
+**RahulChaube Runtime** is an all-in-one JavaScript & TypeScript runtime and developer platform. It ships as a self-contained portable installation under `~/.rahulchaube/`.
 
 Website: [https://rahulchaube.space](https://rahulchaube.space)
+
+---
+
+## Installation
+
+### Windows (PowerShell)
+
+```powershell
+irm https://www.rahulchaube.space/install.ps1 | iex
+```
+
+### Linux / macOS (Bash)
+
+```bash
+curl -fsSL https://www.rahulchaube.space/install | bash
+```
+
+### Upgrade to Latest Release
+
+```bash
+rahulchaube upgrade
+```
+
+### Uninstall
+
+```bash
+rahulchaube uninstall
+```
 
 ---
 
@@ -55,9 +83,11 @@ rahulchaube doctor
 | `rahulchaube profile <file>` | Profiler | Profile CPU user/system time, memory RSS/heap, and per-module load timings |
 | `rahulchaube benchmark` | Benchmark Suite | Execute real wall-clock performance benchmarks |
 | `rahulchaube doctor` | Diagnostics | System health and environment capability check |
+| `rahulchaube upgrade` | Maintenance | Self-update to latest release |
+| `rahulchaube uninstall` | Maintenance | Remove `~/.rahulchaube` installation |
 
 ---
 
-## Licensing
+## License
 
-RahulChaube Runtime is open source under the [MIT License](./LICENSE).
+MIT License © 2026 Rahul Chaube

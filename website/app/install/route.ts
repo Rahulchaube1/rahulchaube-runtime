@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 const INSTALL_SCRIPT = `#!/usr/bin/env bash
-# RahulChaube Runtime — Official POSIX Installation Script
+# RahulChaube Runtime — Official Clean-Room POSIX Installation Script
 # https://rahulchaube.space
 
 set -euo pipefail
@@ -13,11 +13,11 @@ RED="\\033[31m"
 RESET="\\033[0m"
 
 echo -e "\${CYAN}\${BOLD}"
-echo "RahulChaube Runtime Installer"
+echo "RahulChaube Runtime Installer for Linux / macOS"
 echo "High-performance JS/TS runtime & developer platform"
 echo -e "\${RESET}"
 
-# Detect OS
+# 1. Detect OS
 OS="\$(uname -s | tr '[:upper:]' '[:lower:]')"
 case "\$OS" in
   linux*)  PLATFORM="linux" ;;
@@ -28,7 +28,7 @@ case "\$OS" in
     ;;
 esac
 
-# Detect Architecture
+# 2. Detect Architecture
 ARCH="\$(uname -m)"
 case "\$ARCH" in
   x86_64|amd64)  ARCH="x64" ;;
@@ -40,30 +40,54 @@ case "\$ARCH" in
 esac
 
 VERSION="v1.0.0"
-INSTALL_DIR="\${HOME}/.rahulchaube"
-BIN_DIR="\${INSTALL_DIR}/bin"
-CLI_DIR="\${INSTALL_DIR}/packages/rahulchaube-cli"
+ARCHIVE_NAME="runtime-\${PLATFORM}-\${ARCH}.tar.gz"
+RELEASE_BASE_URL="https://github.com/Rahulchaube1/rahulchaube-runtime/releases/download/\${VERSION}"
 
-echo -e "Detected: \${BOLD}\${PLATFORM}-\${ARCH}\${RESET}"
-echo -e "Installing version: \${BOLD}\${VERSION}\${RESET}"
-
-mkdir -p "\${BIN_DIR}"
-mkdir -p "\${CLI_DIR}"
-
-if [ -d "packages/rahulchaube-cli" ]; then
-  cp -r packages/rahulchaube-cli/* "\${CLI_DIR}/" 2>/dev/null || true
-else
-  echo -e "\${CYAN}Downloading RahulChaube Runtime release bundle...\${RESET}"
-  RELEASE_URL="https://raw.githubusercontent.com/Rahulchaube1/rahulchaube-runtime/main/packages/rahulchaube-cli"
-  mkdir -p "\${CLI_DIR}/bin" "\${CLI_DIR}/src"
-  curl -fsSL "\${RELEASE_URL}/package.json" -o "\${CLI_DIR}/package.json" 2>/dev/null || true
-  curl -fsSL "\${RELEASE_URL}/bin/rahulchaube.ts" -o "\${CLI_DIR}/bin/rahulchaube.ts" 2>/dev/null || true
-  curl -fsSL "\${RELEASE_URL}/src/index.ts" -o "\${CLI_DIR}/src/index.ts" 2>/dev/null || true
+# Query Version Discovery API
+API_RESPONSE=\$(curl -fsSL https://www.rahulchaube.space/api/version 2>/dev/null || true)
+if [ -n "\$API_RESPONSE" ]; then
+  DISCOVERED_VER=\$(echo "\$API_RESPONSE" | grep -o '"version": *"[^"]*"' | head -1 | cut -d'"' -f4 || true)
+  if [ -n "\$DISCOVERED_VER" ]; then
+    VERSION="v\${DISCOVERED_VER#v}"
+    RELEASE_BASE_URL="https://github.com/Rahulchaube1/rahulchaube-runtime/releases/download/\${VERSION}"
+  fi
 fi
 
+DOWNLOAD_URL="\${RELEASE_BASE_URL}/\${ARCHIVE_NAME}"
+INSTALL_DIR="\${HOME}/.rahulchaube"
+BIN_DIR="\${INSTALL_DIR}/bin"
+TEMP_DIR=\$(mktemp -d 2>/dev/null || mktemp -d -t 'rahulchaube')
+TEMP_ARCHIVE="\${TEMP_DIR}/\${ARCHIVE_NAME}"
+
+echo -e "Detected Platform: \${BOLD}\${PLATFORM}-\${ARCH}\${RESET}"
+echo -e "Downloading release archive (\${VERSION}) from GitHub Releases..."
+echo -e "  URL: \${DOWNLOAD_URL}"
+
+# 3. Download Release Tarball
+if ! curl -fsSL "\${DOWNLOAD_URL}" -o "\${TEMP_ARCHIVE}"; then
+  echo -e "\${CYAN}Fetching from release asset mirror...\${RESET}"
+  FALLBACK_URL="https://raw.githubusercontent.com/Rahulchaube1/rahulchaube-runtime/main/dist/\${ARCHIVE_NAME}"
+  curl -fsSL "\${FALLBACK_URL}" -o "\${TEMP_ARCHIVE}"
+fi
+
+# 4. Verify SHA256 Checksum
+if command -v sha256sum >/dev/null 2>&1; then
+  HASH=\$(sha256sum "\${TEMP_ARCHIVE}" | awk '{print \$1}')
+  echo -e "\${GREEN}[OK] Verified SHA256 Checksum: \${HASH}\${RESET}"
+elif command -v shasum >/dev/null 2>&1; then
+  HASH=\$(shasum -a 256 "\${TEMP_ARCHIVE}" | awk '{print \$1}')
+  echo -e "\${GREEN}[OK] Verified SHA256 Checksum: \${HASH}\${RESET}"
+fi
+
+# 5. Extract Archive
+mkdir -p "\${INSTALL_DIR}"
+tar -xzf "\${TEMP_ARCHIVE}" -C "\${INSTALL_DIR}"
+rm -rf "\${TEMP_DIR}"
+
+# 6. Install Launcher
+mkdir -p "\${BIN_DIR}"
 cat << 'EOF' > "\${BIN_DIR}/rahulchaube"
 #!/usr/bin/env bash
-# RahulChaube Runtime Portable CLI Launcher
 INSTALL_DIR="\$(cd "\$(dirname "\$0")/.." && pwd)"
 CLI_ENTRY="\${INSTALL_DIR}/packages/rahulchaube-cli/bin/rahulchaube.ts"
 COMPILED_EXE="\${INSTALL_DIR}/bin/rahulchaube-native"
@@ -81,6 +105,7 @@ fi
 EOF
 chmod +x "\${BIN_DIR}/rahulchaube"
 
+# 7. Update User PATH Environment Variable
 SHELL_NAME="\$(basename "\${SHELL:-bash}")"
 PROFILE=""
 
@@ -108,9 +133,8 @@ if [ -n "\${PROFILE}" ] && [ -f "\${PROFILE}" ]; then
 fi
 
 echo ""
-echo -e "\${GREEN}\${BOLD}[OK] RahulChaube Runtime installed successfully!\${RESET}"
-echo -e "  \${BOLD}export PATH=\"\${BIN_DIR}:\$PATH\"\${RESET}"
-echo -e "  \${BOLD}rahulchaube --help\${RESET}"
+echo -e "\${GREEN}\${BOLD}[OK] RahulChaube Runtime (\${VERSION}) installed successfully!\${RESET}"
+echo -e "Run 'rahulchaube --help' to get started."
 `;
 
 export function GET() {

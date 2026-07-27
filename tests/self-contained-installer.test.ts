@@ -18,8 +18,8 @@ test("Self-contained Installation: ~/.rahulchaube contains runtime/ and packages
   expect(existsSync(join(cliDir, "src", "commands", "install.ts"))).toBe(true);
 });
 
-test("Installer Script: install.ps1 route deploys runtime engine", () => {
+test("Installer Script: install.ps1 route downloads release archive", () => {
   const routeContent = readFileSync("website/app/install.ps1/route.ts", "utf-8");
-  expect(routeContent).toContain('$RuntimeDir = Join-Path $InstallDir "runtime"');
-  expect(routeContent).toContain('Copy-Item -Path "$candidateRuntime\\\\*" -Destination $RuntimeDir');
+  expect(routeContent).toContain("github.com/Rahulchaube1/rahulchaube-runtime/releases/download");
+  expect(routeContent).toContain("Expand-Archive");
 });

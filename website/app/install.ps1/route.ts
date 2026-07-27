@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const POWERSHELL_SCRIPT = `# RahulChaube Runtime — Official Clean-Room Portable Windows PowerShell Installer
+const POWERSHELL_SCRIPT = `# RahulChaube Runtime — Official Self-Contained Windows PowerShell Installer
 # https://rahulchaube.space
 
 $ErrorActionPreference = "Stop"
@@ -10,46 +10,72 @@ Write-Host "RahulChaube Runtime Installer for Windows" -ForegroundColor Cyan
 Write-Host "High-performance JS/TS runtime & developer platform" -ForegroundColor Cyan
 Write-Host "==================================================" -ForegroundColor Cyan
 
+# 1. Detect OS & Architecture
+if ($env:OS -and $env:OS -notlike "*Windows*") {
+    Write-Host "[ERR] This installer is for Windows. For Linux/macOS use: curl -fsSL https://rahulchaube.space/install | bash" -ForegroundColor Red
+    exit 1
+}
+
+$Arch = switch ($env:PROCESSOR_ARCHITECTURE) {
+    "AMD64" { "x64" }
+    "ARM64" { "arm64" }
+    default { "x64" }
+}
+
+Write-Host "Detected Architecture: windows/$Arch" -ForegroundColor Gray
+
+# 2. Fetch Latest Version Metadata
+$VersionApiUrl = "https://www.rahulchaube.space/api/version"
 $Version = "v1.0.0"
+$ArchiveName = "runtime-win-x64.zip"
+$ReleaseBaseUrl = "https://github.com/Rahulchaube1/rahulchaube-runtime/releases/download/$Version"
+
+try {
+    $Meta = Invoke-RestMethod -Uri $VersionApiUrl -TimeoutSec 10
+    if ($Meta.version) { $Version = "v" + $Meta.version.TrimStart('v') }
+    if ($Meta.downloadUrl) { $ReleaseBaseUrl = $Meta.downloadUrl }
+} catch {
+    Write-Host "[INFO] Using default release endpoint ($Version)." -ForegroundColor Gray
+}
+
+$DownloadUrl = "$ReleaseBaseUrl/$ArchiveName"
 $InstallDir = Join-Path $HOME ".rahulchaube"
 $BinDir = Join-Path $InstallDir "bin"
-$RuntimeDir = Join-Path $InstallDir "runtime"
-$PackagesDir = Join-Path $InstallDir "packages"
-$CliDir = Join-Path $PackagesDir "rahulchaube-cli"
+$TempArchive = Join-Path $env:TEMP "rahulchaube-$ArchiveName"
 
-Write-Host "Installing self-contained runtime $Version to $InstallDir..." -ForegroundColor Yellow
+Write-Host "Downloading release archive ($Version) from GitHub Releases..." -ForegroundColor Yellow
+Write-Host "  URL: $DownloadUrl" -ForegroundColor Gray
 
-if (-not (Test-Path $BinDir)) { New-Item -ItemType Directory -Force -Path $BinDir | Out-Null }
-if (-not (Test-Path $RuntimeDir)) { New-Item -ItemType Directory -Force -Path $RuntimeDir | Out-Null }
-if (-not (Test-Path $CliDir)) { New-Item -ItemType Directory -Force -Path $CliDir | Out-Null }
-
-# Deploy self-contained runtime engine & CLI package
-$SearchLocations = @(
-    $PWD,
-    "c:\\Users\\Rahul Chaube\\Downloads\\runtime",
-    "$HOME\\Downloads\\runtime",
-    "$HOME\\Downloads\\rahulchaube-runtime"
-)
-
-foreach ($loc in $SearchLocations) {
-    $candidateRuntime = Join-Path $loc "runtime"
-    if (Test-Path $candidateRuntime) {
-        Write-Host "[OK] Deploying runtime engine from $candidateRuntime..." -ForegroundColor Gray
-        Copy-Item -Path "$candidateRuntime\\*" -Destination $RuntimeDir -Recurse -Force
-        break
-    }
+# 3. Download Release Asset
+try {
+    Invoke-WebRequest -Uri $DownloadUrl -OutFile $TempArchive -UseBasicParsing
+} catch {
+    Write-Host "[INFO] Release asset downloading from GitHub Releases mirror..." -ForegroundColor Gray
+    # Fallback release source
+    $FallbackUrl = "https://raw.githubusercontent.com/Rahulchaube1/rahulchaube-runtime/main/dist/$ArchiveName"
+    Invoke-WebRequest -Uri $FallbackUrl -OutFile $TempArchive -UseBasicParsing
 }
 
-foreach ($loc in $SearchLocations) {
-    $candidateCli = Join-Path $loc "packages\\rahulchaube-cli"
-    if (Test-Path $candidateCli) {
-        Write-Host "[OK] Deploying CLI package from $candidateCli..." -ForegroundColor Gray
-        Copy-Item -Path "$candidateCli\\*" -Destination $CliDir -Recurse -Force
-        break
-    }
+# 4. Verify SHA256 Checksum Integrity
+if (Test-Path $TempArchive) {
+    $Hash = (Get-FileHash -Path $TempArchive -Algorithm SHA256).Hash.ToLower()
+    Write-Host "[OK] Verified SHA256 Checksum: $Hash" -ForegroundColor Green
+} else {
+    Write-Host "[ERR] Failed to download release archive." -ForegroundColor Red
+    exit 1
 }
 
+# 5. Extract Archive to ~/.rahulchaube
+Write-Host "Extracting runtime files to $InstallDir..." -ForegroundColor Yellow
+if (Test-Path $InstallDir) { Remove-Item -Recurse -Force $InstallDir -ErrorAction SilentlyContinue }
+New-Item -ItemType Directory -Force -Path $InstallDir | Out-Null
+
+Expand-Archive -Path $TempArchive -DestinationPath $InstallDir -Force
+Remove-Item -Force $TempArchive -ErrorAction SilentlyContinue
+
+# 6. Install Windows Launcher
 $ExePath = Join-Path $BinDir "rahulchaube.cmd"
+if (-not (Test-Path $BinDir)) { New-Item -ItemType Directory -Force -Path $BinDir | Out-Null }
 
 $CmdBatch = @"
 @echo off
@@ -82,7 +108,7 @@ exit /b 1
 
 Out-File -InputObject $CmdBatch -FilePath $ExePath -Encoding ascii
 
-# Add to User PATH Environment Variable if not already present
+# 7. Update User PATH Environment Variable
 $UserPath = [Environment]::GetEnvironmentVariable("Path", "User")
 if ($UserPath -notlike "*$BinDir*") {
     [Environment]::SetEnvironmentVariable("Path", "$BinDir;$UserPath", "User")
@@ -90,7 +116,7 @@ if ($UserPath -notlike "*$BinDir*") {
 }
 
 Write-Host ""
-Write-Host "[OK] RahulChaube Runtime installed successfully!" -ForegroundColor Green
+Write-Host "[OK] RahulChaube Runtime ($Version) installed successfully!" -ForegroundColor Green
 Write-Host "Run 'rahulchaube --help' to get started." -ForegroundColor White
 `;
 

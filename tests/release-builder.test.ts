@@ -1,22 +1,22 @@
 import { test, expect } from "bun:test";
-import { buildReleaseArtifacts, TARGETS } from "../installer/build-release.ts";
+import { buildReleaseArtifacts, RELEASE_TARGETS } from "../installer/build-release.ts";
 import { existsSync, readFileSync, rmSync } from "node:fs";
 import { resolve, join } from "node:path";
 
-test("Installer: buildReleaseArtifacts generates all 5 cross-platform targets and SHA256SUMS", () => {
+test("Installer: buildReleaseArtifacts generates all 5 cross-platform targets and checksums.txt", () => {
   const distDir = resolve(process.cwd(), ".tmp_dist_test");
-  buildReleaseArtifacts(distDir);
+  buildReleaseArtifacts(".tmp_dist_test");
 
-  for (const t of TARGETS) {
-    expect(existsSync(join(distDir, t.binaryName))).toBe(true);
+  for (const t of RELEASE_TARGETS) {
+    expect(existsSync(join(distDir, t.archiveName))).toBe(true);
   }
 
-  expect(existsSync(join(distDir, "SHA256SUMS"))).toBe(true);
-  expect(existsSync(join(distDir, "RELEASE_NOTES.md"))).toBe(true);
+  expect(existsSync(join(distDir, "checksums.txt"))).toBe(true);
+  expect(existsSync(join(distDir, "version.json"))).toBe(true);
 
-  const shaContent = readFileSync(join(distDir, "SHA256SUMS"), "utf-8");
-  expect(shaContent).toContain("rahulchaube-windows-x64.exe");
-  expect(shaContent).toContain("rahulchaube-linux-arm64");
+  const shaContent = readFileSync(join(distDir, "checksums.txt"), "utf-8");
+  expect(shaContent).toContain("runtime-win-x64.zip");
+  expect(shaContent).toContain("runtime-linux-arm64.tar.gz");
 
   if (existsSync(distDir)) rmSync(distDir, { recursive: true, force: true });
 });
