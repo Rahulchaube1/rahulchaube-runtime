@@ -21,7 +21,7 @@ $InstallDir = Join-Path $HOME ".rahulchaube"
 $BinDir     = Join-Path $InstallDir "bin"
 $RuntimeDir = Join-Path $InstallDir "runtime"
 $PackagesDir = Join-Path $InstallDir "packages"
-$CliDir     = Join-Path $PackagesDir "rahulchaube-cli"
+$CliDir = Join-Path $PackagesDir "rahulchaube-cli"
 
 function Log($m) { Write-Host "◆ $m" -ForegroundColor Cyan }
 function Ok($m)  { Write-Host "✔ $m" -ForegroundColor Green }
