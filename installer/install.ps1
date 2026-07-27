@@ -82,8 +82,8 @@ $ExePath = Join-Path $BinDir "rahulchaube.cmd"
 setlocal enabledelayedexpansion
 
 set "INSTALL_DIR=%~dp0.."
-set "CLI_ENTRY=%INSTALL_DIR%\\packages\\rahulchaube-cli\\bin\\rahulchaube.ts"
-set "COMPILED_EXE=%INSTALL_DIR%\\bin\\rahulchaube-native.exe"
+set "CLI_ENTRY=%INSTALL_DIR%/packages/rahulchaube-cli/bin/rahulchaube.ts"
+set "COMPILED_EXE=%INSTALL_DIR%/bin/rahulchaube-native.exe"
 
 IF EXIST "%COMPILED_EXE%" (
   "%COMPILED_EXE%" %*
