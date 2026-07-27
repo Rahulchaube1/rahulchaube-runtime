@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 const INSTALL_SCRIPT = `#!/usr/bin/env bash
 # RahulChaube Runtime — Official Clean-Room POSIX Installation Script
 # https://rahulchaube.space
@@ -142,7 +145,7 @@ export function GET() {
     status: 200,
     headers: {
       "content-type": "text/plain; charset=utf-8",
-      "cache-control": "public, max-age=3600, s-maxage=3600",
+      "cache-control": "no-store, no-cache, must-revalidate, max-age=0",
     },
   });
 }

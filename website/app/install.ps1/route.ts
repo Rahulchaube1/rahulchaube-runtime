@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 
-const POWERSHELL_SCRIPT = `# RahulChaube Runtime — Official Self-Contained Windows PowerShell Installer
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+const POWERSHELL_SCRIPT = `# RahulChaube Runtime — Official Clean-Room Portable Windows PowerShell Installer
 # https://rahulchaube.space
 
 $ErrorActionPreference = "Stop"
@@ -51,7 +54,6 @@ try {
     Invoke-WebRequest -Uri $DownloadUrl -OutFile $TempArchive -UseBasicParsing
 } catch {
     Write-Host "[INFO] Release asset downloading from GitHub Releases mirror..." -ForegroundColor Gray
-    # Fallback release source
     $FallbackUrl = "https://raw.githubusercontent.com/Rahulchaube1/rahulchaube-runtime/main/dist/$ArchiveName"
     Invoke-WebRequest -Uri $FallbackUrl -OutFile $TempArchive -UseBasicParsing
 }
@@ -125,7 +127,7 @@ export function GET() {
     status: 200,
     headers: {
       "content-type": "text/plain; charset=utf-8",
-      "cache-control": "public, max-age=3600, s-maxage=3600",
+      "cache-control": "no-store, no-cache, must-revalidate, max-age=0",
     },
   });
 }
