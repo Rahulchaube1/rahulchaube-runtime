@@ -34,6 +34,16 @@ export const RELEASE_TARGETS: TargetConfig[] = [
   { name: "darwin-arm64", os: "darwin", arch: "arm64", archiveName: "runtime-darwin-arm64.tar.gz", isZip: false },
 ];
 
+function stageNativeTools(target: TargetConfig, nativeDir: string, stageCli: string) {
+  const suffix = target.os === "windows" ? ".exe" : "";
+  for (const tool of ["rahulchaube-native", "blyxc"]) {
+    const bin = join(stageCli, "bin", tool);
+    rmSync(bin + (suffix ? "" : ".exe"), { force: true });
+    cpSync(resolve(nativeDir, "native-" + target.name, tool + suffix), bin + suffix);
+    chmodSync(bin + suffix, 0o755);
+  }
+}
+
 export function buildReleaseArtifacts(outputDir: string = "dist", nativeDir: string = ".native-artifacts"): void {
   const rootDir = process.cwd();
   const distPath = resolve(rootDir, outputDir);
@@ -63,7 +73,7 @@ export function buildReleaseArtifacts(outputDir: string = "dist", nativeDir: str
   cpSync(join(rootDir, "LICENSE.md"), join(stagingDir, "LICENSE.md"));
 
   writeFileSync(join(stageBin, "rahulchaube.cmd"), [
-    "@echo off", '"%~dp0..\\packages\\rahulchaube-cli\\bin\\rahulchaube-native.exe" %*', "exit /b %errorlevel%", ""
+    "@echo off", String.raw`"%~dp0..\packages\rahulchaube-cli\bin\rahulchaube-native.exe" %*`, "exit /b %errorlevel%", ""
   ].join("\r\n"));
   writeFileSync(join(stageBin, "rahulchaube"), [
     "#!/bin/sh", 'exec "${0%/*}/../packages/rahulchaube-cli/bin/rahulchaube-native" "$@"', ""
@@ -77,13 +87,7 @@ export function buildReleaseArtifacts(outputDir: string = "dist", nativeDir: str
   try {
     for (const t of RELEASE_TARGETS) {
       const archivePath = join(complete, t.archiveName);
-      const suffix = t.os === "windows" ? ".exe" : "";
-      for (const tool of ["rahulchaube-native", "blyxc"]) {
-        const bin = join(stageCli, "bin", tool);
-        rmSync(bin + (suffix ? "" : ".exe"), { force: true });
-        cpSync(resolve(nativeDir, "native-" + t.name, tool + suffix), bin + suffix);
-        chmodSync(bin + suffix, 0o755);
-      }
+      stageNativeTools(t, nativeDir, stageCli);
       if (t.isZip && process.platform !== "win32") {
         execFileSync("zip", ["-qr", archivePath, "."], { cwd: stagingDir });
       } else {

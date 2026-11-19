@@ -21,7 +21,9 @@ function cliText(flag: string, color: boolean): string {
 }
 // Blyx accepts literal Unicode (including ANSI ESC) and these string escapes.
 function literal(text: string): string {
-  return '"' + text.replaceAll("\\", "\\\\").replaceAll('"', '\\"').replaceAll("\n", "\\n").replaceAll("\r", "\\r") + '"';
+  const escaped = text.replaceAll("\\", String.raw`\\`).replaceAll('"', String.raw`\"`)
+    .replaceAll("\n", String.raw`\n`).replaceAll("\r", String.raw`\r`);
+  return `"${escaped}"`;
 }
 try {
   cpSync(join(pkg, "blyx"), stage, { recursive: true });

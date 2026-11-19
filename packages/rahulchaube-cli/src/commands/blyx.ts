@@ -22,5 +22,5 @@ export function blyxFile(command: "run" | "build", args: string[], flags: Record
     console.error("[ERR] A Blyx build takes one entry file.");
     return 1;
   }
-  return blyx(["build", args[0], ...(flags.outfile ? ["-o", String(flags.outfile)] : [])]);
+  return blyx(["build", args[0], ...(typeof flags.outfile === "string" && flags.outfile ? ["-o", flags.outfile] : [])]);
 }

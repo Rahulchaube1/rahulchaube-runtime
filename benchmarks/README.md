@@ -29,9 +29,8 @@ RahulChaube Runtime is faster than Bun or Node unless benchmarks demonstrate it.
 
 ### Compare installed CLI startup
 
-Supply paths to two installed launchers. Run the same command on each installation, on the same machine. The benchmark alternates the order, discards five warm-up pairs and prints elapsed wall-clock milliseconds for 50 fresh processes per installation.
+Use the two installed launchers on the same machine. For example, measure 50 fresh CLI processes per release with hyperfine. Repeat with `--help` or `run ./hello.ts` to compare other workloads.
 
 ```sh
-python3 benchmarks/cli-startup.py /path/to/old/bin/rahulchaube /path/to/new/bin/rahulchaube --version
-python3 benchmarks/cli-startup.py /path/to/old/bin/rahulchaube /path/to/new/bin/rahulchaube run ./hello.ts
+hyperfine --shell=none --warmup 5 --runs 50 '/path/to/old/bin/rahulchaube --version' '/path/to/new/bin/rahulchaube --version'
 ```
