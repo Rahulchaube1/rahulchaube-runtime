@@ -15,21 +15,18 @@ jobs:
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest
 
-      - name: Install Dependencies
-        run: bun install
-
       - name: Run Unit & Integration Test Suite
         run: bun test tests/
 
       - name: Run Compatibility Matrix Command
-        run: bun run packages/rahulchaube-cli/src/index.ts compatibility
+        run: bun packages/rahulchaube-cli/bin/rahulchaube.ts compatibility
 
       - name: Run Stress Tests
         run: bun test tests/stress.test.ts
@@ -46,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
@@ -57,7 +54,7 @@ jobs:
         run: bun run installer/build-release.ts
 
       - name: Upload Release Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: rahulchaube-release-artifacts
           path: dist/
@@ -70,28 +67,14 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v1
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
-          bun-version: latest
-
-      - name: Test Windows Self-Contained Installer
-        if: runner.os == 'Windows'
-        shell: powershell
-        run: |
-          $env:Path = "$HOME\.rahulchaube\bin;" + $env:Path
-          irm https://www.rahulchaube.space/install.ps1 | iex
-          rahulchaube --help
-          rahulchaube --version
-          rahulchaube doctor
-          rahulchaube create http-api demo
-
-      - name: Test POSIX Self-Contained Installer (Linux / macOS)
-        if: runner.os != 'Windows'
+          name: rahulchaube-release-artifacts
+          path: dist
+      - name: Verify the generated release in a fresh install
         shell: bash
         run: |
-          curl -fsSL https://www.rahulchaube.space/install | bash
-          export PATH="$HOME/.rahulchaube/bin:$PATH"
-          rahulchaube --help
-          rahulchaube --version
-          rahulchaube doctor
+          cp dist/version.json website/lib/release-manifest.json
+          bun test tests/self-contained-installer.test.ts tests/verify-installer-output.test.ts

@@ -1,13 +1,16 @@
-import { test, expect } from "bun:test";
-import { GET } from "../website/app/install.ps1/route.ts";
+import { expect, test } from "bun:test";
+import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
+import { versionInfo } from "../website/lib/releases.ts";
+import { GET as checksum } from "../website/app/api/checksum/route.ts";
 
-test("Installer Verification: GET() route returns release download script without local paths", async () => {
-  const response = GET();
-  const text = await response.text();
-
-  expect(text).toContain("https://github.com/Rahulchaube1/rahulchaube-runtime/releases/download");
-  expect(text).toContain("Expand-Archive");
-  expect(text).toContain("Get-FileHash");
-  expect(text).not.toContain("$PWD");
-  expect(text).not.toContain("Copy-Item");
+test("Published digests and sizes describe every distributable archive", async () => {
+  const { checksums } = await checksum().json();
+  for (const name of Object.keys(checksums) as Array<keyof typeof versionInfo.sha256>) {
+    const bytes = readFileSync(`dist/${name}`);
+    expect(createHash("sha256").update(bytes).digest("hex")).toBe(checksums[name]);
+    expect(bytes).toHaveLength(versionInfo.sizes[name]);
+    expect(execFileSync("git", ["hash-object", "--no-filters", `dist/${name}`], { encoding: "utf8" }).trim()).toBe(versionInfo.blobs[name]);
+  }
 });

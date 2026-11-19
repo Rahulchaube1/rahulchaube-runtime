@@ -15,7 +15,7 @@ export interface ProjectCompatResult {
 }
 
 export async function compatibilityCommand(_args: string[], _flags: Record<string, unknown>): Promise<number> {
-  log.info(`${colors.cyan(icons.lightning)} Running Real Compatibility Test Projects…\n`);
+  log.info(`${colors.cyan(icons.bolt)} Running Real Compatibility Test Projects…\n`);
 
   const compatDir = resolve(process.cwd(), "compatibility");
   if (!existsSync(compatDir)) {

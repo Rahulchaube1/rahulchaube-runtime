@@ -63,7 +63,6 @@ export async function outdated(args: string[], flags: Record<string, unknown>): 
 
 function readInstalledVersion(root: string, name: string): string | null {
   try {
-    const { existsSync, readFileSync } = fs;
     const pj = joinPath(root, "node_modules", name, "package.json");
     if (!existsSync(pj)) return null;
     return JSON.parse(readFileSync(pj, "utf8")).version ?? null;

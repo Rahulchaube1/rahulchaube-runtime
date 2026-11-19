@@ -16,7 +16,7 @@ export async function uninstallCommand(_args: string[], _flags: Record<string, u
     return 0;
   }
 
-  log.info(`${colors.yellow(icons.warning)} Uninstalling RahulChaube Runtime from ${colors.bold(installDir)}…`);
+  log.info(`${colors.yellow(icons.warn)} Uninstalling RahulChaube Runtime from ${colors.bold(installDir)}…`);
 
   try {
     rmSync(installDir, { recursive: true, force: true });

@@ -1,7 +1,13 @@
 {
-  "latest": "1.0.0",
+  "latest": "1.0.1",
   "name": "RahulChaube Runtime",
   "releases": [
+    {
+      "version": "1.0.1",
+      "date": "2026-11-19",
+      "channel": "stable",
+      "notes": "Verified installation, on-demand commands, and improved script execution."
+    },
     {
       "version": "1.0.0",
       "date": "2026-07-25",

@@ -13,7 +13,7 @@ const roadmap = [
   { title: "Project Scaffolding Generator", desc: "Interactive templates: react, next, express, hono, library, cli.", status: "Shipped", pct: 100 },
   { title: "AI-Assisted Diagnostics", desc: "explain error analysis, optimize performance tips, migrate, analyze diagnostics.", status: "Shipped", pct: 100 },
   { title: "Plugin System & Ecosystem Registry", desc: "Plugin API and discovery registry for rahulchaube-plugin-* packages.", status: "Shipped", pct: 100 },
-  { title: "Multi-OS Release Packages", desc: "Native package managers: Homebrew, Scoop, Winget, Chocolatey, APT, RPM.", status: "Shipped", pct: 100 },
+  { title: "Package manager distribution", desc: "Package manager channels beyond the archive installers.", status: "Planned", pct: 0 },
   { title: "Native C++ Addon Bindings", desc: "Native N-API C/C++ module loader and node-gyp compatibility layer.", status: "In Progress", pct: 65 },
   { title: "Global CDN Edge Registry", desc: "High-speed tarball caching and global edge distribution network.", status: "Planned", pct: 25 },
 ];

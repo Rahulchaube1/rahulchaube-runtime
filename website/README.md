@@ -3,18 +3,17 @@
 The official website for RahulChaube Runtime, served at
 [rahulchaube.space](https://rahulchaube.space).
 
-- **Framework:** Next.js 15 (App Router)
+- **Framework:** Next.js 16 (App Router)
 - **Language:** TypeScript (strict)
 - **Styling:** Tailwind CSS
-- **Animation:** Framer Motion
 - **Icons:** lucide-react
 
 ## Pages
 
 | Route | Description |
 | --- | --- |
-| `/` | Hero, features, CLI showcase, benchmark preview, "why" |
-| `/download` | Auto-detect + per-platform builds |
+| `/` | CLI examples, developer resources, project templates |
+| `/download` | Installation commands and platform archives |
 | `/docs` | Documentation with sidebar (MDX-like content) |
 | `/blog` | Developer blog with RSS-style posts |
 | `/benchmarks` | Interactive charts (placeholder-labeled data) |
@@ -23,7 +22,7 @@ The official website for RahulChaube Runtime, served at
 ## Develop
 
 ```sh
-npm install
+bun install --frozen-lockfile
 npm run dev      # http://localhost:3000
 npm run build    # production build
 npm run typecheck

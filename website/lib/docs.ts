@@ -49,7 +49,7 @@ This tutorial guides beginners through setting up RahulChaube Runtime and buildi
 
 ## Step 1: Installation (POSIX & Windows)
 \`\`\`sh
-curl -fsSL https://rahulchaube.space/install | bash
+curl -fsSL https://www.rahulchaube.space/install | bash
 \`\`\`
 
 Verify installation:
@@ -218,33 +218,27 @@ rahulchaube run api-server.ts
     section: "Getting Started",
     body: `# Getting Started with RahulChaube Runtime
 
-## Overview
-RahulChaube Runtime is an integrated JavaScript & TypeScript developer platform combining a high-performance execution engine, package manager, bundler, and CLI diagnostic suite into a single unified binary.
+Install Bun and follow the instructions on the Download page. Open a new terminal and check the CLI.
 
-## Why It Exists
-Modern JavaScript web development often requires chaining 5 to 10 separate tools (Node.js, npm/pnpm, Babel, tsc, Webpack/Vite, Jest/Vitest). RahulChaube Runtime unifies these workflows into a single executable to eliminate configuration fatigue and accelerate build pipelines.
-
-## Concepts
-- **Single Executable**: One binary handles script execution, dependency management, bundling, and testing.
-- **Zero-Config TypeScript**: Native execution of \`.ts\` and \`.tsx\` files without prior compilation step.
-- **Web Standard APIs**: First-class support for \`fetch\`, \`Request\`, \`Response\`, \`WebSocket\`, and \`Crypto\`.
-
-## CLI Examples
 \`\`\`sh
-# 1. Install RahulChaube Runtime
-curl -fsSL https://rahulchaube.space/install | bash
-
-# 2. Verify installation
 rahulchaube --version
-
-# 3. Create a new React application
-rahulchaube create react my-app
-cd my-app
-
-# 4. Install dependencies & start dev server
-rahulchaube install
-rahulchaube run dev
 \`\`\`
+
+## Run your first file
+Save this as hello.ts.
+
+\`\`\`ts
+const message: string = "Hello, runtime!";
+console.log(message);
+\`\`\`
+
+From the same directory, run the file.
+
+\`\`\`sh
+rahulchaube run ./hello.ts
+\`\`\`
+
+The command prints "Hello, runtime!". Run it with --watch to rerun when files change.
 `,
   },
   {
@@ -254,22 +248,22 @@ rahulchaube run dev
     body: `# Installation & Platform Setup
 
 ## Overview
-RahulChaube Runtime ships as a self-contained, zero-dependency binary compiled for Linux, macOS, and Windows.
+Install Bun first. The release archives require access to the GitHub repository and an authenticated GitHub CLI.
 
 ## POSIX (Linux / macOS)
 \`\`\`sh
-curl -fsSL https://rahulchaube.space/install | bash
+curl -fsSL https://www.rahulchaube.space/install | bash
 \`\`\`
 
 ## Windows (PowerShell)
 \`\`\`powershell
-powershell -c "irm https://rahulchaube.space/install.ps1 | iex"
+powershell -c "irm https://www.rahulchaube.space/install.ps1 | iex"
 \`\`\`
 
 ## Verification
 \`\`\`sh
 rahulchaube --version
-# Output: rahulchaube v1.0.0 (x86_64-platform)
+# Output: rahulchaube v1.0.1
 \`\`\`
 `,
   },

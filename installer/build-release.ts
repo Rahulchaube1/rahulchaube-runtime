@@ -11,9 +11,12 @@
  * - version.json
  */
 import { createHash } from "node:crypto";
-import { writeFileSync, mkdirSync, existsSync, rmSync, cpSync, readFileSync } from "node:fs";
+import { mkdtempSync, writeFileSync, mkdirSync, rmSync, cpSync, readFileSync } from "node:fs";
 import { resolve, join } from "node:path";
-import { execSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
+
+import { tmpdir } from "node:os";
+import cliPackage from "../packages/rahulchaube-cli/package.json";
 
 export interface TargetConfig {
   name: string;
@@ -34,11 +37,8 @@ export const RELEASE_TARGETS: TargetConfig[] = [
 export function buildReleaseArtifacts(outputDir: string = "dist"): void {
   const rootDir = process.cwd();
   const distPath = resolve(rootDir, outputDir);
-  if (existsSync(distPath)) rmSync(distPath, { recursive: true, force: true });
   mkdirSync(distPath, { recursive: true });
-
-  const stagingDir = join(distPath, "_staging");
-  if (existsSync(stagingDir)) rmSync(stagingDir, { recursive: true, force: true });
+  const stagingDir = mkdtempSync(join(tmpdir(), "rahul-release-"));
 
   // Prepare staged file layout
   const stageRuntime = join(stagingDir, "runtime");
@@ -51,59 +51,39 @@ export function buildReleaseArtifacts(outputDir: string = "dist"): void {
 
   // Copy runtime engine and CLI package into staging
   cpSync(join(rootDir, "runtime"), stageRuntime, { recursive: true });
-  cpSync(join(rootDir, "packages", "rahulchaube-cli"), stageCli, { recursive: true });
+  const cliSource = join(rootDir, "packages", "rahulchaube-cli");
+  for (const file of ["bin", "src", "package.json", "README.md"]) {
+    cpSync(join(cliSource, file), join(stageCli, file), { recursive: true });
+  }
+  cpSync(join(rootDir, "LICENSE.md"), join(stagingDir, "LICENSE.md"));
 
-  // Create launcher stubs
-  const winCmd = `@echo off
-setlocal enabledelayedexpansion
-for %%I in ("%~dp0..") do set "INSTALL_DIR=%%~fI"
-set "CLI_ENTRY=%INSTALL_DIR%\\packages\\rahulchaube-cli\\bin\\rahulchaube.ts"
-WHERE bun >nul 2>nul
-IF %ERRORLEVEL% EQU 0 ( bun run "%CLI_ENTRY%" %* & exit /b %ERRORLEVEL% )
-WHERE node >nul 2>nul
-IF %ERRORLEVEL% EQU 0 ( node --import tsx "%CLI_ENTRY%" %* & exit /b %ERRORLEVEL% )
-echo RahulChaube Runtime requires Bun or Node.js to execute script engine.
-exit /b 1
-`;
-  writeFileSync(join(stageBin, "rahulchaube.cmd"), winCmd, "utf-8");
-
-  const posixSh = `#!/usr/bin/env bash
-INSTALL_DIR="\$(cd "\$(dirname "\$0")/.." && pwd)"
-CLI_ENTRY="\${INSTALL_DIR}/packages/rahulchaube-cli/bin/rahulchaube.ts"
-if command -v bun >/dev/null 2>&1; then exec bun run "\${CLI_ENTRY}" "\$@";
-elif command -v node >/dev/null 2>&1; then exec node --import tsx "\${CLI_ENTRY}" "\$@";
-else echo "RahulChaube Runtime requires Bun or Node.js to execute script engine."; exit 1; fi
-`;
-  writeFileSync(join(stageBin, "rahulchaube"), posixSh, { mode: 0o755 });
+  writeFileSync(join(stageBin, "rahulchaube.cmd"), [
+    "@echo off", 'bun run "%~dp0..\\packages\\rahulchaube-cli\\bin\\rahulchaube.ts" %*', "exit /b %errorlevel%", ""
+  ].join("\r\n"));
+  writeFileSync(join(stageBin, "rahulchaube"), [
+    "#!/bin/sh", 'exec bun run "$(dirname "$0")/../packages/rahulchaube-cli/bin/rahulchaube.ts" "$@"', ""
+  ].join("\n"), { mode: 0o755 });
 
   const checksums: Record<string, string> = {};
-
-  for (const t of RELEASE_TARGETS) {
-    const archivePath = join(distPath, t.archiveName);
-
-    if (t.isZip) {
-      // Create ZIP archive
-      try {
-        execSync(`powershell -Command "Compress-Archive -Path '${stagingDir}\\*' -DestinationPath '${archivePath}' -Force"`, {
-          cwd: rootDir,
-        });
-      } catch {
-        // Fallback dummy file for non-Windows host environments
-        writeFileSync(archivePath, Buffer.from(`RahulChaube Runtime Release Zip for ${t.name}`));
+  const sizes: Record<string, number> = {};
+  const blobs: Record<string, string> = {};
+  try {
+    for (const t of RELEASE_TARGETS) {
+      const archivePath = join(distPath, t.archiveName);
+      rmSync(archivePath, { force: true });
+      if (t.isZip && process.platform !== "win32") {
+        execFileSync("zip", ["-qr", archivePath, "."], { cwd: stagingDir });
+      } else {
+        const args = t.isZip ? ["-a", "-cf"] : ["-czf"];
+        execFileSync("tar", [...args, archivePath, "-C", stagingDir, "."]);
       }
-    } else {
-      // Create TAR.GZ archive
-      try {
-        execSync(`tar -czf "${archivePath}" -C "${stagingDir}" .`, { cwd: rootDir });
-      } catch {
-        // Fallback dummy file
-        writeFileSync(archivePath, Buffer.from(`RahulChaube Runtime Release Tarball for ${t.name}`));
-      }
+      const bytes = readFileSync(archivePath);
+      checksums[t.archiveName] = createHash("sha256").update(bytes).digest("hex");
+      sizes[t.archiveName] = bytes.length;
+      blobs[t.archiveName] = execFileSync("git", ["hash-object", "--no-filters", archivePath], { encoding: "utf8" }).trim();
     }
-
-    const fileBuf = readFileSync(archivePath);
-    const hash = createHash("sha256").update(fileBuf).digest("hex");
-    checksums[t.archiveName] = hash;
+  } finally {
+    rmSync(stagingDir, { recursive: true, force: true });
   }
 
   // Write checksums.txt & SHA256SUMS
@@ -112,18 +92,22 @@ else echo "RahulChaube Runtime requires Bun or Node.js to execute script engine.
   writeFileSync(join(distPath, "SHA256SUMS"), checksumLines, "utf-8");
 
   // Write version.json
+  const downloadUrl = "https://github.com/Rahulchaube1/rahulchaube-runtime/raw/refs/heads/main/dist";
   const versionJson = {
-    version: "1.0.0",
+    version: cliPackage.version,
     channel: "stable",
-    release: "https://github.com/Rahulchaube1/rahulchaube-runtime/releases/tag/v1.0.0",
-    downloadUrl: "https://github.com/Rahulchaube1/rahulchaube-runtime/releases/download/v1.0.0",
-    assets: Object.fromEntries(RELEASE_TARGETS.map((t) => [t.name, `https://github.com/Rahulchaube1/rahulchaube-runtime/releases/download/v1.0.0/${t.archiveName}`])),
+    release: "https://www.rahulchaube.space/releases",
+    downloadUrl,
+    assets: Object.fromEntries(RELEASE_TARGETS.map(t => [t.name, `${downloadUrl}/${t.archiveName}`])),
     sha256: checksums,
+    sizes,
+    blobs,
   };
-  writeFileSync(join(distPath, "version.json"), JSON.stringify(versionJson, null, 2), "utf-8");
-
-  // Clean staging
-  rmSync(stagingDir, { recursive: true, force: true });
+  const manifest = JSON.stringify(versionJson, null, 2) + "\n";
+  writeFileSync(join(distPath, "version.json"), manifest);
+  if (distPath === resolve(rootDir, "dist")) {
+    writeFileSync(join(rootDir, "website/lib/release-manifest.json"), manifest);
+  }
 }
 
 if (import.meta.main) {

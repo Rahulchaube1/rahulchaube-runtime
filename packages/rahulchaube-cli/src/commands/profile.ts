@@ -23,7 +23,7 @@ export async function profileCommand(args: string[], _flags: Record<string, unkn
     return 1;
   }
 
-  log.info(`${colors.cyan(icons.lightning)} Profiling execution of ${colors.bold(target)}…`);
+  log.info(`${colors.cyan(icons.bolt)} Profiling execution of ${colors.bold(target)}…`);
 
   const profiler = new RuntimeProfiler();
   profiler.start();

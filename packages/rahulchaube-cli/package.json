@@ -1,6 +1,6 @@
 {
   "name": "rahulchaube-cli",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "RahulChaube Runtime — a next-generation JavaScript runtime and developer platform.",
   "license": "MIT",
   "type": "module",
@@ -27,5 +27,9 @@
     "typescript",
     "package-manager",
     "bundler"
-  ]
+  ],
+  "devDependencies": {
+    "@types/bun": "^1",
+    "typescript": "~5.9.3"
+  }
 }

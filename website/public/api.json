@@ -1,6 +1,6 @@
 {
   "title": "RahulChaube Runtime API Specifications",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "openapi": "3.0.0",
   "endpoints": [
     { "path": "/api/health", "method": "GET", "description": "Server health status check" },

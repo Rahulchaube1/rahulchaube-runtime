@@ -1,3 +1,4 @@
+import { versionInfo } from "../../../lib/releases";
 import { NextResponse } from "next/server";
 
 export function GET() {
@@ -6,6 +7,6 @@ export function GET() {
     uptime: process.uptime(),
     timestamp: new Date().toISOString(),
     service: "RahulChaube Runtime Platform API",
-    version: "1.0.0"
+    version: versionInfo.version
   });
 }
