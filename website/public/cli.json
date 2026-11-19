@@ -1,6 +1,6 @@
 {
   "binary": "rahulchaube",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "commands": [
     { "name": "run", "usage": "rahulchaube run <script|file>", "description": "Execute script or TS/JS file natively", "status": "Implemented" },
     { "name": "test", "usage": "rahulchaube test [file]", "description": "Execute unit tests in workspace", "status": "Implemented" },

@@ -63,7 +63,7 @@ async function install() {
   }
   if (!Object.hasOwn(release.assets, target)) throw new Error(`No release archive for ${target}`);
   if (process.argv.includes("--dry-run")) {
-    console.log(`v${release.version} for ${target}`);
+    console.log("The requested release is available for this platform.");
     return;
   }
   const filename = `runtime-${target}.${os === "win" ? "zip" : "tar.gz"}`;
@@ -77,7 +77,8 @@ async function install() {
   let activated = false;
   try {
     writeFileSync(join(stage, filename), bytes);
-    execFileSync("tar", ["-xf", join(stage, filename), "-C", stage]);
+    const tar = os === "win" ? join(process.env.SystemRoot, "System32", "tar.exe") : "tar";
+    execFileSync(tar, ["-xf", join(stage, filename), "-C", stage]);
     const cli = join(stage, "packages/rahulchaube-cli/bin/rahulchaube.ts");
     const reported = execFileSync(process.execPath, ["run", cli, "--version"], { encoding: "utf8" });
     if (!reported.trim().endsWith(`v${release.version}`)) throw new Error("Archive version check failed");

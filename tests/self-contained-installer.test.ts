@@ -33,7 +33,8 @@ test("Install the archive, run the packaged CLI, and preserve the install on che
     mkdirSync(join(dest, "cache"), { recursive: true });
     writeFileSync(join(dest, "cache", "keep"), "existing");
     const first = install();
-    expect(await first.exited).toBe(0);
+    const firstStatus = await first.exited;
+    expect(firstStatus, await new Response(first.stderr).text()).toBe(0);
     expect(run(["--version"]).stdout.toString()).toContain(versionInfo.version);
     writeFileSync(join(dir, "hello.ts"), 'setTimeout(() => console.log(process.argv.slice(2).join("|")), 5);');
     const result = run(["run", "./hello.ts", "--", "--label=a=b", "hello"]);

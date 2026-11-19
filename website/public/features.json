@@ -1,6 +1,6 @@
 {
   "platform": "RahulChaube Runtime",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "features": [
     {
       "name": "TypeScript & JSX Execution",
@@ -12,7 +12,7 @@
       "name": "Fast Cold Startup",
       "status": "Implemented",
       "category": "performance",
-      "description": "Cold process boot and script startup time under 20ms."
+      "description": "CLI commands load on demand."
     },
     {
       "name": "Node.js API Compatibility Layer",

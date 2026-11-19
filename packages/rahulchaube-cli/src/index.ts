@@ -65,6 +65,23 @@ function showHelp() {
   log.plain(colors.dim("RahulChaube Runtime — High-performance developer platform."));
 }
 
+function readLongFlag(argv: string[], index: number, flags: Record<string, unknown>): number {
+  const option = argv[index].slice(2);
+  const equals = option.indexOf("=");
+  if (equals >= 0) {
+    flags[option.slice(0, equals)] = option.slice(equals + 1);
+    return index;
+  }
+  if (!["outdir", "target", "outfile"].includes(option)) {
+    flags[option] = true;
+    return index;
+  }
+  const value = argv[index + 1];
+  if (!value || value.startsWith("-")) throw new Error(`--${option} requires a value`);
+  flags[option] = value;
+  return index + 1;
+}
+
 function parseFlags(argv: string[]): { args: string[]; flags: Record<string, unknown> } {
   const args: string[] = [];
   const flags: Record<string, unknown> = Object.create(null);
@@ -75,15 +92,7 @@ function parseFlags(argv: string[]): { args: string[]; flags: Record<string, unk
       break;
     }
     if (a.startsWith("--")) {
-      const eq = a.indexOf("=");
-      const k = a.slice(2, eq === -1 ? undefined : eq);
-      const takesValue = ["outdir", "target", "outfile"].includes(k);
-      if (eq >= 0) flags[k] = a.slice(eq + 1);
-      else if (takesValue) {
-        const value = argv[++i];
-        if (!value || value.startsWith("-")) throw new Error(`--${k} requires a value`);
-        flags[k] = value;
-      } else flags[k] = true;
+      i = readLongFlag(argv, i, flags);
     } else if (a.startsWith("-") && a.length > 1) {
       flags[a.slice(1)] = true;
     } else {

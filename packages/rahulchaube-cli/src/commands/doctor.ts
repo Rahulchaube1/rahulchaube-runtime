@@ -35,9 +35,7 @@ export async function doctor(args: string[], flags: Record<string, unknown>): Pr
     name: "Project manifest",
     ok: !!pkg,
     detail: pkg ? join(root, "package.json") : "no package.json",
-  });
-
-  checks.push(dependencyCheck(root));
+  }, dependencyCheck(root));
 
   // 4. Cache dir writable
   const cache = join(root, "node_modules", ".cache");
@@ -45,9 +43,7 @@ export async function doctor(args: string[], flags: Record<string, unknown>): Pr
     name: "Cache directory",
     ok: true,
     detail: existsSync(cache) ? "ready" : "will be created on first build",
-  });
-
-  checks.push(ignoreCheck(root));
+  }, ignoreCheck(root));
 
   let failures = 0;
   for (const c of checks) {
