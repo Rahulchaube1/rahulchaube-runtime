@@ -41,10 +41,16 @@ test("TimerRegistry: clear() cancels a pending timeout", async () => {
 test("TimerRegistry: setInterval fires multiple times", async () => {
   const reg = new TimerRegistry();
   let count = 0;
-  const id = reg.setInterval(() => { count++; }, 10, "tick");
-  await new Promise((r) => globalThis.setTimeout(r, 55));
-  reg.clear(id);
-  expect(count).toBeGreaterThanOrEqual(3);
+  await new Promise<void>((resolve) => {
+    const id = reg.setInterval(() => {
+      if (++count === 3) {
+        reg.clear(id);
+        resolve();
+      }
+    }, 10, "tick");
+  });
+  expect(count).toBe(3);
+  expect(reg.activeCount()).toBe(0);
 });
 
 test("TimerRegistry: clearAll() stops all pending timers", async () => {

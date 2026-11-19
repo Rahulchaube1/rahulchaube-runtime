@@ -1,7 +1,13 @@
 {
-  "latest": "1.0.1",
+  "latest": "1.1.0",
   "name": "RahulChaube Runtime",
   "releases": [
+    {
+      "version": "1.1.0",
+      "date": "2026-11-19",
+      "channel": "stable",
+      "notes": "Native Blyx CLI, bundled compiler, and standalone Blyx application builds."
+    },
     {
       "version": "1.0.1",
       "date": "2026-11-19",

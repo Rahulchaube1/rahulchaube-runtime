@@ -10,6 +10,7 @@ import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 
 export async function build(args: string[], flags: Record<string, unknown>): Promise<number> {
+  if (args[0]?.endsWith(".blyx")) return (await import("./blyx.ts")).blyxFile("build", args, flags);
   const out = flags.outdir ? ["--outdir", String(flags.outdir)] : [];
   const target = flags.target ? ["--target", String(flags.target)] : [];
   const minify = flags.minify ? ["--minify"] : [];

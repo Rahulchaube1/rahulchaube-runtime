@@ -1,19 +1,20 @@
 {
   "name": "rahulchaube-cli",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "RahulChaube Runtime — a next-generation JavaScript runtime and developer platform.",
   "license": "MIT",
   "type": "module",
   "bin": {
-    "rahulchaube": "./bin/rahulchaube.ts"
+    "rahulchaube": "./bin/package-cli.ts"
   },
   "files": [
     "bin",
+    "blyx",
     "src",
     "README.md"
   ],
   "scripts": {
-    "start": "bun ./bin/rahulchaube.ts",
+    "start": "bun ./bin/package-cli.ts",
     "typecheck": "tsc --noEmit"
   },
   "engines": {

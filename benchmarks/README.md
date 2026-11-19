@@ -26,3 +26,11 @@ The suite measures real, machine-local timings for representative workloads
 The `/benchmarks` page renders charts **only when real data is present**, and
 shows a clear "example data" label for placeholders. We do not claim
 RahulChaube Runtime is faster than Bun or Node unless benchmarks demonstrate it.
+
+### Compare installed CLI startup
+
+Use the two installed launchers on the same machine. For example, measure 50 fresh CLI processes per release with hyperfine. Repeat with `--help` or `run ./hello.ts` to compare other workloads.
+
+```sh
+hyperfine --shell=none --warmup 5 --runs 50 '/path/to/old/bin/rahulchaube --version' '/path/to/new/bin/rahulchaube --version'
+```

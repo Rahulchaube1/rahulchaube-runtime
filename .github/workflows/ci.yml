@@ -7,6 +7,40 @@ on:
     branches: [ main ]
 
 jobs:
+  native:
+    name: Compile and exercise Blyx on ${{ matrix.target }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-22.04, target: linux-x64 }
+          - { os: ubuntu-24.04-arm, target: linux-arm64 }
+          - { os: macos-15-intel, target: darwin-x64 }
+          - { os: macos-latest, target: darwin-arm64 }
+          - { os: windows-latest, target: win-x64, suffix: .exe }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          repository: Rahulchaube1/blyxxxx
+          ref: 2b6bd149ee898e05bb4b4e7f87e392baa7786071
+          path: .blyx-compiler
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+      - run: cargo build --locked --release --manifest-path .blyx-compiler/Cargo.toml -p blyxc
+      - run: bun installer/build-native.ts .blyx-compiler/target/release/blyxc${{ matrix.suffix }} packages/rahulchaube-cli/bin
+      - run: bun test tests/native-cli.test.ts tests/self-contained-installer.test.ts
+        env:
+          RAHUL_TEST_NATIVE: "1"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: native-${{ matrix.target }}
+          path: |
+            packages/rahulchaube-cli/bin/rahulchaube-native${{ matrix.suffix }}
+            packages/rahulchaube-cli/bin/blyxc${{ matrix.suffix }}
+          if-no-files-found: error
+
   test-matrix:
     name: Test & Validate (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
@@ -39,7 +73,7 @@ jobs:
 
   build-release:
     name: Generate Binary Release Artifacts
-    needs: test-matrix
+    needs: [test-matrix, native]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -49,6 +83,11 @@ jobs:
         uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest
+
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          pattern: native-*
+          path: .native-artifacts
 
       - name: Generate Release Artifacts
         run: bun run installer/build-release.ts

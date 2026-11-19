@@ -11,7 +11,7 @@
  * - version.json
  */
 import { createHash } from "node:crypto";
-import { mkdtempSync, writeFileSync, mkdirSync, rmSync, cpSync, readFileSync } from "node:fs";
+import { chmodSync, renameSync, mkdtempSync, writeFileSync, mkdirSync, rmSync, cpSync, readFileSync } from "node:fs";
 import { resolve, join } from "node:path";
 import { execFileSync } from "node:child_process";
 
@@ -34,7 +34,17 @@ export const RELEASE_TARGETS: TargetConfig[] = [
   { name: "darwin-arm64", os: "darwin", arch: "arm64", archiveName: "runtime-darwin-arm64.tar.gz", isZip: false },
 ];
 
-export function buildReleaseArtifacts(outputDir: string = "dist"): void {
+function stageNativeTools(target: TargetConfig, nativeDir: string, stageCli: string) {
+  const suffix = target.os === "windows" ? ".exe" : "";
+  for (const tool of ["rahulchaube-native", "blyxc"]) {
+    const bin = join(stageCli, "bin", tool);
+    rmSync(bin + (suffix ? "" : ".exe"), { force: true });
+    cpSync(resolve(nativeDir, "native-" + target.name, tool + suffix), bin + suffix);
+    chmodSync(bin + suffix, 0o755);
+  }
+}
+
+export function buildReleaseArtifacts(outputDir: string = "dist", nativeDir: string = ".native-artifacts"): void {
   const rootDir = process.cwd();
   const distPath = resolve(rootDir, outputDir);
   mkdirSync(distPath, { recursive: true });
@@ -52,25 +62,32 @@ export function buildReleaseArtifacts(outputDir: string = "dist"): void {
   // Copy runtime engine and CLI package into staging
   cpSync(join(rootDir, "runtime"), stageRuntime, { recursive: true });
   const cliSource = join(rootDir, "packages", "rahulchaube-cli");
-  for (const file of ["bin", "src", "package.json", "README.md"]) {
+  for (const file of ["src", "blyx", "package.json", "README.md"]) {
     cpSync(join(cliSource, file), join(stageCli, file), { recursive: true });
   }
+  mkdirSync(join(stageCli, "bin"));
+  for (const name of ["rahulchaube.ts", "package-cli.ts"]) {
+    cpSync(join(cliSource, "bin", name), join(stageCli, "bin", name));
+  }
+  cpSync(join(rootDir, "installer/Blyx-LICENSE-MIT"), join(stageCli, "Blyx-LICENSE-MIT"));
   cpSync(join(rootDir, "LICENSE.md"), join(stagingDir, "LICENSE.md"));
 
   writeFileSync(join(stageBin, "rahulchaube.cmd"), [
-    "@echo off", 'bun run "%~dp0..\\packages\\rahulchaube-cli\\bin\\rahulchaube.ts" %*', "exit /b %errorlevel%", ""
+    "@echo off", String.raw`"%~dp0..\packages\rahulchaube-cli\bin\rahulchaube-native.exe" %*`, "exit /b %errorlevel%", ""
   ].join("\r\n"));
   writeFileSync(join(stageBin, "rahulchaube"), [
-    "#!/bin/sh", 'exec bun run "$(dirname "$0")/../packages/rahulchaube-cli/bin/rahulchaube.ts" "$@"', ""
+    "#!/bin/sh", 'exec "${0%/*}/../packages/rahulchaube-cli/bin/rahulchaube-native" "$@"', ""
   ].join("\n"), { mode: 0o755 });
 
+  // Finish every platform archive before replacing any previously built distribution.
+  const complete = mkdtempSync(join(distPath, ".build-"));
   const checksums: Record<string, string> = {};
   const sizes: Record<string, number> = {};
   const blobs: Record<string, string> = {};
   try {
     for (const t of RELEASE_TARGETS) {
-      const archivePath = join(distPath, t.archiveName);
-      rmSync(archivePath, { force: true });
+      const archivePath = join(complete, t.archiveName);
+      stageNativeTools(t, nativeDir, stageCli);
       if (t.isZip && process.platform !== "win32") {
         execFileSync("zip", ["-qr", archivePath, "."], { cwd: stagingDir });
       } else {
@@ -82,7 +99,11 @@ export function buildReleaseArtifacts(outputDir: string = "dist"): void {
       sizes[t.archiveName] = bytes.length;
       blobs[t.archiveName] = execFileSync("git", ["hash-object", "--no-filters", archivePath], { encoding: "utf8" }).trim();
     }
+    for (const target of RELEASE_TARGETS) {
+      renameSync(join(complete, target.archiveName), join(distPath, target.archiveName));
+    }
   } finally {
+    rmSync(complete, { recursive: true, force: true });
     rmSync(stagingDir, { recursive: true, force: true });
   }
 
@@ -96,6 +117,7 @@ export function buildReleaseArtifacts(outputDir: string = "dist"): void {
   const versionJson = {
     version: cliPackage.version,
     channel: "stable",
+    launcher: "blyx",
     release: "https://www.rahulchaube.space/releases",
     downloadUrl,
     assets: Object.fromEntries(RELEASE_TARGETS.map(t => [t.name, `${downloadUrl}/${t.archiveName}`])),

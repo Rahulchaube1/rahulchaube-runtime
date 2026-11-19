@@ -1,6 +1,6 @@
 # RahulChaube Runtime
 
-![Version](https://img.shields.io/badge/version-1.0.1-emerald.svg)
+![Version](https://img.shields.io/badge/version-1.1.0-emerald.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)
 ![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-darkgreen.svg)
@@ -26,6 +26,18 @@ irm https://www.rahulchaube.space/install.ps1 | iex
 ```bash
 curl -fsSL https://www.rahulchaube.space/install | bash
 ```
+
+### Run a Blyx program
+
+The installed CLI starts in native Blyx. It includes the Blyx compiler and interpreter. Blyx sends JS and TS files directly to Bun’s JavaScriptCore host for ES modules, CommonJS, dynamic imports and top-level await. Watch, debug, package tooling and other compatibility commands still use Bun.
+
+```sh
+rahulchaube blyx new hello
+rahulchaube blyx run hello/src/main.blyx
+rahulchaube build hello/src/main.blyx --outfile hello-app
+```
+
+The interpreter can run portable programs immediately. Native builds and `rahulchaube run file.blyx -- args` require Rust 1.85 or newer and a host linker. A compiled program can be distributed and run independently.
 
 ### Upgrade to Latest Release
 
