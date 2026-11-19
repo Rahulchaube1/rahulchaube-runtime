@@ -16,12 +16,12 @@ export function TerminalDemo() {
   return (
     <div className="min-w-0 rounded-2xl border border-vscode-border bg-ink-800 p-5 text-vscode-text shadow-xl sm:p-7">
       <div className="mb-5 flex items-center gap-2 border-b border-vscode-border pb-4 font-mono text-sm"><Terminal size={17} className="text-brand-lime" /> CLI examples</div>
-      <div className="flex gap-2" aria-label="Command examples" role="group">
+      <fieldset className="flex gap-2" aria-label="Command examples">
         {examples.map(({ label }, index) => (
           <button key={label} aria-pressed={selected === index} onClick={() => setSelected(index)}
             className="rounded-md border border-vscode-border px-3 py-1.5 text-sm aria-pressed:bg-brand-lime aria-pressed:text-ink-900">{label}</button>
         ))}
-      </div>
+      </fieldset>
       <p className="mt-5 text-sm leading-relaxed text-zinc-300">{example.instruction}</p>
       {example.file && <CodeBlock code={example.file} lang="hello.ts" />}
       <CodeBlock key={example.command} code={example.command} lang="Terminal" />

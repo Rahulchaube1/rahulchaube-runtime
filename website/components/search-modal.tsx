@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import type { DocPage } from "@/lib/docs";
 import { Search, X, Command, BookOpen, ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -9,6 +9,7 @@ export function SearchModal() {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const dialog = useRef<HTMLDialogElement>(null);
   const router = useRouter();
   const [docs, setDocs] = useState<DocPage[]>([]);
   const [loadError, setLoadError] = useState(false);
@@ -32,6 +33,11 @@ export function SearchModal() {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
+
+  useEffect(() => {
+    if (isOpen) dialog.current?.showModal();
+    else dialog.current?.close();
+  }, [isOpen]);
 
   const results = query.trim()
     ? docs.filter(
@@ -66,6 +72,10 @@ export function SearchModal() {
     }
   };
 
+  let emptyMessage = `No matching documentation for “${query}”.`;
+  if (!docs.length) emptyMessage = "Loading documentation…";
+  if (loadError) emptyMessage = "Search could not load. Close and reopen to retry.";
+
   return (
     <>
       {/* Trigger Button */}
@@ -82,18 +92,15 @@ export function SearchModal() {
       </button>
 
       {/* Modal Backdrop */}
-      {isOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 dark:bg-black/80 backdrop-blur-sm flex items-start justify-center pt-16 sm:pt-24 px-4 font-sans">
-          <div
-            className="bg-white dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] rounded-xl w-full max-w-xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150"
-            role="dialog" aria-modal="true" aria-label="Search documentation"
-            onKeyDown={handleKeyDown}
-          >
+      <dialog ref={dialog} aria-label="Search documentation" onClose={() => setIsOpen(false)}
+        className="mx-auto mt-16 w-[calc(100%-2rem)] max-w-xl rounded-xl border border-zinc-200 bg-white p-0 text-zinc-900 shadow-2xl backdrop:bg-black/70 sm:mt-24 dark:border-[#30363D] dark:bg-[#161B22] dark:text-white">
+        {isOpen && <>
             {/* Input Bar */}
             <div className="flex items-center px-4 py-3 border-b border-zinc-200 dark:border-[#30363D] gap-3">
               <Search className="w-4 h-4 text-blue-500 shrink-0" />
               <input
                 type="text"
+                onKeyDown={handleKeyDown}
                 autoFocus
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
@@ -101,18 +108,16 @@ export function SearchModal() {
                 placeholder="Search documentation, commands, APIs..."
                 className="bg-transparent text-xs text-zinc-900 dark:text-[#F0F6FC] placeholder-zinc-400 dark:placeholder-[#8B949E] focus:outline-none w-full font-mono"
               />
-              {isOpen && (
                 <button aria-label="Close search" onClick={() => setIsOpen(false)} className="text-zinc-400 dark:text-[#8B949E] hover:text-zinc-900 dark:hover:text-[#F0F6FC]">
                   <X className="w-4 h-4" />
                 </button>
-              )}
             </div>
 
             {/* Results List */}
             <div className="max-h-80 overflow-y-auto p-2">
               {results.length === 0 ? (
                 <div className="p-8 text-center text-xs text-zinc-500 dark:text-[#8B949E]">
-                  {loadError ? "Search could not load. Close and reopen to retry." : !docs.length ? "Loading documentation…" : `No matching documentation for “${query}”.`}
+                  {emptyMessage}
                 </div>
               ) : (
                 results.map((doc, idx) => (
@@ -147,9 +152,8 @@ export function SearchModal() {
               </span>
               <span>RahulChaube Docs v1.0</span>
             </div>
-          </div>
-        </div>
-      )}
+        </>}
+      </dialog>
     </>
   );
 }

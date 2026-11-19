@@ -16,7 +16,7 @@ export async function build(args: string[], flags: Record<string, unknown>): Pro
   const sourcemap = flags.sourcemap ? ["--sourcemap"] : [];
   const splitting = flags.splitting ? ["--splitting"] : [];
 
-  const output = flags.outfile ? ["--outfile", String(flags.outfile)] : out;
+  const output = typeof flags.outfile === "string" ? ["--outfile", flags.outfile] : out;
   const compile = flags.compile ? ["--compile"] : [];
   const isWatch = Boolean(flags.watch || flags.w);
 

@@ -66,9 +66,7 @@ export class PackageInstaller {
     let cachedCount = 0;
 
     const nodeModulesDir = resolve(projectDir, "node_modules");
-    if (!existsSync(nodeModulesDir)) {
-      mkdirSync(nodeModulesDir, { recursive: true });
-    }
+    mkdirSync(nodeModulesDir, { recursive: true });
 
     for (const [name, rawVersion] of Object.entries(deps)) {
       if (!/^(?:@[a-z0-9~][a-z0-9._~-]*\/)?[a-z0-9~][a-z0-9._~-]*$/i.test(name)) {
@@ -91,21 +89,7 @@ export class PackageInstaller {
 
       // Global store directory for package
       const globalPkgStore = resolve(this.cacheDir, name.replace(/\//g, "__"), verMeta.version);
-      if (!existsSync(globalPkgStore)) {
-        mkdirSync(dirname(globalPkgStore), { recursive: true });
-        const stage = mkdtempSync(join(dirname(globalPkgStore), ".extract-"));
-        try {
-          this.extractTarball(tarballBuffer, stage);
-          try {
-            renameSync(stage, globalPkgStore);
-          } catch (error) {
-            // A concurrent installer may already have published the complete package.
-            if (!existsSync(globalPkgStore)) throw error;
-          }
-        } finally {
-          rmSync(stage, { recursive: true, force: true });
-        }
-      }
+      this.cachePackage(globalPkgStore, tarballBuffer);
 
       // Link / copy package from global store to project node_modules
       const projectTarget = resolve(nodeModulesDir, name);
@@ -124,6 +108,23 @@ export class PackageInstaller {
     const lockfilePath = LockfileManager.write(projectDir, lockfile);
 
     return { installed, lockfilePath, cachedCount, offline: this.offline };
+  }
+
+  private cachePackage(globalPkgStore: string, tarballBuffer: Buffer): void {
+    if (existsSync(globalPkgStore)) return;
+    mkdirSync(dirname(globalPkgStore), { recursive: true });
+    const stage = mkdtempSync(join(dirname(globalPkgStore), ".extract-"));
+    try {
+      this.extractTarball(tarballBuffer, stage);
+      try {
+        renameSync(stage, globalPkgStore);
+      } catch (error) {
+        // A concurrent installer may already have published the complete package.
+        if (!existsSync(globalPkgStore)) throw error;
+      }
+    } finally {
+      rmSync(stage, { recursive: true, force: true });
+    }
   }
 
   public async resolveVersion(name: string, rawVersion: string): Promise<VersionMetadata> {
@@ -226,25 +227,26 @@ export class PackageInstaller {
       }
       if (rawName && ["0", "\0", "5"].includes(typeFlag)) {
         const cleanName = rawName.replace(/^package[\\/]/, "");
-        if (cleanName) {
-          const outPath = resolve(destDir, cleanName);
-          if (win32.isAbsolute(cleanName) || cleanName.split(/[\\/]/).includes("..") ||
-              (outPath !== resolve(destDir) && !outPath.startsWith(resolve(destDir) + sep))) {
-            throw new Error("Package archive entry is outside its destination");
-          }
-
-          if (typeFlag === "5" || cleanName.endsWith("/")) {
-            mkdirSync(outPath, { recursive: true });
-          } else {
-            mkdirSync(dirname(outPath), { recursive: true });
-            const fileData = tarBuffer.subarray(offset, offset + fileSize);
-            writeFileSync(outPath, fileData);
-          }
-        }
+        if (cleanName) this.writeTarEntry(destDir, cleanName, typeFlag, tarBuffer.subarray(offset, offset + fileSize));
       }
 
       offset += Math.ceil(fileSize / 512) * 512;
     }
+  }
+
+  private writeTarEntry(destDir: string, name: string, type: string, data: Buffer): void {
+    const root = resolve(destDir);
+    const output = resolve(root, name);
+    if (win32.isAbsolute(name) || name.split(/[\\/]/).includes("..") ||
+        (output !== root && !output.startsWith(root + sep))) {
+      throw new Error("Package archive entry is outside its destination");
+    }
+    if (type === "5" || name.endsWith("/")) {
+      mkdirSync(output, { recursive: true });
+      return;
+    }
+    mkdirSync(dirname(output), { recursive: true });
+    writeFileSync(output, data);
   }
 
   private copyRecursiveSync(src: string, dest: string): void {

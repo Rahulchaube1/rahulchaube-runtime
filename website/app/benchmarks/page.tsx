@@ -13,7 +13,7 @@ export default function BenchmarksPage() {
     <div className="mx-auto max-w-5xl px-4 py-16 font-sans">
       <h1 className="text-3xl font-extrabold text-zinc-900 dark:text-[#F0F6FC]">Runtime Performance &amp; Startup</h1>
       <p className="mt-3 max-w-2xl text-xs text-zinc-600 dark:text-[#8B949E] leading-relaxed">
-        These charts use illustrative values. To measure the runtime on your hardware, run
+        These charts use illustrative values. To measure the runtime on your hardware, run{" "}
         <code className="ml-1 font-mono">bun benchmarks/runner.ts</code> from the repository root.
       </p>
 

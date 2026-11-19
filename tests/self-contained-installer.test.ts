@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { versionInfo } from "../website/lib/releases.ts";
@@ -7,18 +7,15 @@ import { versionInfo } from "../website/lib/releases.ts";
 test("Install the archive, run the packaged CLI, and preserve the install on checksum failure", async () => {
   const dir = mkdtempSync(join(tmpdir(), "rahul-install-test-"));
   const dest = join(dir, "install");
-  let corrupt = false;
+  const archiveDir = join(dir, "archive");
+  mkdirSync(archiveDir);
+  const os = process.platform === "win32" ? "win" : process.platform;
+  const file = `runtime-${os}-${process.arch}.${os === "win" ? "zip" : "tar.gz"}`;
+  for (const name of ["version.json", file]) copyFileSync(join("dist", name), join(archiveDir, name));
   const server = Bun.serve({
     hostname: "127.0.0.1", port: 0,
     fetch(request) {
       const url = new URL(request.url);
-      if (url.pathname === "/api/version") {
-        return Response.json({ ...versionInfo, assets: Object.fromEntries(Object.entries(versionInfo.assets)
-          .map(([key, asset]) => [key, url.origin + "/" + asset.split("/").pop()])) });
-      }
-      if (url.pathname.startsWith("/runtime-")) {
-        return new Response(corrupt ? "incomplete download" : Bun.file(join("dist", url.pathname.slice(1))));
-      }
       if (url.pathname === "/install-runtime.mjs") return new Response(Bun.file("website/public/install-runtime.mjs"));
       return new Response(null, { status: 404 });
     },
@@ -27,7 +24,7 @@ test("Install the archive, run the packaged CLI, and preserve the install on che
   const exe = windows ? "powershell" : "bash";
   const args = windows ? ["-NoProfile", "-File", "website/public/install.ps1"] : ["website/public/install.sh"];
   const install = () => Bun.spawn([exe, ...args], {
-    env: { ...process.env, RAHULCHAUBE_INSTALL_DIR: dest, RAHULCHAUBE_INSTALL_ORIGIN: server.url.origin },
+    env: { ...process.env, RAHULCHAUBE_INSTALL_DIR: dest, RAHULCHAUBE_INSTALL_ARCHIVE_DIR: archiveDir, RAHULCHAUBE_INSTALL_ORIGIN: server.url.origin },
     stdout: "pipe", stderr: "pipe",
   });
   const launcher = join(dest, "bin", windows ? "rahulchaube.cmd" : "rahulchaube");
@@ -43,7 +40,7 @@ test("Install the archive, run the packaged CLI, and preserve the install on che
     expect(result.exitCode).toBe(0);
     expect(result.stdout.toString().trim()).toBe("--label=a=b|hello");
     expect(run(["run", "./missing.ts"]).exitCode).toBe(1);
-    corrupt = true;
+    writeFileSync(join(archiveDir, file), "incomplete download");
     const failed = install();
     expect(await failed.exited).not.toBe(0);
     expect(await new Response(failed.stderr).text()).toContain("SHA-256 mismatch");

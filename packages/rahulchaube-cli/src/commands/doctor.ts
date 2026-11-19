@@ -37,15 +37,7 @@ export async function doctor(args: string[], flags: Record<string, unknown>): Pr
     detail: pkg ? join(root, "package.json") : "no package.json",
   });
 
-  // 3. node_modules vs lockfile consistency
-  const nm = existsSync(join(root, "node_modules"));
-  const lock = existsSync(join(root, "bun.lock"));
-  checks.push({
-    name: "Dependency tree",
-    ok: nm || !lock,
-    detail: nm ? "node_modules present" : lock ? "missing node_modules — run `rahulchaube install`" : "no deps",
-    fix: nm || !lock ? undefined : () => runEngine(["install", "--frozen-lockfile"], { inherit: false }).code === 0,
-  });
+  checks.push(dependencyCheck(root));
 
   // 4. Cache dir writable
   const cache = join(root, "node_modules", ".cache");
@@ -55,33 +47,17 @@ export async function doctor(args: string[], flags: Record<string, unknown>): Pr
     detail: existsSync(cache) ? "ready" : "will be created on first build",
   });
 
-  // 5. Git ignore hygiene (node_modules ignored)
-  const gitignore = existsSync(join(root, ".gitignore"))
-    ? (await import("node:fs")).readFileSync(join(root, ".gitignore"), "utf8")
-    : "";
-  checks.push({
-    name: "VCS hygiene",
-    ok: gitignore.includes("node_modules"),
-    detail: gitignore.includes("node_modules") ? ".gitignore covers node_modules" : "add node_modules to .gitignore",
-      fix: gitignore.includes("node_modules")
-        ? undefined
-        : () => {
-            appendFileSync(join(root, ".gitignore"), "\nnode_modules\n");
-            return true;
-          },
-  });
+  checks.push(ignoreCheck(root));
 
   let failures = 0;
   for (const c of checks) {
     if (c.ok) {
       log.success(`${c.name}: ${colors.dim(c.detail)}`);
+    } else if (fix && c.fix?.()) {
+      log.success(`${icons.wrench} Fixed ${colors.bold(c.name)}.`);
     } else {
-      if (fix && c.fix?.()) {
-        log.success(`${icons.wrench} Fixed ${colors.bold(c.name)}.`);
-      } else {
-        failures++;
-        log.error(`${c.name}: ${c.detail}`);
-      }
+      failures++;
+      log.error(`${c.name}: ${c.detail}`);
     }
   }
 
@@ -91,4 +67,29 @@ export async function doctor(args: string[], flags: Record<string, unknown>): Pr
   }
   log.warn(`Found ${failures} issue(s). Run ${colors.bold("rahulchaube doctor --fix")} to repair.`);
   return 1;
+}
+
+
+function dependencyCheck(root: string): Check {
+  const present = existsSync(join(root, "node_modules"));
+  const missing = !present && existsSync(join(root, "bun.lock"));
+  return {
+    name: "Dependency tree",
+    ok: !missing,
+    detail: missing ? "missing node_modules" : "ready",
+    fix: () => runEngine(["install", "--frozen-lockfile"], { cwd: root, inherit: false }).code === 0,
+  };
+}
+
+function ignoreCheck(root: string): Check {
+  const file = join(root, ".gitignore");
+  const ignored = existsSync(file) && readFileSync(file, "utf8").includes("node_modules");
+  return {
+    name: "VCS hygiene", ok: ignored,
+    detail: ignored ? ".gitignore covers node_modules" : "add node_modules to .gitignore",
+    fix: () => {
+      appendFileSync(file, "\nnode_modules\n");
+      return true;
+    },
+  };
 }

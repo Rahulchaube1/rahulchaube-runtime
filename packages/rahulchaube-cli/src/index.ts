@@ -77,9 +77,13 @@ function parseFlags(argv: string[]): { args: string[]; flags: Record<string, unk
     if (a.startsWith("--")) {
       const eq = a.indexOf("=");
       const k = a.slice(2, eq === -1 ? undefined : eq);
-      if (eq !== -1) flags[k] = a.slice(eq + 1);
-      else if ((k === "outdir" || k === "target" || k === "outfile") && argv[i + 1] && !argv[i + 1].startsWith("-")) flags[k] = argv[++i];
-      else flags[k] = true;
+      const takesValue = ["outdir", "target", "outfile"].includes(k);
+      if (eq >= 0) flags[k] = a.slice(eq + 1);
+      else if (takesValue) {
+        const value = argv[++i];
+        if (!value || value.startsWith("-")) throw new Error(`--${k} requires a value`);
+        flags[k] = value;
+      } else flags[k] = true;
     } else if (a.startsWith("-") && a.length > 1) {
       flags[a.slice(1)] = true;
     } else {
@@ -101,7 +105,6 @@ export async function main(argv: string[]): Promise<number> {
     return 0;
   }
 
-  const { args, flags } = parseFlags(argv.slice(1));
   const cmd = argv[0];
   const meta = COMMANDS[cmd];
   if (!Object.hasOwn(COMMANDS, cmd)) {
@@ -109,15 +112,16 @@ export async function main(argv: string[]): Promise<number> {
     log.info(`Run ${colors.bold("rahulchaube --help")} for the full command list.`);
     return 1;
   }
-  if (flags.help || flags.h) {
-    showHelp();
-    return 0;
-  }
   try {
+    const { args, flags } = parseFlags(argv.slice(1));
+    if (flags.help || flags.h) {
+      showHelp();
+      return 0;
+    }
     return await meta.fn(args, flags);
   } catch (err) {
     log.error(`Command ${colors.bold(cmd)} failed: ${(err as Error).message}`);
-    if (flags.debug) log.raw((err as Error).stack ?? "");
+    if (argv.includes("--debug")) log.raw((err as Error).stack ?? "");
     return 1;
   }
 }

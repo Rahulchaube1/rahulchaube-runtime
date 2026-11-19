@@ -11,7 +11,7 @@
  * - version.json
  */
 import { createHash } from "node:crypto";
-import { mkdtempSync, writeFileSync, mkdirSync, existsSync, rmSync, cpSync, readFileSync } from "node:fs";
+import { mkdtempSync, writeFileSync, mkdirSync, rmSync, cpSync, readFileSync } from "node:fs";
 import { resolve, join } from "node:path";
 import { execFileSync } from "node:child_process";
 
@@ -80,7 +80,7 @@ export function buildReleaseArtifacts(outputDir: string = "dist"): void {
       const bytes = readFileSync(archivePath);
       checksums[t.archiveName] = createHash("sha256").update(bytes).digest("hex");
       sizes[t.archiveName] = bytes.length;
-      blobs[t.archiveName] = createHash("sha1").update(`blob ${bytes.length}\0`).update(bytes).digest("hex");
+      blobs[t.archiveName] = execFileSync("git", ["hash-object", "--no-filters", archivePath], { encoding: "utf8" }).trim();
     }
   } finally {
     rmSync(stagingDir, { recursive: true, force: true });

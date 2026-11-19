@@ -6,11 +6,11 @@ tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
 curl -fsSL "$origin/install-runtime.mjs" -o "$tmp/install-runtime.mjs"
 bun "$tmp/install-runtime.mjs" "$@"
-if [ -z "${RAHULCHAUBE_INSTALL_DIR:-}" ] && [ "$#" -eq 0 ]; then
+if [[ -z "${RAHULCHAUBE_INSTALL_DIR:-}" && "$#" -eq 0 ]]; then
   shell_name="${SHELL:-sh}"
   case "${shell_name##*/}" in
     zsh) profile="$HOME/.zshrc" ;;
-    bash) profile="$HOME/.bashrc"; if [ -f "$HOME/.bash_profile" ]; then profile="$HOME/.bash_profile"; fi ;;
+    bash) profile="$HOME/.bashrc"; if [[ -f "$HOME/.bash_profile" ]]; then profile="$HOME/.bash_profile"; fi ;;
     *) profile="$HOME/.profile" ;;
   esac
   line='export PATH="$HOME/.rahulchaube/bin:$PATH"'
