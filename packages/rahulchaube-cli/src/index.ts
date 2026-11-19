@@ -19,6 +19,7 @@ const COMMANDS: Record<string, { fn: CommandFn; summary: string; group: string }
   run: { fn: async (args, flags) => (await import("./commands/run.ts")).run(args, flags), summary: "Run a script", group: "Execute" },
   test: { fn: async (args, flags) => (await import("./commands/test.ts")).test(args, flags), summary: "Run the test suite", group: "Execute" },
   build: { fn: async (args, flags) => (await import("./commands/build.ts")).build(args, flags), summary: "Bundle your project", group: "Execute" },
+  blyx: { fn: async (args) => (await import("./commands/blyx.ts")).blyx(args), summary: "Run the Blyx compiler or interpreter", group: "Execute" },
   profile: { fn: async (args, flags) => (await import("./commands/profile.ts")).profileCommand(args, flags), summary: "Profile script execution", group: "Execute" },
   compatibility: { fn: async (args, flags) => (await import("./commands/compatibility.ts")).compatibilityCommand(args, flags), summary: "Run compatibility test matrix", group: "Execute" },
   create: { fn: async (args, flags) => (await import("./commands/create.ts")).create(args, flags), summary: "Scaffold a new project", group: "Project" },
@@ -122,6 +123,7 @@ export async function main(argv: string[]): Promise<number> {
     return 1;
   }
   try {
+    if (cmd === "blyx") return await meta.fn(argv.slice(1), {});
     const { args, flags } = parseFlags(argv.slice(1));
     if (flags.help || flags.h) {
       showHelp();

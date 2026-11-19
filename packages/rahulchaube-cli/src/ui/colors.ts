@@ -5,8 +5,7 @@
 
 const enabled =
   !process.env.NO_COLOR &&
-  !!process.stdout.isTTY &&
-  process.env.TERM !== "dumb";
+  (process.env.FORCE_COLOR === "1" || (!!process.stdout.isTTY && process.env.TERM !== "dumb"));
 
 function code(open: number, close: number) {
   const o = `\x1b[${open}m`;

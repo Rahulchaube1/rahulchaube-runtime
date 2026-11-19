@@ -1,6 +1,6 @@
 {
   "name": "rahulchaube-cli",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "RahulChaube Runtime — a next-generation JavaScript runtime and developer platform.",
   "license": "MIT",
   "type": "module",

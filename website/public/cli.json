@@ -1,7 +1,8 @@
 {
   "binary": "rahulchaube",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "commands": [
+    { "name": "blyx", "usage": "rahulchaube blyx <subcommand>", "description": "Access the bundled Blyx compiler and interpreter", "status": "Implemented" },
     { "name": "run", "usage": "rahulchaube run <script|file>", "description": "Execute script or TS/JS file natively", "status": "Implemented" },
     { "name": "test", "usage": "rahulchaube test [file]", "description": "Execute unit tests in workspace", "status": "Implemented" },
     { "name": "build", "usage": "rahulchaube build [entry]", "description": "Bundle source code for production", "status": "Implemented" },

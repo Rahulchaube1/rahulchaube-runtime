@@ -79,8 +79,12 @@ async function install() {
     writeFileSync(join(stage, filename), bytes);
     const tar = os === "win" ? join(process.env.SystemRoot, "System32", "tar.exe") : "tar";
     execFileSync(tar, ["-xf", join(stage, filename), "-C", stage]);
-    const cli = join(stage, "packages/rahulchaube-cli/bin/rahulchaube.ts");
-    const reported = execFileSync(process.execPath, ["run", cli, "--version"], { encoding: "utf8" });
+    const cli = join(stage, "packages/rahulchaube-cli/bin", os === "win" ? "rahulchaube-native.exe" : "rahulchaube-native");
+    const native = release.launcher === "blyx";
+    const args = native ? ["--version"] : ["run", join(stage, "packages/rahulchaube-cli/bin/rahulchaube.ts"), "--version"];
+    const reported = execFileSync(native ? cli : process.execPath, args, {
+      encoding: "utf8", env: { ...process.env, NO_COLOR: "1" }
+    });
     if (!reported.trim().endsWith(`v${release.version}`)) throw new Error("Archive version check failed");
     activate(stage, dest);
     activated = true;

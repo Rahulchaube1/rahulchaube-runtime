@@ -1,6 +1,6 @@
 {
   "platform": "RahulChaube Runtime",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "downloads": [
     { "os": "linux", "arch": "x64", "url": "https://www.rahulchaube.space/install", "cmd": "curl -fsSL https://www.rahulchaube.space/install | bash" },
     { "os": "macos", "arch": "arm64/x64", "url": "https://www.rahulchaube.space/install", "cmd": "curl -fsSL https://www.rahulchaube.space/install | bash" },

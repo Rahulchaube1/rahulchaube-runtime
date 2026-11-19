@@ -1,0 +1,52 @@
+use std::cli;
+use std::text;
+
+// Options are alternating names and values. Positional arguments retain OS bytes.
+pub fn parse_args(command: String, raw: arglist, want_options: bool) -> arglist {
+    let mut result = args_new();
+    let mut i = 0;
+    while i < args_len(raw) {
+        let word = args_at(raw, i);
+        if word == "--" {
+            if want_options { return result; }
+            return args_concat(result, args_tail(raw, i + 1));
+        }
+        if word == "-" || !text_starts(word, "-") {
+            if !want_options { result = args_concat(result, args_item(raw, i)); }
+        } else {
+            let mut key = text_after(word, "-");
+            let mut value = "true";
+            if text_starts(word, "--") {
+                let option = text_after(word, "--");
+                key = text_before(option, "=");
+                if key != option {
+                    value = text_after(option, text_concat(key, "="));
+                } else if key == "outdir" || key == "outfile" || key == "target" {
+                    i += 1;
+                    if i == args_len(raw) || args_at(raw, i) == "" || text_starts(args_at(raw, i), "-") {
+                        stderr_line(text_concat(text_concat(text_concat("[ERR] Command ", command), " failed: --"), text_concat(key, " requires a value")));
+                        process_exit(1);
+                    }
+                    value = args_at(raw, i);
+                }
+            }
+            if want_options { result = args_push(args_push(result, key), value); }
+        }
+        i += 1;
+    }
+    result
+}
+
+pub fn option(opts: arglist, key: String) -> String {
+    let mut i = args_len(opts);
+    while i > 0 {
+        i -= 2;
+        if args_at(opts, i) == key { return args_at(opts, i + 1); }
+    }
+    ""
+}
+
+pub fn engine_flag(xs: arglist, opts: arglist, key: String) -> arglist {
+    if option(opts, key) != "" { return args_push(xs, text_concat("--", key)); }
+    xs
+}

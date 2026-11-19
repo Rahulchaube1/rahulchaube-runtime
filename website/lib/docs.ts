@@ -239,6 +239,23 @@ rahulchaube run ./hello.ts
 \`\`\`
 
 The command prints "Hello, runtime!". Run it with --watch to rerun when files change.
+
+## Run Blyx
+
+The release includes a native Blyx launcher and the Blyx compiler. Create a project and run it with the bundled interpreter.
+
+\`\`\`sh
+rahulchaube blyx new hello
+rahulchaube blyx run hello/src/main.blyx
+\`\`\`
+
+Install Rust 1.85 or newer and a host linker to compile a standalone executable. Choose an output filename ending in .exe on Windows.
+
+\`\`\`sh
+rahulchaube build hello/src/main.blyx --outfile hello-app
+\`\`\`
+
+Use rahulchaube run file.blyx -- args to compile and run a program with its arguments.
 `,
   },
   {
@@ -263,7 +280,7 @@ powershell -c "irm https://www.rahulchaube.space/install.ps1 | iex"
 ## Verification
 \`\`\`sh
 rahulchaube --version
-# Output: rahulchaube v1.0.1
+# Output: rahulchaube v1.1.0
 \`\`\`
 `,
   },
