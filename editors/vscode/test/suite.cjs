@@ -6,8 +6,8 @@ const vscode = require("vscode");
 
 async function until(condition, description) {
   const end = Date.now() + 25000;
-  for await (const _ of ticks(50)) {
-    if (condition()) return;
+  for await (const check of ticks(50, condition)) {
+    if (check()) return;
     if (Date.now() > end) throw new Error("Timed out waiting for " + description);
   }
 }
