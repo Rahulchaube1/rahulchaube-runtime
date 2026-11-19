@@ -56,7 +56,9 @@ export function buildReleaseArtifacts(outputDir: string = "dist", nativeDir: str
     cpSync(join(cliSource, file), join(stageCli, file), { recursive: true });
   }
   mkdirSync(join(stageCli, "bin"));
-  cpSync(join(cliSource, "bin/rahulchaube.ts"), join(stageCli, "bin/rahulchaube.ts"));
+  for (const name of ["rahulchaube.ts", "package-cli.ts"]) {
+    cpSync(join(cliSource, "bin", name), join(stageCli, "bin", name));
+  }
   cpSync(join(rootDir, "installer/Blyx-LICENSE-MIT"), join(stageCli, "Blyx-LICENSE-MIT"));
   cpSync(join(rootDir, "LICENSE.md"), join(stagingDir, "LICENSE.md"));
 

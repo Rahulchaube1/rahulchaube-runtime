@@ -26,7 +26,7 @@ export default function DownloadPage() {
           Download RahulChaube Runtime
         </h1>
         <p className="text-zinc-600 dark:text-[#8B949E] text-sm sm:text-base">
-          Choose the installer for your operating system. The CLI runs on Bun.
+          Each archive includes the native Blyx CLI and compiler. Install Bun to use the installer and run JavaScript or TypeScript.
         </p>
       </div>
 

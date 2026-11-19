@@ -26,3 +26,12 @@ The suite measures real, machine-local timings for representative workloads
 The `/benchmarks` page renders charts **only when real data is present**, and
 shows a clear "example data" label for placeholders. We do not claim
 RahulChaube Runtime is faster than Bun or Node unless benchmarks demonstrate it.
+
+### Compare installed CLI startup
+
+Supply paths to two installed launchers. Run the same command on each installation, on the same machine. The benchmark alternates the order, discards five warm-up pairs and prints elapsed wall-clock milliseconds for 50 fresh processes per installation.
+
+```sh
+python3 benchmarks/cli-startup.py /path/to/old/bin/rahulchaube /path/to/new/bin/rahulchaube --version
+python3 benchmarks/cli-startup.py /path/to/old/bin/rahulchaube /path/to/new/bin/rahulchaube run ./hello.ts
+```

@@ -7,35 +7,26 @@ independent, MIT-licensed fork of Bun.
 rahulchaube --help
 ```
 
-## What this is
+## Execution
 
-`rahulchaube-cli` is a TypeScript front-end that provides the branded developer
-experience: a colorful CLI, animated spinners, progress bars, beautiful tables,
-Unicode icons, better error messages, interactive prompts, and a broad command
-surface (package manager, project generator, diagnostics, AI-assisted tools, and
-a plugin system).
+The release launcher is compiled from `blyx/main.blyx`. It handles flags, help, version, package commands, tests, builds and script dispatch. JS and TS files run in JavaScriptCore through Bun. Watch mode, debug mode and the other compatibility commands use the TypeScript implementation in `src/`.
 
-Engine operations (runtime, transpiler, bundler, installer, test runner) are
-delegated to the underlying MIT-licensed Bun engine binary, preserving
-API-compatibility and performance.
-
-## Project layout
-
-```
-src/
-  index.ts          command dispatcher
-  ui/               premium terminal UI (colors, spinner, progress, table, …)
-  engine/bun.ts     engine delegation
-  commands/         one file per command
-  util/             fs, config, semver helpers
-```
+The bundled Blyx compiler can interpret portable programs and build standalone executables. Native compilation requires Rust and a host linker. An installed user can run `rahulchaube blyx --help` to inspect the compiler commands.
 
 ## Development
 
+From the repository root, install the compiler revision used by CI and build the launcher for your host OS.
+
 ```sh
-bun run start --help
-bun run typecheck
+cargo install --locked --git https://github.com/Rahulchaube1/blyxxxx --rev 2b6bd149ee898e05bb4b4e7f87e392baa7786071 blyxc
+bun installer/build-native.ts "$(command -v blyxc)" packages/rahulchaube-cli/bin
+packages/rahulchaube-cli/bin/rahulchaube-native --help
+RAHUL_TEST_NATIVE=1 bun test tests/native-cli.test.ts
 ```
+
+On Windows, pass the path to blyxc.exe and run rahulchaube-native.exe. The build embeds help and version from the CLI package and places the compiler beside the launcher.
+
+Run `bun run typecheck` from this package to check the TypeScript compatibility layer. The five-platform CI matrix produces the native inputs for `bun installer/build-release.ts`.
 
 ## License
 

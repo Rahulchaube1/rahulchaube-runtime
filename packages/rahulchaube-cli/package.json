@@ -5,15 +5,16 @@
   "license": "MIT",
   "type": "module",
   "bin": {
-    "rahulchaube": "./bin/rahulchaube.ts"
+    "rahulchaube": "./bin/package-cli.ts"
   },
   "files": [
     "bin",
+    "blyx",
     "src",
     "README.md"
   ],
   "scripts": {
-    "start": "bun ./bin/rahulchaube.ts",
+    "start": "bun ./bin/package-cli.ts",
     "typecheck": "tsc --noEmit"
   },
   "engines": {

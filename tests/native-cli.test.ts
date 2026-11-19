@@ -48,7 +48,9 @@ nativeTest("the Blyx launcher runs ESM, TypeScript, CommonJS and async imports t
     writeFileSync(join(dir, "package.json"), JSON.stringify({ type: "module", scripts: { "main.ts": "exit 12" } }));
     writeFileSync(join(dir, "lib.ts"), 'export const result: number = 42;');
     writeFileSync(join(dir, "main.ts"), 'const { result } = await import("./lib.ts"); console.log(result, process.argv.slice(2).join("|"));');
-    const result = execute([binary, "run", "main.ts", "--", "--one=x=y", "two words"], dir);
+    const args = ["run", "main.ts", "--", "--one=x=y", "two words"];
+    const result = execute([binary, ...args], dir);
+    expect(execute([process.execPath, join(folder, "package-cli.ts"), ...args], dir)).toEqual(result);
     expect(result).toEqual({ code: 0, out: "42 --one=x=y|two words\n", err: "" });
     writeFileSync(join(dir, "app.cjs"), 'console.log(require("./lib.ts").result); process.exitCode = 7;');
     expect(execute([binary, "run", join(dir, "app.cjs")], dir)).toEqual({ code: 7, out: "42\n", err: "" });
