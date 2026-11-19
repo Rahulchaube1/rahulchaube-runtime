@@ -1,7 +1,13 @@
 {
-  "latest": "1.1.0",
+  "latest": "1.2.0",
   "name": "RahulChaube Runtime",
   "releases": [
+    {
+      "version": "1.2.0",
+      "date": "2026-11-19",
+      "channel": "stable",
+      "notes": "Watch and hot reload JS/TS applications with RC Runtime and its VS Code extension."
+    },
     {
       "version": "1.1.0",
       "date": "2026-11-19",

@@ -26,7 +26,7 @@ export default function DownloadPage() {
           Download RahulChaube Runtime
         </h1>
         <p className="text-zinc-600 dark:text-[#8B949E] text-sm sm:text-base">
-          Each archive includes the native Blyx CLI and compiler. Install Bun to use the installer and run JavaScript or TypeScript.
+          Install Bun first to run the RC Runtime installer and JavaScript or TypeScript projects.
         </p>
       </div>
 
@@ -35,13 +35,26 @@ export default function DownloadPage() {
         <DownloadTabs />
       </div>
 
+      <section id="vscode" className="scroll-mt-24 mb-12">
+        <h2 className="text-xl font-bold">RC Runtime for VS Code</h2>
+        <p className="mt-2 mb-4 text-sm text-zinc-600 dark:text-[#8B949E]">
+          In the Extensions view, choose Install from VSIX and select the downloaded file.
+          Open a JavaScript or TypeScript file and choose RC Runtime: Watch Current File to restart on save.
+        </p>
+        <a href="/extensions/rahulchaube-runtime-1.0.0.vsix" download
+          className="inline-flex items-center gap-2 font-semibold text-sm underline underline-offset-4">
+          <Download aria-hidden="true" className="h-4 w-4" /> Download extension 1.0.0
+        </a>
+        <a className="ml-5 text-sm underline" href="/extensions/SHA256SUMS">SHA-256 checksum</a>
+      </section>
+
       {/* Direct Binary Downloads Section */}
       <div className="mt-16 border-t border-zinc-200 dark:border-[#163830] pt-12">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-xl font-bold text-zinc-900 dark:text-[#F0F6FC]">Release archives</h2>
             <p className="text-xs text-zinc-600 dark:text-[#8B949E] mt-0.5">
-              Sign in to GitHub with repository access to download an archive.
+              Choose the archive for your operating system and processor.
             </p>
           </div>
           <Link

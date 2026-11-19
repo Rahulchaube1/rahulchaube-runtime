@@ -6,7 +6,10 @@ use options;
 // Send JS and TS source straight to the installed JavaScriptCore host. Prefixing
 // relative paths also distinguishes a file named "test.ts" from a package script.
 pub fn execute_script(inputs: arglist, opts: arglist) {
-    if args_len(inputs) == 0 || option(opts, "debug") != "" || option(opts, "watch") != "" || option(opts, "w") != "" {
+    let watch = option(opts, "watch") != "" || option(opts, "w") != "";
+    let hot = option(opts, "hot") != "";
+    if watch && hot { stderr_line("[ERR] Choose either --watch or --hot."); process_exit(1); }
+    if args_len(inputs) == 0 || (option(opts, "debug") != "" && !watch && !hot) {
         return;
     }
     let file = args_at(inputs, 0);
@@ -14,7 +17,10 @@ pub fn execute_script(inputs: arglist, opts: arglist) {
     let typescript = text_ends(file, ".ts") || text_ends(file, ".tsx") || text_ends(file, ".mts") || text_ends(file, ".cts");
     if (!javascript && !typescript) || !is_file(file) { return; }
 
-    let args = args_concat(args_push(args_new(), path_join(".", file)), args_tail(inputs, 1));
+    let mut prefix = args_new();
+    if watch { prefix = args_push(prefix, "--watch"); }
+    if hot { prefix = args_push(prefix, "--hot"); }
+    let args = args_concat(args_push(prefix, path_join(".", file)), args_tail(inputs, 1));
     let mut env = args_new();
     if option(opts, "no-color") != "" { env = args_push(args_push(env, "NO_COLOR"), "1"); }
     process_exec("bun", args, env);

@@ -18,7 +18,7 @@ export default function ReleasesPage() {
           Releases &amp; Changelog
         </h1>
         <p className="text-zinc-600 dark:text-[#8B949E] text-sm max-w-2xl">
-          Release archives require GitHub repository access. Compare the SHA-256 digest below after downloading.
+          Compare the SHA-256 digest below after downloading your release archive.
         </p>
       </div>
 

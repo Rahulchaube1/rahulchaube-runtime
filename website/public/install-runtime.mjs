@@ -16,15 +16,22 @@ async function getRelease() {
   return response.json();
 }
 
-function readArchive(filename, blob) {
+async function readArchive(filename, blob) {
   if (archiveDir) return readFileSync(join(archiveDir, filename));
   if (!/^[a-f0-9]{40}$/.test(blob)) throw new Error("Missing GitHub archive identifier");
+  const endpoint = `repos/${repo}/git/blobs/${blob}`;
+  // Fetch the exact public Git object identified by the release manifest.
   try {
-    // GitHub authenticates the visitor and enforces the repository's access controls.
+    const response = await fetch("https://api.github.com/" + endpoint, {
+      headers: { Accept: "application/vnd.github.raw+json" }, signal: AbortSignal.timeout(20000),
+    });
+    if (response.ok) return Buffer.from(await response.arrayBuffer());
+  } catch { /* An authenticated CLI can also read restricted or rate-limited archives. */ }
+  try {
     return execFileSync("gh", ["api", "--hostname", "github.com", "-H", "Accept: application/vnd.github.raw+json",
-      `repos/${repo}/git/blobs/${blob}`], { maxBuffer: 32 * 1024 * 1024, stdio: ["ignore", "pipe", "ignore"] });
+      endpoint], { maxBuffer: 32 * 1024 * 1024, stdio: ["ignore", "pipe", "ignore"] });
   } catch {
-    throw new Error("This archive requires repository access. Sign in with gh auth login and retry.");
+    throw new Error("Could not download the release archive from GitHub. Check your connection or sign in with gh auth login and retry.");
   }
 }
 
@@ -67,7 +74,7 @@ async function install() {
     return;
   }
   const filename = `runtime-${target}.${os === "win" ? "zip" : "tar.gz"}`;
-  const bytes = readArchive(filename, release.blobs[filename]);
+  const bytes = await readArchive(filename, release.blobs[filename]);
   const actual = createHash("sha256").update(bytes).digest("hex");
   if (actual !== release.sha256[filename]) throw new Error(`SHA-256 mismatch for ${filename}`);
 

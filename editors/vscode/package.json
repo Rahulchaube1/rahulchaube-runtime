@@ -1,0 +1,44 @@
+{
+  "name": "rahulchaube-runtime",
+  "displayName": "RahulChaube Runtime",
+  "description": "Run JavaScript and TypeScript with RC Runtime. Restart or hot reload the app when you save a source file.",
+  "version": "1.0.0",
+  "publisher": "RahulChaube",
+  "license": "MIT",
+  "icon": "icon.png",
+  "homepage": "https://www.rahulchaube.space/download#vscode",
+  "repository": {"type": "git", "url": "https://github.com/Rahulchaube1/rahulchaube-runtime.git", "directory": "editors/vscode"},
+  "bugs": {"url": "https://github.com/Rahulchaube1/rahulchaube-runtime/issues"},
+  "engines": {"vscode": "^1.85.0"},
+  "categories": ["Programming Languages", "Other"],
+  "keywords": ["rc runtime", "rahulchaube", "javascript", "typescript", "watch", "hot reload"],
+  "extensionKind": ["workspace"],
+  "capabilities": {"untrustedWorkspaces": {"supported": false}, "virtualWorkspaces": {"supported": false}},
+  "main": "./src/extension.js",
+  "contributes": {
+    "commands": [
+      {"command": "rcRuntime.run", "category": "RC Runtime", "title": "Run Current File", "icon": "$(play)"},
+      {"command": "rcRuntime.watch", "category": "RC Runtime", "title": "Watch Current File", "icon": "$(eye)"},
+      {"command": "rcRuntime.hot", "category": "RC Runtime", "title": "Hot Reload Current File", "icon": "$(flame)"},
+      {"command": "rcRuntime.stop", "category": "RC Runtime", "title": "Stop Running Task", "icon": "$(debug-stop)"}
+    ],
+    "menus": {
+      "editor/title": [
+        {"command": "rcRuntime.watch", "when": "isWorkspaceTrusted && resourceLangId =~ /^(javascript|javascriptreact|typescript|typescriptreact)$/", "group": "navigation"},
+        {"command": "rcRuntime.run", "when": "isWorkspaceTrusted && resourceLangId =~ /^(javascript|javascriptreact|typescript|typescriptreact)$/", "group": "1_run"},
+        {"command": "rcRuntime.hot", "when": "isWorkspaceTrusted && resourceLangId =~ /^(javascript|javascriptreact|typescript|typescriptreact)$/", "group": "1_run"},
+        {"command": "rcRuntime.stop", "when": "rcRuntime.running", "group": "navigation"}
+      ]
+    },
+    "configuration": {
+      "title": "RC Runtime",
+      "properties": {
+        "rcRuntime.executablePath": {
+          "type": "string", "default": "", "scope": "machine-overridable",
+          "description": "Absolute path to the rahulchaube executable. Leave empty to discover the installed runtime. On Windows, choose the native .exe."
+        }
+      }
+    }
+  },
+  "files": ["src", "icon.png", "README.md", "LICENSE"]
+}
