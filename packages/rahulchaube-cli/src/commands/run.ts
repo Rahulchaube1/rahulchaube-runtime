@@ -3,7 +3,7 @@
  */
 import { log } from "../ui/logger.ts";
 import { colors } from "../ui/colors.ts";
-import { existsSync } from "node:fs";
+import { existsSync, realpathSync } from "node:fs";
 import { extname, resolve } from "node:path";
 
 import { SUPPORTED_EXTENSIONS } from "../../../../runtime/module-loader/resolver.ts";
@@ -33,7 +33,10 @@ export async function run(args: string[], flags: Record<string, unknown>): Promi
     log.debug(`[Stage 1: CLI] Subcommand 'run' received target: ${colors.bold(target)}`);
 
     if (mode) {
-      const result = spawnSync(process.execPath, [mode, absPath, ...args.slice(1)], { stdio: "inherit" });
+      // Windows may provide a DOS short path for cwd while module imports use long paths.
+      const cwd = realpathSync.native(process.cwd());
+      const entry = existsSync(absPath) ? realpathSync.native(absPath) : absPath;
+      const result = spawnSync(process.execPath, [mode, entry, ...args.slice(1)], { cwd, stdio: "inherit" });
       if (result.error) log.error(result.error.message);
       return result.status ?? 1;
     }

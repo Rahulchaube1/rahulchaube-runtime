@@ -32,6 +32,7 @@ curl -fsSL https://www.rahulchaube.space/install | bash
 ```sh
 rahulchaube run --watch ./src/app.ts
 rahulchaube run --hot ./src/app.ts
+rahulchaube build --watch ./src/app.ts --outdir dist
 ```
 
 Watch restarts the application when you save the entry file or an imported module. Hot reload re-evaluates modules in the running process. Open the Command Palette in VS Code and choose **RC Runtime: Watch Current File** or **RC Runtime: Hot Reload Current File**. [Download the VS Code extension](https://www.rahulchaube.space/download#vscode)

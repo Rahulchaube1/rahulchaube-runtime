@@ -243,6 +243,7 @@ The command prints "Hello, runtime!". RC Runtime watches the entry file and its 
 \`\`\`sh
 rahulchaube run --watch ./hello.ts
 rahulchaube run --hot ./hello.ts
+rahulchaube build --watch ./hello.ts --outdir dist
 \`\`\`
 
 In VS Code, install the RahulChaube Runtime extension from the Download page. Open a JS or TS file and choose RC Runtime: Watch Current File. Choose RC Runtime: Stop Running Task to end the session.

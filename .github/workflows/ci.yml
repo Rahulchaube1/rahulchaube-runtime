@@ -41,20 +41,9 @@ jobs:
             packages/rahulchaube-cli/bin/blyxc${{ matrix.suffix }}
           if-no-files-found: error
 
-  editor-test:
-    name: Verify published VSIX in desktop VS Code
-    needs: native
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
-      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
-        with:
-          name: native-linux-x64
-          path: packages/rahulchaube-cli/bin
-      - name: Run the extension against the compiled runtime
+      - name: Verify the published VSIX in desktop VS Code
+        if: matrix.target == 'linux-x64'
         run: |
-          chmod +x packages/rahulchaube-cli/bin/rahulchaube-native packages/rahulchaube-cli/bin/blyxc
           (cd website/public/extensions && sha256sum --check SHA256SUMS)
           npm install --prefix "$RUNNER_TEMP/editor-test" --no-audit --no-fund @vscode/test-electron@3.1.0
           NODE_PATH="$RUNNER_TEMP/editor-test/node_modules" xvfb-run -a node editors/vscode/test/run.cjs

@@ -56,3 +56,36 @@ for (const mode of ["--watch", "--hot"]) {
     }
   }, 50_000);
 }
+
+test.skipIf(process.env.RAHUL_TEST_NATIVE !== "1")("build --watch rebuilds imports outside the entry directory", async () => {
+  const { mkdirSync, readFileSync, existsSync } = await import("node:fs");
+  const dir = mkdtempSync(join(tmpdir(), "rc build watch "));
+  const src = join(dir, "src");
+  mkdirSync(src);
+  const output = join(src, "result.js");
+  const dep = join(dir, "common.ts");
+  writeFileSync(join(src, "main.ts"), 'import {value} from "../common"; console.log(value);');
+  writeFileSync(dep, 'export const value = "RC_INITIAL";');
+  const proc = spawn(native, ["build", "-w", "src/main.ts", "--outfile", output], {
+    cwd: dir, stdio: "ignore", detached: process.platform !== "win32",
+  });
+  const closed = once(proc, "close");
+  try {
+    for (const marker of ["RC_INITIAL", "RC_UPDATED"]) {
+      const end = Date.now() + 12000;
+      while (!existsSync(output) || !readFileSync(output, "utf8").includes(marker)) {
+        if (Date.now() >= end || proc.exitCode !== null) throw new Error("Missing bundle update: " + marker);
+        await Bun.sleep(25);
+      }
+      if (marker === "RC_INITIAL") writeFileSync(dep, 'export const value = "RC_UPDATED";');
+    }
+    expect(proc.exitCode).toBeNull();
+  } finally {
+    if (proc.pid && proc.exitCode === null && !proc.signalCode) {
+      if (process.platform === "win32") spawnSync("taskkill.exe", ["/pid", String(proc.pid), "/t", "/f"]);
+      else process.kill(-proc.pid, "SIGTERM");
+    }
+    await closed;
+    rmSync(dir, { recursive: true, force: true });
+  }
+}, 30_000);

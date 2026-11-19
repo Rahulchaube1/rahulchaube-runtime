@@ -2,6 +2,7 @@ use std::cli;
 use std::fs;
 use std::text;
 use options;
+use metadata;
 
 // Send JS and TS source straight to the installed JavaScriptCore host. Prefixing
 // relative paths also distinguishes a file named "test.ts" from a package script.
@@ -9,6 +10,7 @@ pub fn execute_script(inputs: arglist, opts: arglist) {
     let watch = option(opts, "watch") != "" || option(opts, "w") != "";
     let hot = option(opts, "hot") != "";
     if watch && hot { stderr_line("[ERR] Choose either --watch or --hot."); process_exit(1); }
+    if windows_host() && (watch || hot) { return; }
     if args_len(inputs) == 0 || (option(opts, "debug") != "" && !watch && !hot) {
         return;
     }

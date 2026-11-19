@@ -30,6 +30,7 @@ try {
   const metadata = [["help_text", "--help"], ["version_text", "--version"]].map(([fn, flag]) =>
     `pub fn ${fn}(color: bool) -> String { if color { return ${literal(cliText(flag, true))}; } ${literal(cliText(flag, false))} }`
   );
+  metadata.push(`pub fn windows_host() -> bool { ${process.platform === "win32"} }`);
   metadata.push(`pub fn compiler_filename() -> String { "blyxc${suffix}" }`);
   writeFileSync(join(stage, "metadata.blyx"), metadata.join("\n"));
   mkdirSync(dest, { recursive: true });
