@@ -11,7 +11,7 @@
  * - version.json
  */
 import { createHash } from "node:crypto";
-import { chmodSync, mkdtempSync, writeFileSync, mkdirSync, rmSync, cpSync, readFileSync } from "node:fs";
+import { chmodSync, renameSync, mkdtempSync, writeFileSync, mkdirSync, rmSync, cpSync, readFileSync } from "node:fs";
 import { resolve, join } from "node:path";
 import { execFileSync } from "node:child_process";
 
@@ -67,13 +67,14 @@ export function buildReleaseArtifacts(outputDir: string = "dist", nativeDir: str
     "#!/bin/sh", 'exec "${0%/*}/../packages/rahulchaube-cli/bin/rahulchaube-native" "$@"', ""
   ].join("\n"), { mode: 0o755 });
 
+  // Finish every platform archive before replacing any previously built distribution.
+  const complete = mkdtempSync(join(distPath, ".build-"));
   const checksums: Record<string, string> = {};
   const sizes: Record<string, number> = {};
   const blobs: Record<string, string> = {};
   try {
     for (const t of RELEASE_TARGETS) {
-      const archivePath = join(distPath, t.archiveName);
-      rmSync(archivePath, { force: true });
+      const archivePath = join(complete, t.archiveName);
       const suffix = t.os === "windows" ? ".exe" : "";
       for (const tool of ["rahulchaube-native", "blyxc"]) {
         const bin = join(stageCli, "bin", tool);
@@ -92,7 +93,11 @@ export function buildReleaseArtifacts(outputDir: string = "dist", nativeDir: str
       sizes[t.archiveName] = bytes.length;
       blobs[t.archiveName] = execFileSync("git", ["hash-object", "--no-filters", archivePath], { encoding: "utf8" }).trim();
     }
+    for (const target of RELEASE_TARGETS) {
+      renameSync(join(complete, target.archiveName), join(distPath, target.archiveName));
+    }
   } finally {
+    rmSync(complete, { recursive: true, force: true });
     rmSync(stagingDir, { recursive: true, force: true });
   }
 

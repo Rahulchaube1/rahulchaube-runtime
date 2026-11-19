@@ -30,7 +30,7 @@ jobs:
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
       - run: cargo build --locked --release --manifest-path .blyx-compiler/Cargo.toml -p blyxc
       - run: bun installer/build-native.ts .blyx-compiler/target/release/blyxc${{ matrix.suffix }} packages/rahulchaube-cli/bin
-      - run: bun test tests/native-cli.test.ts
+      - run: bun test tests/native-cli.test.ts tests/self-contained-installer.test.ts
         env:
           RAHUL_TEST_NATIVE: "1"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
