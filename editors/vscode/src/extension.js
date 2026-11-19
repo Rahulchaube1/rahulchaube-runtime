@@ -7,6 +7,9 @@ const labels = { run: "Run", watch: "Watch", hot: "Hot reload" };
 
 function activate(context) {
   const starting = new Set();
+  const processIds = new WeakMap();
+  const deferredStops = new WeakSet();
+  const launched = new WeakSet();
   const executions = () => vscode.tasks.taskExecutions.filter(x => x.task.definition.type === taskType);
   const updateContext = () => vscode.commands.executeCommand("setContext", "rcRuntime.running", executions().length > 0);
 
@@ -39,10 +42,29 @@ function activate(context) {
         labels[mode] + " " + path.basename(doc.fileName), "RC Runtime", proc, []);
       task.isBackground = mode !== "run";
       task.presentationOptions = { reveal: vscode.TaskRevealKind.Always, panel: vscode.TaskPanelKind.Dedicated, focus: false };
-      return await vscode.tasks.executeTask(task);
+      const execution = await vscode.tasks.executeTask(task);
+      launched.add(execution);
+      return execution;
     } catch (error) {
       await vscode.window.showErrorMessage("RC Runtime could not start the task. " + error.message);
     } finally { starting.delete(key); }
+  }
+
+  async function stopExecution(execution) {
+    const pid = processIds.get(execution);
+    if (!pid && launched.has(execution)) {
+      deferredStops.add(execution);
+      return;
+    }
+    if (pid) {
+      // A fast app can start before VS Code has finished revealing its task terminal.
+      // Closing that same terminal also stops its children during this interval.
+      const terminals = vscode.window.terminals;
+      const ids = await Promise.all(terminals.map(terminal => terminal.processId));
+      const terminal = terminals[ids.indexOf(pid)];
+      if (terminal) { terminal.dispose(); return; }
+    }
+    execution.terminate();
   }
 
   async function stop() {
@@ -57,13 +79,18 @@ function activate(context) {
       })), { placeHolder: "Stop an RC Runtime task" });
       target = choice?.execution;
     }
-    target?.terminate();
+    if (target) await stopExecution(target);
   }
 
   for (const mode of Object.keys(labels)) {
     context.subscriptions.push(vscode.commands.registerCommand("rcRuntime." + mode, () => launch(mode)));
   }
   context.subscriptions.push(vscode.commands.registerCommand("rcRuntime.stop", stop),
+    vscode.tasks.onDidStartTaskProcess(event => {
+      if (event.execution.task.definition.type !== taskType) return;
+      processIds.set(event.execution, event.processId);
+      if (deferredStops.has(event.execution)) void stopExecution(event.execution);
+    }),
     vscode.tasks.onDidStartTask(updateContext), vscode.tasks.onDidEndTask(updateContext));
   void updateContext();
 }

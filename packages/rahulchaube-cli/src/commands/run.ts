@@ -36,6 +36,10 @@ export async function run(args: string[], flags: Record<string, unknown>): Promi
       // Windows may provide a DOS short path for cwd while module imports use long paths.
       const cwd = realpathSync.native(process.cwd());
       const entry = existsSync(absPath) ? realpathSync.native(absPath) : absPath;
+      if (process.platform === "win32" && existsSync(entry)) {
+        const { runWindowsLive } = await import("../engine/windows-live.ts");
+        return runWindowsLive(mode, cwd, entry, args.slice(1));
+      }
       const result = spawnSync(process.execPath, [mode, entry, ...args.slice(1)], { cwd, stdio: "inherit" });
       if (result.error) log.error(result.error.message);
       return result.status ?? 1;
