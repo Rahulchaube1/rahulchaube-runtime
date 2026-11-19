@@ -19,7 +19,11 @@ async function main() {
       ["terminal.integrated.env." + platform]: { PATH: process.env.PATH },
     }));
     const vsix = join(root, "website/public/extensions/rahulchaube-runtime-" + require("../package.json").version + ".vsix");
-    execFileSync("unzip", ["-q", vsix, "-d", dir]);
+    if (process.platform === "win32") {
+      execFileSync(join(process.env.SystemRoot, "System32", "tar.exe"), ["-xf", vsix, "-C", dir]);
+    } else {
+      execFileSync("/usr/bin/unzip", ["-q", vsix, "-d", dir]);
+    }
     const code = await downloadAndUnzipVSCode({ version: "1.105.1", cachePath: process.env.RC_VSCODE_CACHE || join(tmpdir(), "rc-vscode-cache") });
     await runTests({
       vscodeExecutablePath: code, extensionDevelopmentPath: join(dir, "extension"),

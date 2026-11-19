@@ -1,13 +1,14 @@
 const assert = require("node:assert/strict");
 const { existsSync, readFileSync, writeFileSync } = require("node:fs");
 const { join } = require("node:path");
+const { setInterval: ticks } = require("node:timers/promises");
 const vscode = require("vscode");
 
 async function until(condition, description) {
   const end = Date.now() + 25000;
-  while (!condition()) {
+  for await (const _ of ticks(50)) {
+    if (condition()) return;
     if (Date.now() > end) throw new Error("Timed out waiting for " + description);
-    await new Promise(resolve => setTimeout(resolve, 50));
   }
 }
 async function run() {
@@ -30,23 +31,22 @@ async function run() {
       console.log("RC Runtime task ended", event.execution.task.name, event.exitCode);
     }
   });
+  async function exerciseLive(mode, value) {
+    const stamp = "mode-" + mode;
+    writeFileSync(lib, 'export const value = "' + stamp + '";');
+    const execution = await command(mode);
+    assert.equal(execution.task.definition.mode, mode);
+    await until(() => tasks().length === 1 && result() === stamp, "first " + mode + " evaluation");
+    writeFileSync(lib, "export const value = " + value + ";");
+    await until(() => result() === value, "saved dependency to reload");
+    await command("stop");
+    await until(() => tasks().length === 0, "task termination");
+  }
   try {
     await command("run");
     await until(() => result() === "1" && tasks().length === 0, "one-shot run to finish");
-    for (const [mode, value] of [["watch", "2"], ["hot", "3"]]) {
-      const execution = await command(mode);
-      assert.equal(execution.task.definition.mode, mode);
-      await until(() => tasks().length === 1, "live task");
-      const previous = result();
-      // Wait until the new process has executed the entry before changing an import.
-      const stamp = "mode-" + mode;
-      writeFileSync(lib, 'export const value = "' + stamp + '";');
-      await until(() => result() === stamp && result() !== previous, "first evaluation");
-      writeFileSync(lib, "export const value = " + value + ";");
-      await until(() => result() === value, "saved dependency to reload");
-      await command("stop");
-      await until(() => tasks().length === 0, "task termination");
-    }
+    await exerciseLive("watch", "2");
+    await exerciseLive("hot", "3");
   } finally {
     ended.dispose();
     for (const task of tasks()) task.terminate();

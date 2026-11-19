@@ -11,6 +11,20 @@ import { runScript } from "../../../../runtime/engine/runner.ts";
 import { spawnSync } from "node:child_process";
 import { runEngine } from "../engine/bun.ts";
 
+async function runLive(mode: "--watch" | "--hot", path: string, args: string[]): Promise<number> {
+  // Windows can report a DOS short path for cwd while imports use long paths.
+  const cwd = realpathSync.native(process.cwd());
+  const exists = existsSync(path);
+  const entry = exists ? realpathSync.native(path) : path;
+  if (process.platform === "win32" && exists) {
+    const { runWindowsLive } = await import("../engine/windows-live.ts");
+    return runWindowsLive(mode, cwd, entry, args);
+  }
+  const result = spawnSync(process.execPath, [mode, entry, ...args], { cwd, stdio: "inherit" });
+  if (result.error) log.error(result.error.message);
+  return result.status ?? 1;
+}
+
 export async function run(args: string[], flags: Record<string, unknown>): Promise<number> {
   if (args[0]?.endsWith(".blyx")) return (await import("./blyx.ts")).blyxFile("run", args, flags);
   const target = args[0];
@@ -25,25 +39,16 @@ export async function run(args: string[], flags: Record<string, unknown>): Promi
     log.error("Choose either --watch or --hot.");
     return 1;
   }
-  const mode = watch ? "--watch" : flags.hot ? "--hot" : undefined;
+  let mode: "--watch" | "--hot" | undefined;
+  if (watch) mode = "--watch";
+  else if (flags.hot) mode = "--hot";
 
   // If target is a local file, run native pipeline
   const absPath = resolve(process.cwd(), target);
   if (existsSync(absPath) || SUPPORTED_EXTENSIONS.includes(extname(target))) {
     log.debug(`[Stage 1: CLI] Subcommand 'run' received target: ${colors.bold(target)}`);
 
-    if (mode) {
-      // Windows may provide a DOS short path for cwd while module imports use long paths.
-      const cwd = realpathSync.native(process.cwd());
-      const entry = existsSync(absPath) ? realpathSync.native(absPath) : absPath;
-      if (process.platform === "win32" && existsSync(entry)) {
-        const { runWindowsLive } = await import("../engine/windows-live.ts");
-        return runWindowsLive(mode, cwd, entry, args.slice(1));
-      }
-      const result = spawnSync(process.execPath, [mode, entry, ...args.slice(1)], { cwd, stdio: "inherit" });
-      if (result.error) log.error(result.error.message);
-      return result.status ?? 1;
-    }
+    if (mode) return runLive(mode, absPath, args.slice(1));
     process.argv = [process.execPath, absPath, ...args.slice(1)];
     return (await runScript(absPath, { debug: Boolean(flags.debug) })).exitCode;
   }

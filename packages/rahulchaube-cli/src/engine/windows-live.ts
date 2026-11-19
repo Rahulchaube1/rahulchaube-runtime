@@ -84,7 +84,10 @@ export async function runWindowsLive(mode: "--watch" | "--hot", cwd: string, ent
     try {
       return await new Promise<number>((resolve, reject) => {
         child.once("error", reject);
-        child.once("close", (code) => { if (pending) forward(pending); resolve(code ?? 1); });
+        child.once("close", code => {
+          if (pending) forward(pending);
+          resolve(code ?? 1);
+        });
       });
     } finally {
       process.off("SIGINT", stop);
