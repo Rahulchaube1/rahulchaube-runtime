@@ -46,8 +46,8 @@ function reactTemplate(ctx: TemplateContext): TemplateFile[] {
     {
       path: "package.json",
       contents: pkg(ctx, ["react", "react-dom"], ["@types/react", "@types/react-dom", "typescript"], {
-        dev: "rahulchaube run --hot src/main.tsx",
-        build: "rahulchaube build src/main.tsx --outdir dist --minify",
+        dev: "bun --hot ./index.html",
+        build: "rahulchaube build ./index.html --outdir dist --minify",
         test: "rahulchaube test",
       }),
     },
@@ -63,16 +63,16 @@ createRoot(document.getElementById("root")!).render(<App />);
     {
       path: "src/App.tsx",
       contents: `export function App() {
-  return <h1>Hello from ${ctx.name} ${"{"}🚀{"}"}</h1>;
+  return <h1>Hello from {${JSON.stringify(ctx.name)}} 🚀</h1>;
 }
 `,
     },
     {
-      path: "public/index.html",
+      path: "index.html",
       contents: `<!doctype html>
 <html>
   <head><title>${ctx.name}</title></head>
-  <body><div id="root"></div><script type="module" src="/src/main.tsx"></script></body>
+  <body><div id="root"></div><script type="module" src="./src/main.tsx"></script></body>
 </html>
 `,
     },
@@ -81,7 +81,10 @@ createRoot(document.getElementById("root")!).render(<App />);
 
 function nextTemplate(ctx: TemplateContext): TemplateFile[] {
   return [
-    ...reactTemplate(ctx),
+    ...baseFiles(ctx),
+    { path: "package.json", contents: pkg(ctx, ["next", "react", "react-dom"], ["typescript", "@types/react", "@types/node"], {
+      dev: "next dev", build: "next build", start: "next start",
+    }) },
     {
       path: "src/pages/index.tsx",
       contents: `export default function Page() {
@@ -102,9 +105,9 @@ function expressTemplate(ctx: TemplateContext): TemplateFile[] {
     {
       path: "package.json",
       contents: pkg(ctx, ["express"], ["typescript", "@types/express"], {
-        dev: "rahulchaube run --hot src/index.ts",
-        build: "rahulchaube build src/index.ts --outdir dist --minify",
-        start: "rahulchaube run dist/index.js",
+        dev: "bun --hot ./src/index.ts",
+        build: "rahulchaube build src/index.ts --target bun --outdir dist --minify",
+        start: "bun dist/index.js",
       }),
     },
     { path: "tsconfig.json", contents: tsconfig() },
@@ -129,9 +132,9 @@ function honoTemplate(ctx: TemplateContext): TemplateFile[] {
     {
       path: "package.json",
       contents: pkg(ctx, ["hono"], ["typescript"], {
-        dev: "rahulchaube run --hot src/index.ts",
-        build: "rahulchaube build src/index.ts --outdir dist --minify",
-        start: "rahulchaube run dist/index.js",
+        dev: "bun --hot ./src/index.ts",
+        build: "rahulchaube build src/index.ts --target bun --outdir dist --minify",
+        start: "bun dist/index.js",
       }),
     },
     { path: "tsconfig.json", contents: tsconfig() },
@@ -182,7 +185,7 @@ function libraryTemplate(ctx: TemplateContext): TemplateFile[] {
     },
     {
       path: "test/index.test.ts",
-      contents: `import { expect, test } from "rahulchaube";
+      contents: `import { expect, test } from "bun:test";
 import { greet } from "../src/index";
 
 test("greet", () => {
@@ -199,15 +202,15 @@ function cliTemplate(ctx: TemplateContext): TemplateFile[] {
     {
       path: "package.json",
       contents: pkg(ctx, [], ["typescript"], {
-        dev: "rahulchaube run --hot src/main.ts",
+        dev: "rahulchaube run --watch src/main.ts",
         build: "rahulchaube build src/main.ts --compile --outfile dist/" + ctx.name,
-        start: "rahulchaube run dist/" + ctx.name,
+        start: "./dist/" + ctx.name,
       }),
     },
     { path: "tsconfig.json", contents: tsconfig() },
     {
       path: "src/main.ts",
-      contents: `const args = Bun.argv.slice(2);
+      contents: `const args = process.argv.slice(2);
 
 console.log(\`${ctx.name} received args:\`, args);
 `,

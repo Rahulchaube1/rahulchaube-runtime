@@ -28,7 +28,7 @@ export async function migrate(args: string[], _flags: Record<string, unknown>): 
       log.info(`Detected ${colors.bold(detected.label)} (${colors.dim(detected.hint)}).`);
       from = detected.value;
     } else {
-      from = await select("What are you migrating from?", SOURCES as unknown as { value: string; label: string; hint?: string }[]);
+      from = await select("What are you migrating from?", SOURCES);
     }
   }
 

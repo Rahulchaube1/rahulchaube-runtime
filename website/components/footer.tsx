@@ -171,7 +171,7 @@ export function Footer() {
           <ul className="space-y-3 font-medium">
             <li><Link href="/docs" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Docs Home</Link></li>
             <li><Link href="/docs/cli" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">CLI Reference</Link></li>
-            <li><a href="/api/openapi.json" target="_blank" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">API Specs</a></li>
+            <li><a href="/api/docs" target="_blank" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">API reference</a></li>
             <li><Link href="/blog" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Blog</Link></li>
           </ul>
         </div>
@@ -182,7 +182,7 @@ export function Footer() {
           <ul className="space-y-3 font-medium">
             <li><Link href="/license" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Privacy Policy</Link></li>
             <li><Link href="/license" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Terms of Service</Link></li>
-            <li><Link href="/license" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Security</Link></li>
+            <li><Link href="/security" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Security</Link></li>
             <li><Link href="/license" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Software License</Link></li>
           </ul>
         </div>
@@ -205,7 +205,7 @@ export function Footer() {
           <div className="flex items-center gap-8 text-zinc-500 dark:text-[#8B949E]">
             <Link href="/license" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Privacy</Link>
             <Link href="/license" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Terms</Link>
-            <Link href="/license" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Security</Link>
+            <Link href="/security" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Security</Link>
             <Link href="/license" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">License</Link>
           </div>
         </div>

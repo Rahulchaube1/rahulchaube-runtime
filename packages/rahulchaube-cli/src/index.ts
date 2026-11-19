@@ -6,63 +6,37 @@ import { icons } from "./ui/icons.ts";
 import { banner } from "./ui/banner.ts";
 import { log, setLevel } from "./ui/logger.ts";
 
-import { install } from "./commands/install.ts";
-import { add } from "./commands/add.ts";
-import { remove } from "./commands/remove.ts";
-import { update } from "./commands/update.ts";
-import { run } from "./commands/run.ts";
-import { test } from "./commands/test.ts";
-import { build } from "./commands/build.ts";
-import { create } from "./commands/create.ts";
-import { doctor } from "./commands/doctor.ts";
-import { audit } from "./commands/audit.ts";
-import { licenses } from "./commands/licenses.ts";
-import { graph } from "./commands/graph.ts";
-import { why } from "./commands/why.ts";
-import { outdated } from "./commands/outdated.ts";
-import { cache } from "./commands/cache.ts";
-import { benchmark } from "./commands/benchmark.ts";
-import { explain } from "./commands/explain.ts";
-import { optimize } from "./commands/optimize.ts";
-import { migrate } from "./commands/migrate.ts";
-import { analyze } from "./commands/analyze.ts";
-import { plugins } from "./commands/plugins.ts";
-
-import { profileCommand } from "./commands/profile.ts";
-import { compatibilityCommand } from "./commands/compatibility.ts";
-import { upgradeCommand } from "./commands/upgrade.ts";
-import { uninstallCommand } from "./commands/uninstall.ts";
-
-const VERSION = "1.0.0";
+import cliPackage from "../package.json";
+const VERSION = cliPackage.version;
 
 type CommandFn = (args: string[], flags: Record<string, unknown>) => Promise<number>;
 
 const COMMANDS: Record<string, { fn: CommandFn; summary: string; group: string }> = {
-  install: { fn: install, summary: "Install dependencies", group: "Package Manager" },
-  add: { fn: add, summary: "Add a dependency", group: "Package Manager" },
-  remove: { fn: remove, summary: "Remove a dependency", group: "Package Manager" },
-  update: { fn: update, summary: "Update dependencies", group: "Package Manager" },
-  run: { fn: run, summary: "Run a script", group: "Execute" },
-  test: { fn: test, summary: "Run the test suite", group: "Execute" },
-  build: { fn: build, summary: "Bundle your project", group: "Execute" },
-  profile: { fn: profileCommand, summary: "Profile script execution", group: "Execute" },
-  compatibility: { fn: compatibilityCommand, summary: "Run compatibility test matrix", group: "Execute" },
-  create: { fn: create, summary: "Scaffold a new project", group: "Project" },
-  doctor: { fn: doctor, summary: "Diagnose & repair environment", group: "Maintenance" },
-  audit: { fn: audit, summary: "Scan for vulnerabilities", group: "Maintenance" },
-  licenses: { fn: licenses, summary: "Summarize dependency licenses", group: "Maintenance" },
-  graph: { fn: graph, summary: "Show the dependency graph", group: "Maintenance" },
-  why: { fn: why, summary: "Why is a dependency installed?", group: "Maintenance" },
-  outdated: { fn: outdated, summary: "List outdated dependencies", group: "Maintenance" },
-  "cache": { fn: cache, summary: "Clean package caches", group: "Maintenance" },
-  upgrade: { fn: upgradeCommand, summary: "Self-update to latest release", group: "Maintenance" },
-  uninstall: { fn: uninstallCommand, summary: "Uninstall RahulChaube Runtime", group: "Maintenance" },
-  benchmark: { fn: benchmark, summary: "Run performance benchmarks", group: "Performance" },
-  explain: { fn: explain, summary: "Explain an error or concept", group: "AI Tools" },
-  optimize: { fn: optimize, summary: "Suggest performance fixes", group: "AI Tools" },
-  migrate: { fn: migrate, summary: "Migrate from another tool", group: "AI Tools" },
-  analyze: { fn: analyze, summary: "Analyze project health", group: "AI Tools" },
-  plugins: { fn: plugins, summary: "Manage plugins", group: "Ecosystem" },
+  install: { fn: async (args, flags) => (await import("./commands/install.ts")).install(args, flags), summary: "Install dependencies", group: "Package Manager" },
+  add: { fn: async (args, flags) => (await import("./commands/add.ts")).add(args, flags), summary: "Add a dependency", group: "Package Manager" },
+  remove: { fn: async (args, flags) => (await import("./commands/remove.ts")).remove(args, flags), summary: "Remove a dependency", group: "Package Manager" },
+  update: { fn: async (args, flags) => (await import("./commands/update.ts")).update(args, flags), summary: "Update dependencies", group: "Package Manager" },
+  run: { fn: async (args, flags) => (await import("./commands/run.ts")).run(args, flags), summary: "Run a script", group: "Execute" },
+  test: { fn: async (args, flags) => (await import("./commands/test.ts")).test(args, flags), summary: "Run the test suite", group: "Execute" },
+  build: { fn: async (args, flags) => (await import("./commands/build.ts")).build(args, flags), summary: "Bundle your project", group: "Execute" },
+  profile: { fn: async (args, flags) => (await import("./commands/profile.ts")).profileCommand(args, flags), summary: "Profile script execution", group: "Execute" },
+  compatibility: { fn: async (args, flags) => (await import("./commands/compatibility.ts")).compatibilityCommand(args, flags), summary: "Run compatibility test matrix", group: "Execute" },
+  create: { fn: async (args, flags) => (await import("./commands/create.ts")).create(args, flags), summary: "Scaffold a new project", group: "Project" },
+  doctor: { fn: async (args, flags) => (await import("./commands/doctor.ts")).doctor(args, flags), summary: "Diagnose & repair environment", group: "Maintenance" },
+  audit: { fn: async (args, flags) => (await import("./commands/audit.ts")).audit(args, flags), summary: "Scan for vulnerabilities", group: "Maintenance" },
+  licenses: { fn: async (args, flags) => (await import("./commands/licenses.ts")).licenses(args, flags), summary: "Summarize dependency licenses", group: "Maintenance" },
+  graph: { fn: async (args, flags) => (await import("./commands/graph.ts")).graph(args, flags), summary: "Show the dependency graph", group: "Maintenance" },
+  why: { fn: async (args, flags) => (await import("./commands/why.ts")).why(args, flags), summary: "Why is a dependency installed?", group: "Maintenance" },
+  outdated: { fn: async (args, flags) => (await import("./commands/outdated.ts")).outdated(args, flags), summary: "List outdated dependencies", group: "Maintenance" },
+  "cache": { fn: async (args, flags) => (await import("./commands/cache.ts")).cache(args, flags), summary: "Clean package caches", group: "Maintenance" },
+  upgrade: { fn: async () => (await import("./commands/upgrade.ts")).upgradeCommand(), summary: "Self-update to latest release", group: "Maintenance" },
+  uninstall: { fn: async (args, flags) => (await import("./commands/uninstall.ts")).uninstallCommand(args, flags), summary: "Uninstall RahulChaube Runtime", group: "Maintenance" },
+  benchmark: { fn: async (args, flags) => (await import("./commands/benchmark.ts")).benchmark(args, flags), summary: "Run performance benchmarks", group: "Performance" },
+  explain: { fn: async (args, flags) => (await import("./commands/explain.ts")).explain(args, flags), summary: "Explain an error or concept", group: "AI Tools" },
+  optimize: { fn: async (args, flags) => (await import("./commands/optimize.ts")).optimize(args, flags), summary: "Suggest performance fixes", group: "AI Tools" },
+  migrate: { fn: async (args, flags) => (await import("./commands/migrate.ts")).migrate(args, flags), summary: "Migrate from another tool", group: "AI Tools" },
+  analyze: { fn: async (args, flags) => (await import("./commands/analyze.ts")).analyze(args, flags), summary: "Analyze project health", group: "AI Tools" },
+  plugins: { fn: async (args, flags) => (await import("./commands/plugins.ts")).plugins(args, flags), summary: "Manage plugins", group: "Ecosystem" },
 };
 
 function showHelp() {
@@ -93,11 +67,19 @@ function showHelp() {
 
 function parseFlags(argv: string[]): { args: string[]; flags: Record<string, unknown> } {
   const args: string[] = [];
-  const flags: Record<string, unknown> = {};
-  for (const a of argv) {
+  const flags: Record<string, unknown> = Object.create(null);
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i];
+    if (a === "--") {
+      args.push(...argv.slice(i + 1));
+      break;
+    }
     if (a.startsWith("--")) {
-      const [k, v] = a.slice(2).split("=");
-      flags[k] = v ?? true;
+      const eq = a.indexOf("=");
+      const k = a.slice(2, eq === -1 ? undefined : eq);
+      if (eq !== -1) flags[k] = a.slice(eq + 1);
+      else if ((k === "outdir" || k === "target" || k === "outfile") && argv[i + 1] && !argv[i + 1].startsWith("-")) flags[k] = argv[++i];
+      else flags[k] = true;
     } else if (a.startsWith("-") && a.length > 1) {
       flags[a.slice(1)] = true;
     } else {
@@ -122,12 +104,12 @@ export async function main(argv: string[]): Promise<number> {
   const { args, flags } = parseFlags(argv.slice(1));
   const cmd = argv[0];
   const meta = COMMANDS[cmd];
-  if (!meta) {
+  if (!Object.hasOwn(COMMANDS, cmd)) {
     log.error(`Unknown command ${colors.bold(cmd)}.`);
     log.info(`Run ${colors.bold("rahulchaube --help")} for the full command list.`);
     return 1;
   }
-  if (flags.help) {
+  if (flags.help || flags.h) {
     showHelp();
     return 0;
   }

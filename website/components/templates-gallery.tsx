@@ -1,39 +1,37 @@
-"use client";
-
 import { Code } from "lucide-react";
 
 const TEMPLATES = [
   {
     title: "React 19 + TypeScript",
-    command: "rahulchaube create app --template react-ts",
-    description: "Production starter with Fast Refresh, Tailwind CSS, and full TypeScript configuration."
+    command: "rahulchaube create react my-app",
+    description: "Start a React project with a TypeScript entry point."
   },
   {
     title: "HTTP REST API Server",
-    command: "rahulchaube create app --template api-server",
-    description: "Lightweight HTTP server with zero-dependency routing and OpenAPI specifications."
+    command: "rahulchaube create hono my-api",
+    description: "Create a Hono server with a sample route."
   },
   {
-    title: "Fullstack Next.js App",
-    command: "rahulchaube create app --template nextjs",
-    description: "Modern web stack pre-configured for RahulChaube Runtime compilation."
+    title: "Next.js app",
+    command: "rahulchaube create next my-site",
+    description: "Create a Next.js project with a page in src/pages."
   },
   {
     title: "CLI Tooling Template",
-    command: "rahulchaube create app --template cli",
-    description: "Starter kit for building high-speed cross-platform CLI binaries."
+    command: "rahulchaube create cli my-tool",
+    description: "Start a command-line tool with a TypeScript entry point."
   }
 ];
 
 export function TemplatesGallery() {
   return (
-    <section className="site-container py-24 lg:py-32 font-sans border-t border-zinc-200 dark:border-[#163830]">
-      <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
+    <section className="mx-auto max-w-6xl px-6 py-12 font-sans border-t border-zinc-200 dark:border-[#163830]">
+      <div className="text-center max-w-3xl mx-auto mb-8 space-y-3">
         <h2 className="text-h2-fluid font-black text-zinc-900 dark:text-[#F0F6FC]">
-          Templates Gallery
+          Project templates
         </h2>
         <p className="text-body-fluid text-zinc-600 dark:text-[#8B949E]">
-          Jumpstart your next project with official production-grade starter templates.
+          Run a command from the directory where you want to create your project.
         </p>
       </div>
 

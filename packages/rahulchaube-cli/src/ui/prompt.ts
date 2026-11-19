@@ -23,7 +23,7 @@ export async function confirm(question: string, def = true): Promise<boolean> {
   return line === "y" || line === "yes";
 }
 
-export async function select<T extends string>(question: string, choices: { value: T; label: string; hint?: string }[]): Promise<T> {
+export async function select<T extends string>(question: string, choices: ReadonlyArray<{ value: T; label: string; hint?: string }>): Promise<T> {
   process.stdout.write(`${colors.magenta(icons.question)} ${colors.bold(question)}\n`);
   choices.forEach((c, i) => {
     process.stdout.write(
@@ -51,7 +51,7 @@ async function readLine(): Promise<string> {
   const data = await new Promise<string>((resolve) => {
     stdin.resume();
     stdin.once("data", (d) => {
-      const s = decoder.decode(d);
+      const s = typeof d === "string" ? d : decoder.decode(d);
       resolve(s);
     });
   });

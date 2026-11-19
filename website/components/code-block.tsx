@@ -3,12 +3,16 @@
 import { useState } from "react";
 
 export function CodeBlock({ code, lang }: { code: string; lang?: string }) {
-  const [copied, setCopied] = useState(false);
+  const [status, setStatus] = useState("Copy");
 
-  function copy() {
-    navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(code);
+      setStatus("Copied!");
+    } catch {
+      setStatus("Select text to copy");
+    }
+    setTimeout(() => setStatus("Copy"), 1800);
   }
 
   return (
@@ -18,7 +22,7 @@ export function CodeBlock({ code, lang }: { code: string; lang?: string }) {
         onClick={copy}
         className="absolute right-2 top-2 rounded-md border border-white/10 px-2 py-1 text-xs text-white/70 hover:bg-white/10"
       >
-        {copied ? "Copied!" : "Copy"}
+        <span aria-live="polite">{status}</span>
       </button>
       <pre className="overflow-x-auto p-4 pt-8 text-sm">
         <code>{code}</code>

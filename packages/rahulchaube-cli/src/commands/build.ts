@@ -16,10 +16,12 @@ export async function build(args: string[], flags: Record<string, unknown>): Pro
   const sourcemap = flags.sourcemap ? ["--sourcemap"] : [];
   const splitting = flags.splitting ? ["--splitting"] : [];
 
+  const output = flags.outfile ? ["--outfile", String(flags.outfile)] : out;
+  const compile = flags.compile ? ["--compile"] : [];
   const isWatch = Boolean(flags.watch || flags.w);
 
   log.info(`${icons.build} Building ${colors.dim(args.join(" ") || "project")}…`);
-  const r = runEngine(["build", ...out, ...target, ...minify, ...sourcemap, ...splitting, ...args]);
+  const r = runEngine(["build", ...output, ...compile, ...target, ...minify, ...sourcemap, ...splitting, ...args]);
 
   if (isWatch) {
     const entry = args[0] || "src";
@@ -27,8 +29,8 @@ export async function build(args: string[], flags: Record<string, unknown>): Pro
     if (existsSync(absPath)) {
       log.info(`${colors.cyan(icons.info)} Watch mode active for build. Monitoring changes…`);
       const watcher = new FileWatcher(absPath, (_evt, filename) => {
-        log.info(`${colors.yellow(icons.lightning)} Rebuilding due to change in ${filename || entry}…`);
-        runEngine(["build", ...out, ...target, ...minify, ...sourcemap, ...splitting, ...args]);
+        log.info(`${colors.yellow(icons.bolt)} Rebuilding due to change in ${filename || entry}…`);
+        runEngine(["build", ...output, ...compile, ...target, ...minify, ...sourcemap, ...splitting, ...args]);
       });
       watcher.start();
       return new Promise(() => {});

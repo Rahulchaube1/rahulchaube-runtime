@@ -8,11 +8,11 @@ export const site = {
   name: "RahulChaube Runtime",
   shortName: "RahulChaube",
   company: "RahulChaube",
-  domain: "https://rahulchaube.space",
+  domain: "https://www.rahulchaube.space",
   tagline: "High-performance JavaScript & TypeScript developer platform.",
   description:
     "A next-generation JavaScript & TypeScript runtime, package manager, and developer platform engineered for high-throughput execution, instant startup, and modular CLI tooling.",
-  version: "1.0.0",
+  version: "1.0.1",
   social: {
     github: "https://github.com/Rahulchaube1/rahulchaube-runtime",
     npm: "https://www.npmjs.com/package/rahulchaube",

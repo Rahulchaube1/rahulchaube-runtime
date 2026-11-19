@@ -1,0 +1,82 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "RahulChaube Runtime website API",
+    "version": "1.0.1"
+  },
+  "paths": {
+    "/api/health": {
+      "get": {
+        "summary": "Health check",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/version": {
+      "get": {
+        "summary": "Version information",
+        "responses": {
+          "200": {
+            "description": "Version details"
+          }
+        }
+      }
+    },
+    "/api/releases": {
+      "get": {
+        "summary": "List official releases",
+        "responses": {
+          "200": {
+            "description": "Releases list"
+          }
+        }
+      }
+    },
+    "/api/download": {
+      "get": {
+        "summary": "Download links matrix",
+        "responses": {
+          "307": {
+            "description": "Redirect to the selected archive"
+          },
+          "404": {
+            "description": "Unknown version or platform"
+          }
+        }
+      }
+    },
+    "/api/checksum": {
+      "get": {
+        "summary": "Release SHA256 checksums",
+        "responses": {
+          "200": {
+            "description": "Checksum map"
+          }
+        }
+      }
+    },
+    "/api/plugins": {
+      "get": {
+        "summary": "Official CLI plugins",
+        "responses": {
+          "200": {
+            "description": "Plugins list"
+          }
+        }
+      }
+    },
+    "/api/templates": {
+      "get": {
+        "summary": "Available project starter templates",
+        "responses": {
+          "200": {
+            "description": "Templates list"
+          }
+        }
+      }
+    }
+  }
+}

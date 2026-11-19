@@ -22,7 +22,11 @@ export async function create(args: string[], _flags: Record<string, unknown>): P
     templateId = choice;
   }
 
-  const template = TEMPLATES.find((t) => t.id === templateId) ?? TEMPLATES[0];
+  const template = TEMPLATES.find((t) => t.id === templateId);
+  if (!template) {
+    log.error(`Unknown template "${templateId}". Choose ${TEMPLATES.map(t => t.id).join(", ")}.`);
+    return 1;
+  }
 
   if (!name) {
     name = await text("Project name:", { placeholder: "my-app" });
@@ -51,8 +55,8 @@ export async function create(args: string[], _flags: Record<string, unknown>): P
   log.plain("");
   log.plain(`${colors.magenta(icons.rocket)} Next steps:`);
   log.plain(`  ${colors.cyan("cd")} ${name}`);
-  log.plain(`  ${colors.cyan("rahulchaube install")}`);
-  log.plain(`  ${colors.cyan("rahulchaube run dev")}`);
+  log.plain(`  ${colors.cyan("bun install")}`);
+  log.plain(`  ${colors.cyan(templateId === "library" ? "rahulchaube test" : "rahulchaube run dev")}`);
   log.plain("");
   return 0;
 }

@@ -19,7 +19,7 @@ export async function benchmark(args: string[], flags: Record<string, unknown>):
   const pkg = (await import("../util/fs.ts")).readPackageJson(root);
   const script = pkg?.scripts?.["benchmark"];
   if (script) {
-    return runEngine(["run", "benchmark", ...args]);
+    return runEngine(["run", "benchmark", ...args]).code;
   }
 
   if (!existsSync(benchDir)) {

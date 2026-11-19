@@ -4,17 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { docSections, docs } from "@/lib/docs";
 import { cn } from "@/lib/utils";
-import { SearchModal } from "@/components/search-modal";
 
 export function DocsSidebar() {
   const pathname = usePathname();
   const slugFor = (section: string) => docs.find((d) => d.section === section)?.slug ?? "";
 
   return (
-    <aside className="w-64 shrink-0 border-r border-zinc-200 dark:border-[#30363D] p-4 font-sans bg-zinc-50 dark:bg-[#0D1117] transition-colors duration-200">
-      <div className="mb-4">
-        <SearchModal />
-      </div>
+    <aside className="hidden sm:block w-56 shrink-0 border-r border-zinc-200 dark:border-[#30363D] p-4 font-sans bg-zinc-50 dark:bg-[#0D1117] transition-colors duration-200">
 
       <nav className="space-y-1 text-xs">
         <div className="px-3 py-1.5 text-[10px] font-bold text-zinc-500 dark:text-[#8B949E] uppercase tracking-wider font-mono">

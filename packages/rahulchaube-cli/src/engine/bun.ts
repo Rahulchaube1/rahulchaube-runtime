@@ -30,11 +30,16 @@ export function runEngine(args: string[], opts: { inherit?: boolean; cwd?: strin
       RAHULCHAUBE_BRAND_ACTIVE: "1",
     },
   });
+  if (proc.error) {
+    const message = `Could not start ${engineName()}: ${proc.error.message}`;
+    if (inherit) console.error(message);
+    return { code: 1, stdout: "", stderr: message };
+  }
   if (inherit) {
-    return { code: proc.status ?? 0, stdout: "", stderr: "" };
+    return { code: proc.status ?? 1, stdout: "", stderr: "" };
   }
   return {
-    code: proc.status ?? 0,
+    code: proc.status ?? 1,
     stdout: proc.stdout?.toString() ?? "",
     stderr: proc.stderr?.toString() ?? "",
   };

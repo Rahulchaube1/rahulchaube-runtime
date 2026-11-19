@@ -18,7 +18,7 @@ export default function ReleasesPage() {
           Releases &amp; Changelog
         </h1>
         <p className="text-zinc-600 dark:text-[#8B949E] text-sm max-w-2xl">
-          Official production releases, checksums, and release notes for Windows, Linux, and macOS.
+          Release archives require GitHub repository access. Compare the SHA-256 digest below after downloading.
         </p>
       </div>
 

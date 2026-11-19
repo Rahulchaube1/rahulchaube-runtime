@@ -1,10 +1,12 @@
-import { NextRequest, NextResponse } from "next/server";
+import { getLatestRelease } from "../../../lib/releases";
 
-export function GET(request: NextRequest) {
+export function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const platform = searchParams.get("platform") ?? "linux-x64";
-  const version = searchParams.get("version") ?? "1.0.0";
-
-  const targetUrl = `https://github.com/Rahulchaube1/rahulchaube-runtime/releases/download/v${version}/rahulchaube-${platform}.tar.gz`;
-  return NextResponse.redirect(targetUrl, { status: 307 });
+  const release = getLatestRelease();
+  const platform = (searchParams.get("platform") ?? "linux-x64").replace(/^macos-/, "darwin-").replace(/^windows-/, "win-");
+  const asset = release.assets.find(a => a.target === platform);
+  if (!asset || (searchParams.get("version") ?? release.version).replace(/^v/, "") !== release.version) {
+    return Response.json({ error: "Unknown release or platform" }, { status: 404 });
+  }
+  return Response.redirect(asset.downloadUrl, 307);
 }

@@ -1,6 +1,6 @@
 import { DownloadTabs } from "@/components/download-tabs";
 import { Card } from "@/components/ui/card";
-import { downloadTargets } from "@/lib/site";
+import { getLatestRelease } from "@/lib/releases";
 import { Download, Monitor, Apple, Terminal } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -8,12 +8,12 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Download RahulChaube Runtime — Official Packages & Installers",
   description:
-    "Download RahulChaube Runtime for Windows, Linux, macOS, Docker, Homebrew, Scoop, Winget, APT, and RPM.",
+    "Download RahulChaube Runtime for Windows x64, Linux, and macOS.",
 };
 
 const getTargetIcon = (os: string) => {
   if (os === "windows") return Monitor;
-  if (os === "macos") return Apple;
+  if (os === "darwin") return Apple;
   return Terminal;
 };
 
@@ -26,7 +26,7 @@ export default function DownloadPage() {
           Download RahulChaube Runtime
         </h1>
         <p className="text-zinc-600 dark:text-[#8B949E] text-sm sm:text-base">
-          Single binary executable for JavaScript &amp; TypeScript. Choose your operating system or package manager below.
+          Choose the installer for your operating system. The CLI runs on Bun.
         </p>
       </div>
 
@@ -39,9 +39,9 @@ export default function DownloadPage() {
       <div className="mt-16 border-t border-zinc-200 dark:border-[#163830] pt-12">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-xl font-bold text-zinc-900 dark:text-[#F0F6FC]">Direct Binary Archives</h2>
+            <h2 className="text-xl font-bold text-zinc-900 dark:text-[#F0F6FC]">Release archives</h2>
             <p className="text-xs text-zinc-600 dark:text-[#8B949E] mt-0.5">
-              Pre-built standalone archives for custom deployments or offline installation.
+              Sign in to GitHub with repository access to download an archive.
             </p>
           </div>
           <Link
@@ -53,7 +53,7 @@ export default function DownloadPage() {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {downloadTargets.map((t) => {
+          {getLatestRelease().assets.map((t) => {
             const IconComponent = getTargetIcon(t.os);
             return (
               <Card key={`${t.os}-${t.arch}`} className="flex flex-col justify-between">
@@ -61,13 +61,13 @@ export default function DownloadPage() {
                   <div className="p-2.5 rounded-lg bg-zinc-100 dark:bg-[#0A1F1B] border border-zinc-200 dark:border-[#163830] w-fit mb-3 text-[#2FA866] dark:text-[#A8F05B]">
                     <IconComponent className="w-5 h-5" />
                   </div>
-                  <h3 className="font-semibold text-zinc-900 dark:text-[#F0F6FC] text-sm">{t.label}</h3>
+                  <h3 className="font-semibold text-zinc-900 dark:text-[#F0F6FC] text-sm">{t.platform}</h3>
                   <p className="text-xs text-zinc-600 dark:text-[#8B949E] mb-4 font-mono mt-0.5">
                     Target: {t.os} / {t.arch}
                   </p>
                 </div>
                 <a
-                  href={`https://github.com/Rahulchaube1/rahulchaube-runtime/releases/download/v1.0.0/rahulchaube-${t.os}-${t.arch}.${t.os === "windows" ? "zip" : "tar.gz"}`}
+                  href={t.downloadUrl}
                   className="inline-flex items-center justify-center gap-2 px-3.5 py-1.5 rounded-lg bg-zinc-100 dark:bg-[#0A1F1B] hover:bg-zinc-200 dark:hover:bg-[#0E2923] border border-zinc-200 dark:border-[#163830] text-xs font-semibold text-zinc-900 dark:text-[#F0F6FC] transition-colors"
                 >
                   <Download className="w-3.5 h-3.5" /> Download Archive

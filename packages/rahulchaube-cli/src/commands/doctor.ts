@@ -13,7 +13,7 @@ interface Check {
   name: string;
   ok: boolean;
   detail: string;
-  fix?: () => void;
+  fix?: () => boolean;
 }
 
 export async function doctor(args: string[], flags: Record<string, unknown>): Promise<number> {
@@ -44,7 +44,7 @@ export async function doctor(args: string[], flags: Record<string, unknown>): Pr
     name: "Dependency tree",
     ok: nm || !lock,
     detail: nm ? "node_modules present" : lock ? "missing node_modules — run `rahulchaube install`" : "no deps",
-    fix: nm || !lock ? undefined : () => runEngine(["install", "--frozen-lockfile"], { inherit: false }),
+    fix: nm || !lock ? undefined : () => runEngine(["install", "--frozen-lockfile"], { inherit: false }).code === 0,
   });
 
   // 4. Cache dir writable
@@ -67,6 +67,7 @@ export async function doctor(args: string[], flags: Record<string, unknown>): Pr
         ? undefined
         : () => {
             appendFileSync(join(root, ".gitignore"), "\nnode_modules\n");
+            return true;
           },
   });
 
@@ -75,11 +76,10 @@ export async function doctor(args: string[], flags: Record<string, unknown>): Pr
     if (c.ok) {
       log.success(`${c.name}: ${colors.dim(c.detail)}`);
     } else {
-      failures++;
-      if (fix && c.fix) {
-        c.fix();
+      if (fix && c.fix?.()) {
         log.success(`${icons.wrench} Fixed ${colors.bold(c.name)}.`);
       } else {
+        failures++;
         log.error(`${c.name}: ${c.detail}`);
       }
     }
@@ -87,10 +87,6 @@ export async function doctor(args: string[], flags: Record<string, unknown>): Pr
 
   if (failures === 0) {
     log.success(`${icons.shield} Your environment is healthy.`);
-    return 0;
-  }
-  if (fix) {
-    log.success(`${icons.wrench} Doctor applied ${failures} fix(es).`);
     return 0;
   }
   log.warn(`Found ${failures} issue(s). Run ${colors.bold("rahulchaube doctor --fix")} to repair.`);

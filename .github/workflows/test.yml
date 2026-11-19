@@ -12,12 +12,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
-      - run: bun install
       - name: Run benchmark suite (smoke)
-        working-directory: benchmarks
-        run: bun install && bun run bench
-        continue-on-error: true
+        run: bun benchmarks/runner.ts
       - name: Run API tests
         working-directory: api
-        run: bun install && bun test
-        continue-on-error: true
+        run: bun test tests/

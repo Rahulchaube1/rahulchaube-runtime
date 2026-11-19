@@ -13,8 +13,8 @@
  * ─────────────────────────────────────────────────────────────────
  */
 
-import { existsSync, mkdirSync, writeFileSync, readFileSync, symlinkSync, copyFileSync, readdirSync, statSync } from "node:fs";
-import { resolve, join, dirname } from "node:path";
+import { existsSync, mkdtempSync, renameSync, rmSync, mkdirSync, writeFileSync, readFileSync, symlinkSync, copyFileSync, readdirSync, statSync } from "node:fs";
+import { resolve, join, dirname, sep, win32 } from "node:path";
 import { gunzipSync } from "node:zlib";
 import { createHash } from "node:crypto";
 import { RegistryClient, VersionMetadata } from "../registry/client.ts";
@@ -71,6 +71,9 @@ export class PackageInstaller {
     }
 
     for (const [name, rawVersion] of Object.entries(deps)) {
+      if (!/^(?:@[a-z0-9~][a-z0-9._~-]*\/)?[a-z0-9~][a-z0-9._~-]*$/i.test(name)) {
+        throw new Error(`Invalid package name: ${name}`);
+      }
       let verMeta: VersionMetadata;
 
       if (this.offline) {
@@ -79,6 +82,7 @@ export class PackageInstaller {
         verMeta = await this.resolveVersion(name, rawVersion);
       }
 
+      if (!/^[a-z0-9][a-z0-9.+_-]*$/i.test(verMeta.version)) throw new Error("Invalid package version");
       const tarballUrl = verMeta.dist.tarball;
       const shasum = verMeta.dist.shasum || "";
 
@@ -88,7 +92,19 @@ export class PackageInstaller {
       // Global store directory for package
       const globalPkgStore = resolve(this.cacheDir, name.replace(/\//g, "__"), verMeta.version);
       if (!existsSync(globalPkgStore)) {
-        this.extractTarball(tarballBuffer, globalPkgStore);
+        mkdirSync(dirname(globalPkgStore), { recursive: true });
+        const stage = mkdtempSync(join(dirname(globalPkgStore), ".extract-"));
+        try {
+          this.extractTarball(tarballBuffer, stage);
+          try {
+            renameSync(stage, globalPkgStore);
+          } catch (error) {
+            // A concurrent installer may already have published the complete package.
+            if (!existsSync(globalPkgStore)) throw error;
+          }
+        } finally {
+          rmSync(stage, { recursive: true, force: true });
+        }
       }
 
       // Link / copy package from global store to project node_modules
@@ -196,17 +212,26 @@ export class PackageInstaller {
       const header = tarBuffer.subarray(offset, offset + 512);
       if (header.every((b) => b === 0)) break;
 
-      const rawName = header.subarray(0, 100).toString("ascii").replace(/\0/g, "").trim();
+      const name = header.subarray(0, 100).toString("utf8").split("\0")[0];
+      const prefix = header.subarray(345, 500).toString("utf8").split("\0")[0];
+      const rawName = prefix ? prefix + "/" + name : name;
       const sizeStr = header.subarray(124, 136).toString("ascii").replace(/\0/g, "").trim();
       const fileSize = parseInt(sizeStr, 8) || 0;
       const typeFlag = String.fromCharCode(header[156]);
 
       offset += 512;
 
-      if (rawName && fileSize >= 0) {
+      if (!/^[0-7]+$/.test(sizeStr) || offset + fileSize > tarBuffer.length) {
+        throw new Error("Invalid package archive size");
+      }
+      if (rawName && ["0", "\0", "5"].includes(typeFlag)) {
         const cleanName = rawName.replace(/^package[\\/]/, "");
         if (cleanName) {
           const outPath = resolve(destDir, cleanName);
+          if (win32.isAbsolute(cleanName) || cleanName.split(/[\\/]/).includes("..") ||
+              (outPath !== resolve(destDir) && !outPath.startsWith(resolve(destDir) + sep))) {
+            throw new Error("Package archive entry is outside its destination");
+          }
 
           if (typeFlag === "5" || cleanName.endsWith("/")) {
             mkdirSync(outPath, { recursive: true });
@@ -238,6 +263,7 @@ export class PackageInstaller {
 
   private getOfflineVersionMetadata(name: string, rawVersion: string): VersionMetadata {
     const cleanVersion = rawVersion.replace(/[\^~]/g, "");
+    if (!/^[a-z0-9][a-z0-9.+_-]*$/i.test(cleanVersion)) throw new Error("Invalid offline package version");
     const safeName = name.replace(/\//g, "__");
     const cacheFile = resolve(this.cacheDir, `${safeName}-${cleanVersion}.tgz`);
 

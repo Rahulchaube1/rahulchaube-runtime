@@ -1,0 +1,34 @@
+{
+  "version": "1.0.1",
+  "channel": "stable",
+  "release": "https://www.rahulchaube.space/releases",
+  "downloadUrl": "https://github.com/Rahulchaube1/rahulchaube-runtime/raw/refs/heads/main/dist",
+  "assets": {
+    "win-x64": "https://github.com/Rahulchaube1/rahulchaube-runtime/raw/refs/heads/main/dist/runtime-win-x64.zip",
+    "linux-x64": "https://github.com/Rahulchaube1/rahulchaube-runtime/raw/refs/heads/main/dist/runtime-linux-x64.tar.gz",
+    "linux-arm64": "https://github.com/Rahulchaube1/rahulchaube-runtime/raw/refs/heads/main/dist/runtime-linux-arm64.tar.gz",
+    "darwin-x64": "https://github.com/Rahulchaube1/rahulchaube-runtime/raw/refs/heads/main/dist/runtime-darwin-x64.tar.gz",
+    "darwin-arm64": "https://github.com/Rahulchaube1/rahulchaube-runtime/raw/refs/heads/main/dist/runtime-darwin-arm64.tar.gz"
+  },
+  "sha256": {
+    "runtime-win-x64.zip": "50815b09f503659797de63b0a6024e79a228fbb985c3d4d110eb64287b441e6e",
+    "runtime-linux-x64.tar.gz": "5c672cf03fcdfffb0a8e6ace3b4d94de98adf8919fad8a5663f99107c1507f96",
+    "runtime-linux-arm64.tar.gz": "5c672cf03fcdfffb0a8e6ace3b4d94de98adf8919fad8a5663f99107c1507f96",
+    "runtime-darwin-x64.tar.gz": "5c672cf03fcdfffb0a8e6ace3b4d94de98adf8919fad8a5663f99107c1507f96",
+    "runtime-darwin-arm64.tar.gz": "5c672cf03fcdfffb0a8e6ace3b4d94de98adf8919fad8a5663f99107c1507f96"
+  },
+  "sizes": {
+    "runtime-win-x64.zip": 99441,
+    "runtime-linux-x64.tar.gz": 61922,
+    "runtime-linux-arm64.tar.gz": 61922,
+    "runtime-darwin-x64.tar.gz": 61922,
+    "runtime-darwin-arm64.tar.gz": 61922
+  },
+  "blobs": {
+    "runtime-win-x64.zip": "0e6de5700bb0850179c13daf67ae12093d5f0946",
+    "runtime-linux-x64.tar.gz": "ab1b3ce2a943db9abeda4c0c3404eb47f03d8dbd",
+    "runtime-linux-arm64.tar.gz": "ab1b3ce2a943db9abeda4c0c3404eb47f03d8dbd",
+    "runtime-darwin-x64.tar.gz": "ab1b3ce2a943db9abeda4c0c3404eb47f03d8dbd",
+    "runtime-darwin-arm64.tar.gz": "ab1b3ce2a943db9abeda4c0c3404eb47f03d8dbd"
+  }
+}
