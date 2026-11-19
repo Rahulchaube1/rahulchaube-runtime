@@ -238,7 +238,15 @@ From the same directory, run the file.
 rahulchaube run ./hello.ts
 \`\`\`
 
-The command prints "Hello, runtime!". Run it with --watch to rerun when files change.
+The command prints "Hello, runtime!". RC Runtime watches the entry file and its imported modules. Save a change to restart the app. Use hot reload to keep compatible process state, such as values stored on globalThis.
+
+\`\`\`sh
+rahulchaube run --watch ./hello.ts
+rahulchaube run --hot ./hello.ts
+rahulchaube build --watch ./hello.ts --outdir dist
+\`\`\`
+
+In VS Code, install the RahulChaube Runtime extension from the Download page. Open a JS or TS file and choose RC Runtime: Watch Current File. Choose RC Runtime: Stop Running Task to end the session.
 
 ## Run Blyx
 
@@ -265,7 +273,7 @@ Use rahulchaube run file.blyx -- args to compile and run a program with its argu
     body: `# Installation & Platform Setup
 
 ## Overview
-Install Bun first. The release archives require access to the GitHub repository and an authenticated GitHub CLI.
+Install Bun first. The installer downloads the platform archive from GitHub and verifies its SHA-256 digest.
 
 ## POSIX (Linux / macOS)
 \`\`\`sh
@@ -280,7 +288,7 @@ powershell -c "irm https://www.rahulchaube.space/install.ps1 | iex"
 ## Verification
 \`\`\`sh
 rahulchaube --version
-# Output: rahulchaube v1.1.0
+# Output: rahulchaube v1.2.0
 \`\`\`
 `,
   },

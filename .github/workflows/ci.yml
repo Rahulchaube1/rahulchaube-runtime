@@ -30,7 +30,7 @@ jobs:
       - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
       - run: cargo build --locked --release --manifest-path .blyx-compiler/Cargo.toml -p blyxc
       - run: bun installer/build-native.ts .blyx-compiler/target/release/blyxc${{ matrix.suffix }} packages/rahulchaube-cli/bin
-      - run: bun test tests/native-cli.test.ts tests/self-contained-installer.test.ts
+      - run: bun test tests/native-cli.test.ts tests/live-runtime.test.ts tests/self-contained-installer.test.ts
         env:
           RAHUL_TEST_NATIVE: "1"
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -40,6 +40,13 @@ jobs:
             packages/rahulchaube-cli/bin/rahulchaube-native${{ matrix.suffix }}
             packages/rahulchaube-cli/bin/blyxc${{ matrix.suffix }}
           if-no-files-found: error
+
+      - name: Verify the published VSIX in desktop VS Code
+        if: matrix.target == 'linux-x64'
+        run: |
+          (cd website/public/extensions && sha256sum --check SHA256SUMS)
+          npm install --prefix "$RUNNER_TEMP/editor-test" --no-audit --no-fund @vscode/test-electron@3.1.0
+          NODE_PATH="$RUNNER_TEMP/editor-test/node_modules" xvfb-run -a node editors/vscode/test/run.cjs
 
   test-matrix:
     name: Test & Validate (${{ matrix.os }})

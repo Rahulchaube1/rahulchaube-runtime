@@ -12,7 +12,7 @@ export const site = {
   tagline: "High-performance JavaScript & TypeScript developer platform.",
   description:
     "A next-generation JavaScript & TypeScript runtime, package manager, and developer platform engineered for high-throughput execution, instant startup, and modular CLI tooling.",
-  version: "1.1.0",
+  version: "1.2.0",
   social: {
     github: "https://github.com/Rahulchaube1/rahulchaube-runtime",
     npm: "https://www.npmjs.com/package/rahulchaube",

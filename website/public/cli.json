@@ -1,6 +1,6 @@
 {
   "binary": "rahulchaube",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "commands": [
     { "name": "blyx", "usage": "rahulchaube blyx <subcommand>", "description": "Access the bundled Blyx compiler and interpreter", "status": "Implemented" },
     { "name": "run", "usage": "rahulchaube run <script|file>", "description": "Execute script or TS/JS file natively", "status": "Implemented" },

@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "channel": "stable",
   "launcher": "blyx",
   "release": "https://www.rahulchaube.space/releases",
@@ -12,24 +12,24 @@
     "darwin-arm64": "https://github.com/Rahulchaube1/rahulchaube-runtime/raw/refs/heads/main/dist/runtime-darwin-arm64.tar.gz"
   },
   "sha256": {
-    "runtime-win-x64.zip": "b3bc9955aa121cb19a91c115af5b0c7fb29830248030faf571afb5373453bb22",
-    "runtime-linux-x64.tar.gz": "df2d62027efc9975f44cb44da1b751655952e6b68ced592295c0c2cc15999c88",
-    "runtime-linux-arm64.tar.gz": "91c2b121b000a08021da73f99d6ede5f8782a504f1001e01b17ea8b433e71f57",
-    "runtime-darwin-x64.tar.gz": "0fdaf9b152d64c9165fea08f87c6e570d15e2df843c1860a299b0e97214a7d8b",
-    "runtime-darwin-arm64.tar.gz": "1b847fe570c77054fac4d9b8a4e1176ec6f7faeecd50fd2b52bd9131ef0cb8d3"
+    "runtime-win-x64.zip": "61a802d534fac714cacb8febaca569d8c6f963730ad0dd09aa6d145a6150fd37",
+    "runtime-linux-x64.tar.gz": "dec8a09ebd82283a18f756c9e88641cf2c66024a18abda9f85e60f11a70a7424",
+    "runtime-linux-arm64.tar.gz": "0d605efd45bd9e9e15b8522db05bf6e9d8a2317c671c2ada0bd86c367ba7e1d0",
+    "runtime-darwin-x64.tar.gz": "b60a2adcac5e57d106c34a51217242db2c739603d02c71295eb9dde0b56d60d1",
+    "runtime-darwin-arm64.tar.gz": "33ae6c5083dad7d4cae844b53cafa90102bdf210a2b2953189188aeeca74b00b"
   },
   "sizes": {
-    "runtime-win-x64.zip": 513699,
-    "runtime-linux-x64.tar.gz": 631188,
-    "runtime-linux-arm64.tar.gz": 614256,
-    "runtime-darwin-x64.tar.gz": 607444,
-    "runtime-darwin-arm64.tar.gz": 571500
+    "runtime-win-x64.zip": 512395,
+    "runtime-linux-x64.tar.gz": 632144,
+    "runtime-linux-arm64.tar.gz": 616230,
+    "runtime-darwin-x64.tar.gz": 609569,
+    "runtime-darwin-arm64.tar.gz": 573376
   },
   "blobs": {
-    "runtime-win-x64.zip": "9ffaeef76597a73112c6b98ce83c8f2c4541b351",
-    "runtime-linux-x64.tar.gz": "00e5027bc2a38578455371dc7d1af8839ebbc4c1",
-    "runtime-linux-arm64.tar.gz": "042feb648aaf59ab9a84ab33c58acce530d2ca27",
-    "runtime-darwin-x64.tar.gz": "aec75d2643bc1c2b6543745b422137ce82f268c0",
-    "runtime-darwin-arm64.tar.gz": "e98934150cdb95ac0234d9abe04ecbda2a6127be"
+    "runtime-win-x64.zip": "ca1c113d8a4d4262976a02647524f7ea8e5b2823",
+    "runtime-linux-x64.tar.gz": "027e674972e29fc93ade35e19b5bcea436f66581",
+    "runtime-linux-arm64.tar.gz": "9c20ef259fe98d7a94261385bc5ec3c862541507",
+    "runtime-darwin-x64.tar.gz": "c4a982616ea33e19e1109b69aee42cd7bd3faf04",
+    "runtime-darwin-arm64.tar.gz": "6a870f460ee324a5ed1badb58cc627d22232cd49"
   }
 }

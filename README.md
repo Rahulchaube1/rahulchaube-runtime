@@ -1,6 +1,6 @@
 # RahulChaube Runtime
 
-![Version](https://img.shields.io/badge/version-1.1.0-emerald.svg)
+![Version](https://img.shields.io/badge/version-1.2.0-emerald.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)
 ![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-darkgreen.svg)
@@ -13,7 +13,7 @@ Website: [https://rahulchaube.space](https://rahulchaube.space)
 
 ## Installation
 
-Install [Bun](https://bun.sh/) first. Release archives require repository access. Sign in with the GitHub CLI using `gh auth login` before running the installer.
+Install Bun first. The installer downloads the matching GitHub archive and verifies its SHA-256 digest. [Install Bun](https://bun.sh/)
 
 ### Windows (PowerShell)
 
@@ -27,9 +27,19 @@ irm https://www.rahulchaube.space/install.ps1 | iex
 curl -fsSL https://www.rahulchaube.space/install | bash
 ```
 
+### Live development with RC Runtime
+
+```sh
+rahulchaube run --watch ./src/app.ts
+rahulchaube run --hot ./src/app.ts
+rahulchaube build --watch ./src/app.ts --outdir dist
+```
+
+Watch restarts the application when you save the entry file or an imported module. Hot reload re-evaluates modules in the running process. Open the Command Palette in VS Code and choose **RC Runtime: Watch Current File** or **RC Runtime: Hot Reload Current File**. [Download the VS Code extension](https://www.rahulchaube.space/download#vscode)
+
 ### Run a Blyx program
 
-The installed CLI starts in native Blyx. It includes the Blyx compiler and interpreter. Blyx sends JS and TS files directly to Bun’s JavaScriptCore host for ES modules, CommonJS, dynamic imports and top-level await. Watch, debug, package tooling and other compatibility commands still use Bun.
+The installed CLI starts in native Blyx. It includes the Blyx compiler and interpreter. Blyx sends JS and TS files directly to Bun’s JavaScriptCore host for ES modules, CommonJS, dynamic imports and top-level await. RC Runtime uses Bun for JS/TS watch and hot reload, debugging and package tooling.
 
 ```sh
 rahulchaube blyx new hello

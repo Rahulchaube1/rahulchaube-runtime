@@ -1,0 +1,51 @@
+name: Publish RC Runtime editor extension
+on:
+  workflow_dispatch:
+    inputs:
+      registry:
+        description: Extension registry
+        type: choice
+        options: [both, marketplace, open-vsx]
+        required: true
+permissions:
+  contents: read
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    strategy:
+      fail-fast: false
+      matrix:
+        registry: ${{ fromJSON(inputs.registry == 'both' && '["marketplace","open-vsx"]' || format('["{0}"]', inputs.registry)) }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Verify the distribution package
+        run: |
+          cd website/public/extensions
+          sha256sum --check SHA256SUMS
+          version=$(node -p "require('../../../editors/vscode/package.json').version")
+          echo "PACKAGE=$PWD/rahulchaube-runtime-$version.vsix" >> "$GITHUB_ENV"
+      - name: Publish to Visual Studio Marketplace
+        if: matrix.registry == 'marketplace'
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: |
+          flags=()
+          if [[ -z "$VSCE_PAT" ]]; then flags+=(--oidc); fi
+          npx --yes @vscode/vsce@4.1.1 publish --packagePath "$PACKAGE" "${flags[@]}"
+      - name: Publish to Open VSX
+        if: matrix.registry == 'open-vsx'
+        env:
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+        run: |
+          flags=()
+          if [[ -z "$OVSX_PAT" ]]; then flags+=(--trusted-publishing); fi
+          npx --yes ovsx@1.4.0 publish "$PACKAGE" "${flags[@]}"

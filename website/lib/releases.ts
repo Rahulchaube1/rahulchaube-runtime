@@ -30,11 +30,11 @@ const assets = Object.entries(versionInfo.assets).map(([target, downloadUrl]) =>
 
 export const releases = [{
   version: manifest.version, tag: `v${manifest.version}`, date: "2026-11-19", isLatest: true,
-  notes: ["Start the CLI with a native Blyx executable.", "Run Blyx programs with the bundled interpreter or build standalone executables."],
+  notes: ["Watch JavaScript and TypeScript projects in the terminal or VS Code.", "Reload changed modules while keeping compatible process state."],
   changelog: {
-    features: ["Use rahulchaube blyx to access the compiler and interpreter.", "Run JS and TS files with top-level await and dynamic imports through JavaScriptCore."],
-    fixes: ["Verify the native launcher during installation."],
-    improvements: ["Run help and version directly from the native executable."],
+    features: ["Run, watch, hot reload and stop a project with the RC Runtime editor commands."],
+    fixes: ["Restart when an imported module changes and recover after correcting syntax errors."],
+    improvements: ["Download verified public release archives without signing in."],
   },
   assets,
 }];

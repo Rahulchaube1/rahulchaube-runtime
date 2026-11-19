@@ -60,6 +60,8 @@ function showHelp() {
   log.plain(colors.bold("OPTIONS"));
   log.plain(`  ${colors.cyan("--help, -h")}     ${colors.dim("Show help")}`);
   log.plain(`  ${colors.cyan("--version, -v")}  ${colors.dim("Show version")}`);
+  log.plain(`  ${colors.cyan("run --watch")}   ${colors.dim("Restart when an imported JS or TS file changes")}`);
+  log.plain(`  ${colors.cyan("run --hot")}     ${colors.dim("Reload JS or TS modules in the running process")}`);
   log.plain(`  ${colors.cyan("--json")}        ${colors.dim("Emit JSON output")}`);
   log.plain(`  ${colors.cyan("--no-color")}    ${colors.dim("Disable colors")}`);
   log.plain("");
