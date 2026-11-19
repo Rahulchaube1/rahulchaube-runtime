@@ -4,6 +4,7 @@ use std::text;
 use metadata;
 use options;
 use engine;
+use execute;
 
 fn compiler() -> String {
     env_get("BLYXC", path_join(exe_dir(), compiler_filename()))
@@ -62,6 +63,7 @@ fn main() {
         }
         process_exec(compiler(), xs, args_new());
     }
+    if command == "run" { execute_script(inputs, opts); }
     if command == "run" || (command == "build" && (option(opts, "watch") != "" || option(opts, "w") != "")) {
         legacy(argv);
         return;

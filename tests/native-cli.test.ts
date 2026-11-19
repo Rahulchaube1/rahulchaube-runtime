@@ -24,11 +24,11 @@ nativeTest("compiled Blyx front end matches CLI output and flag handling", () =>
   }
 });
 
-nativeTest("compiled runtime can interpret, build, and run Blyx and execute a legacy JS file", () => {
+nativeTest("compiled runtime can interpret, build, and run Blyx and execute a TS file", () => {
   const dir = mkdtempSync(join(tmpdir(), "rahul blyx "));
   try {
     writeFileSync(join(dir, "hello.blyx"), 'fn main() { println!(6 * 7); }');
-    expect(execute([binary, "blyx", "run", "hello.blyx"], dir)).toEqual({ code: 0, out: "42\n", err: "" });
+    expect(execute([binary, "blyx", "run", "hello.blyx"], dir, { PATH: "", Path: "" })).toEqual({ code: 0, out: "42\n", err: "" });
     writeFileSync(join(dir, "app.blyx"), 'use std::cli; fn main() { println!(args_join(cli_args(), "|")); process_exit(17); }');
     const args = ["", "a b", "--flag=with=equals", "x&y", "₹"];
     const expected = { code: 17, out: args.join("|") + "\n", err: "" };
@@ -41,6 +41,19 @@ nativeTest("compiled runtime can interpret, build, and run Blyx and execute a le
     expect(execute([binary, "run", "./demo.ts", "--", ...args], dir)).toEqual({ ...expected, code: 0 });
   } finally { rmSync(dir, { recursive: true, force: true }); }
 }, 60_000);
+
+nativeTest("the Blyx launcher runs ESM, TypeScript, CommonJS and async imports through JavaScriptCore", () => {
+  const dir = mkdtempSync(join(tmpdir(), "rahul js host "));
+  try {
+    writeFileSync(join(dir, "package.json"), JSON.stringify({ type: "module", scripts: { "main.ts": "exit 12" } }));
+    writeFileSync(join(dir, "lib.ts"), 'export const result: number = 42;');
+    writeFileSync(join(dir, "main.ts"), 'const { result } = await import("./lib.ts"); console.log(result, process.argv.slice(2).join("|"));');
+    const result = execute([binary, "run", "main.ts", "--", "--one=x=y", "two words"], dir);
+    expect(result).toEqual({ code: 0, out: "42 --one=x=y|two words\n", err: "" });
+    writeFileSync(join(dir, "app.cjs"), 'console.log(require("./lib.ts").result); process.exitCode = 7;');
+    expect(execute([binary, "run", join(dir, "app.cjs")], dir)).toEqual({ code: 7, out: "42\n", err: "" });
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
 
 nativeTest("Blyx engine commands preserve engine arguments, environment and nonzero exit codes", () => {
   const dir = mkdtempSync(join(tmpdir(), "rahul engine "));

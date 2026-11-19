@@ -29,7 +29,7 @@ curl -fsSL https://www.rahulchaube.space/install | bash
 
 ### Run a Blyx program
 
-The installed CLI starts in native Blyx. It includes the Blyx compiler and interpreter. The JavaScript engine, package toolchain, and compatibility commands still use Bun.
+The installed CLI starts in native Blyx. It includes the Blyx compiler and interpreter. Blyx sends JS and TS files directly to Bun’s JavaScriptCore host for ES modules, CommonJS, dynamic imports and top-level await. Watch, debug, package tooling and other compatibility commands still use Bun.
 
 ```sh
 rahulchaube blyx new hello

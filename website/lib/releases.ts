@@ -32,7 +32,7 @@ export const releases = [{
   version: manifest.version, tag: `v${manifest.version}`, date: "2026-11-19", isLatest: true,
   notes: ["Start the CLI with a native Blyx executable.", "Run Blyx programs with the bundled interpreter or build standalone executables."],
   changelog: {
-    features: ["Use rahulchaube blyx to access the compiler and interpreter."],
+    features: ["Use rahulchaube blyx to access the compiler and interpreter.", "Run JS and TS files with top-level await and dynamic imports through JavaScriptCore."],
     fixes: ["Verify the native launcher during installation."],
     improvements: ["Run help and version directly from the native executable."],
   },
