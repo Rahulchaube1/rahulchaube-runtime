@@ -13,7 +13,11 @@ async function main() {
     mkdirSync(workspace);
     mkdirSync(join(workspace, ".vscode"));
     const binary = resolve(root, "packages/rahulchaube-cli/bin/rahulchaube-native" + (process.platform === "win32" ? ".exe" : ""));
-    writeFileSync(join(workspace, ".vscode/settings.json"), JSON.stringify({ "rcRuntime.executablePath": binary }));
+    const platform = { linux: "linux", darwin: "osx", win32: "windows" }[process.platform];
+    writeFileSync(join(workspace, ".vscode/settings.json"), JSON.stringify({
+      "rcRuntime.executablePath": binary,
+      ["terminal.integrated.env." + platform]: { PATH: process.env.PATH },
+    }));
     const vsix = join(root, "website/public/extensions/rahulchaube-runtime-" + require("../package.json").version + ".vsix");
     execFileSync("unzip", ["-q", vsix, "-d", dir]);
     const code = await downloadAndUnzipVSCode({ version: "1.105.1", cachePath: process.env.RC_VSCODE_CACHE || join(tmpdir(), "rc-vscode-cache") });

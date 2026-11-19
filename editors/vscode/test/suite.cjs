@@ -25,6 +25,11 @@ async function run() {
   const command = name => vscode.commands.executeCommand("rcRuntime." + name);
   const result = () => existsSync(marker) ? readFileSync(marker, "utf8") : "";
   const tasks = () => vscode.tasks.taskExecutions.filter(x => x.task.definition.type === "rahulchaube-runtime");
+  const ended = vscode.tasks.onDidEndTaskProcess(event => {
+    if (event.execution.task.definition.type === "rahulchaube-runtime") {
+      console.log("RC Runtime task ended", event.execution.task.name, event.exitCode);
+    }
+  });
   try {
     await command("run");
     await until(() => result() === "1" && tasks().length === 0, "one-shot run to finish");
@@ -42,7 +47,10 @@ async function run() {
       await command("stop");
       await until(() => tasks().length === 0, "task termination");
     }
-  } finally { for (const task of tasks()) task.terminate(); }
+  } finally {
+    ended.dispose();
+    for (const task of tasks()) task.terminate();
+  }
   console.log("RC Runtime packaged VSIX ran, watched, hot reloaded and stopped real tasks.");
 }
 module.exports = { run };

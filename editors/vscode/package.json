@@ -16,6 +16,14 @@
   "capabilities": {"untrustedWorkspaces": {"supported": false}, "virtualWorkspaces": {"supported": false}},
   "main": "./src/extension.js",
   "contributes": {
+    "taskDefinitions": [{
+      "type": "rahulchaube-runtime",
+      "required": ["file", "mode"],
+      "properties": {
+        "file": {"type": "string", "description": "URI of the saved JavaScript or TypeScript file."},
+        "mode": {"type": "string", "enum": ["run", "watch", "hot"], "description": "RC Runtime execution mode."}
+      }
+    }],
     "commands": [
       {"command": "rcRuntime.run", "category": "RC Runtime", "title": "Run Current File", "icon": "$(play)"},
       {"command": "rcRuntime.watch", "category": "RC Runtime", "title": "Watch Current File", "icon": "$(eye)"},
