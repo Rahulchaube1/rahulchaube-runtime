@@ -42,7 +42,8 @@ jobs:
           Invoke-WebRequest 'https://raw.githubusercontent.com/ScoopInstaller/Install/1e2f334083d609986d8c8bc9e31ae8e87c39fab4/install.ps1' -OutFile $bootstrap
           & $bootstrap -ScoopDir $env:SCOOP -RunAsAdmin
           $scoop = Join-Path $env:SCOOP 'apps/scoop/current/bin/scoop.ps1'
-          & $scoop bucket add rc-runtime $env:GITHUB_WORKSPACE
+          $bucketUri = ([uri]$env:GITHUB_WORKSPACE).AbsoluteUri
+          & $scoop bucket add rc-runtime $bucketUri
           if ($LASTEXITCODE -ne 0) { throw 'Scoop bucket add failed' }
           & $scoop install --no-update-scoop rc-runtime/rc-runtime
           if ($LASTEXITCODE -ne 0) { throw 'Scoop install failed' }
@@ -60,11 +61,18 @@ jobs:
         shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
           $app = Get-AppxPackage Microsoft.DesktopAppInstaller
           if ($app) { $clientVersion = (& (Join-Path $app.InstallLocation 'winget.exe') --version).Trim().TrimStart('v') }
           if (!$app -or [version]$clientVersion -lt [version]'1.28') {
-            Install-Module Microsoft.WinGet.Client -Scope CurrentUser -Force -Repository PSGallery
-            Repair-WinGetPackageManager -AllUsers -Latest -Force
+            $release = 'https://github.com/microsoft/winget-cli/releases/download/v1.29.380'
+            $bundle = Join-Path $env:RUNNER_TEMP 'AppInstaller.msixbundle'
+            $dependencies = Join-Path $env:RUNNER_TEMP 'AppInstaller-dependencies'
+            Invoke-WebRequest -UseBasicParsing "$release/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle" -OutFile $bundle
+            Invoke-WebRequest -UseBasicParsing "$release/DesktopAppInstaller_Dependencies.zip" -OutFile "$dependencies.zip"
+            Expand-Archive "$dependencies.zip" $dependencies
+            $frameworks = (Get-ChildItem "$dependencies/x64/*.appx").FullName
+            Add-AppxPackage -Path $bundle -DependencyPath $frameworks
             $app = Get-AppxPackage Microsoft.DesktopAppInstaller
           }
           $winget = Join-Path $app.InstallLocation 'winget.exe'
