@@ -48,7 +48,7 @@ export function CodeBlock({
         <CopyButton text={code} />
       </div>
       <pre>
-        <code>{children ?? code}</code>
+        <code className="syntax">{children ?? code}</code>
       </pre>
     </div>
   );

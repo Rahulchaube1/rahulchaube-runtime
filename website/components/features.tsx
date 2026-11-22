@@ -2,7 +2,7 @@ import Link from "next/link";
 import {
   Sparkles,
   Puzzle,
-  Cpu,
+  FileCode2,
   Package,
   Layers,
   FileCode,
@@ -32,7 +32,7 @@ const platformFeatures = [
     link: "/docs",
   },
   {
-    icon: Cpu,
+    icon: FileCode2,
     title: "Integrated Runtime",
     desc: "Run JavaScript and TypeScript with a bundled engine and compiler.",
     link: "/docs",

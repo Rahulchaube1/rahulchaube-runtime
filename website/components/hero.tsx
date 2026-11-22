@@ -1,9 +1,21 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, ArrowUpRight, BookOpen, Cpu, Terminal } from "lucide-react";
+import {
+  ArrowDownToLine,
+  ArrowRight,
+  ArrowUpRight,
+  BookOpen,
+  Braces,
+  FileCode2,
+  Terminal,
+} from "lucide-react";
+import { CopyButton } from "./code-block";
+import { highlightCode } from "./markdown";
+import { helloExample } from "@/lib/hello-example";
 import { site } from "@/lib/site";
 
 export function Hero() {
+  const command = "rc " + helloExample.args.join(" ");
   return (
     <section className="hero">
       <div className="site-wrap hero-grid">
@@ -31,21 +43,48 @@ export function Hero() {
             </Link>
           </div>
         </div>
-        <figure className="engine-figure">
-          <div className="engine-frame">
+        <figure className="runtime-figure" aria-label="TypeScript example and its RC terminal output">
+          <div className="runtime-stage">
             <Image
-              src="/rc-engine.webp"
-              alt="An exploded graphite and copper processor bearing the green RC Runtime logo"
-              width={1152}
-              height={768}
-              sizes="(max-width: 760px) 92vw, 600px"
+              className="runtime-art"
+              src="/rc-flow.webp"
+              alt=""
+              width={1080}
+              height={720}
+              sizes="(max-width: 760px) 92vw, 580px"
               preload
               unoptimized
             />
+            <div className="runtime-window">
+              <div className="runtime-filebar">
+                <span>
+                  <FileCode2 size={16} /> hello.ts
+                </span>
+                <a
+                  href="/examples/hello.ts"
+                  download="hello.ts"
+                  aria-label="Download hello.ts"
+                  title="Download hello.ts"
+                >
+                  <ArrowDownToLine size={16} />
+                </a>
+              </div>
+              <pre className="runtime-source">
+                <code className="syntax">{highlightCode(helloExample.source, "typescript")}</code>
+              </pre>
+              <div className="runtime-output">
+                <div className="runtime-command">
+                  <Terminal size={17} aria-hidden="true" />
+                  <code>{command}</code>
+                  <CopyButton text={command} label="Copy example command" />
+                </div>
+                <samp>{helloExample.output}</samp>
+              </div>
+            </div>
           </div>
           <figcaption>
             <span>
-              <Cpu size={13} /> QuickJS-NG <i>/</i> esbuild
+              <Braces size={14} /> QuickJS-NG <i>/</i> esbuild
             </span>
             <Link href="/docs/architecture">
               Architecture <ArrowUpRight size={13} />

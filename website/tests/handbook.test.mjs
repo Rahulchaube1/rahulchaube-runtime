@@ -18,6 +18,8 @@ import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { guides, lessons } from "../lib/doc-catalog.ts";
 import { guideHeadings, readGuide as readSource, searchIndex } from "../lib/docs.ts";
+import { helloExample } from "../lib/hello-example.ts";
+import { GET as downloadHello } from "../app/examples/hello.ts/route.ts";
 import { searchGuides } from "../lib/doc-search.ts";
 
 const website = fileURLToPath(new URL("../", import.meta.url));
@@ -68,6 +70,17 @@ test("handbook sources accept Windows line endings", () => {
     readGuide("getting-started").replaceAll("\n", "\r\n"),
   );
   expect(readSource("getting-started", windowsSource)).toBe(readGuide("getting-started"));
+});
+
+test("the homepage download runs the first lesson and prints the output shown in the hero", async () => {
+  const response = downloadHello();
+  expect(response.headers.get("Content-Disposition")).toBe('attachment; filename="hello.ts"');
+  const source = await response.text();
+  expect(source.trimEnd()).toBe(snippets("getting-started", "ts")[0].trimEnd());
+  const project = join(tmp, "homepage");
+  mkdirSync(project);
+  writeFileSync(join(project, "hello.ts"), source);
+  expect(run(project, ...helloExample.args).trim()).toBe(helloExample.output);
 });
 
 test("the five published lessons build a working, tested greeting service", async () => {

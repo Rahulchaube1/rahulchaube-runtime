@@ -5,6 +5,7 @@ export const site = {
   company: "RahulChaube",
   domain: "https://www.rahulchaube.space",
   feed: "/feed.xml",
+  themeColor: "#000000",
   tagline: "Standalone JavaScript and TypeScript runtime by Rahul Chaube.",
   description:
     "Run JavaScript and TypeScript, bundle modules, test code and serve HTTP with RC Web. RC Runtime is open source under the MIT License.",

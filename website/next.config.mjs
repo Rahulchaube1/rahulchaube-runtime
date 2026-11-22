@@ -5,6 +5,7 @@ const nextConfig = {
   outputFileTracingIncludes: { "/docs": ["./content/docs/*.md"] },
   async redirects() {
     return [
+      { source: "/rc-engine.webp", destination: "/rc-flow.webp", permanent: true },
       { source: "/docs/reference-cli-specification", destination: "/docs/cli", permanent: true },
       {
         source: "/docs/explanations-architecture-and-lifecycle",

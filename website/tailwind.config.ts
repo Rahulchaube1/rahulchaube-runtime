@@ -24,9 +24,9 @@ export default {
           danger: "#EF4444",
         },
         brand: {
-          DEFAULT: "#2FA866",
-          lime: "#A8F05B",
-          mid: "#6FCF63",
+          DEFAULT: "#199050",
+          lime: "#aee75a",
+          mid: "#85cf54",
           dark: "#071A16",
           surface: "#0E2923",
           border: "#163830",

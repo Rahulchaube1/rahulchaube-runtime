@@ -33,16 +33,20 @@ export const metadata: Metadata = {
     description: site.description,
     siteName: site.name,
     type: "website",
-    images: [{ url: "/rc-social.jpg", width: 1200, height: 630, alt: "RC Runtime by Rahul Chaube" }],
+    images: [
+      {
+        url: "/rc-social.jpg?art=terminal",
+        width: 1200,
+        height: 630,
+        alt: "RC Runtime running a TypeScript greeting from the terminal",
+      },
+    ],
   },
-  twitter: { card: "summary_large_image", images: ["/rc-social.jpg"] },
+  twitter: { card: "summary_large_image", images: ["/rc-social.jpg?art=terminal"] },
 };
 export const viewport: Viewport = {
-  colorScheme: "dark light",
-  themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#111213" },
-    { media: "(prefers-color-scheme: light)", color: "#f8f7f3" },
-  ],
+  colorScheme: "dark",
+  themeColor: site.themeColor,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -75,14 +79,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     ],
   };
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang="en" className="dark" style={{ backgroundColor: site.themeColor }}>
       <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html:
-              "try{if(localStorage.getItem('theme')==='light')document.documentElement.classList.remove('dark')}catch{}",
-          }}
-        />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       </head>
       <body>

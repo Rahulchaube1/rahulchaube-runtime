@@ -1,22 +1,16 @@
 {
-  "name": "RahulChaube Runtime",
-  "tagline": "The Next Generation JavaScript Runtime & Developer Platform.",
+  "name": "RC Runtime",
+  "tagline": "Standalone JavaScript and TypeScript runtime by Rahul Chaube.",
   "version": "1.0.0",
-  "primary": "#a21caf",
-  "primaryHex": 0xa21caf,
-  "accent": "#d946ef",
-  "accentHex": 0xd946ef,
+  "primary": "#aee75a",
+  "primaryHex": 11462490,
+  "accent": "#199050",
+  "accentHex": 1675344,
   "dark": {
-    "background": "#0b0b0f",
-    "surface": "#14141a",
-    "text": "#f9fafb",
-    "muted": "#9ca3af"
-  },
-  "light": {
-    "background": "#ffffff",
-    "surface": "#f9fafb",
-    "text": "#1f2937",
-    "muted": "#6b7280"
+    "background": "#000000",
+    "surface": "#060a07",
+    "text": "#eff7ed",
+    "muted": "#b0c0b3"
   },
   "semantic": {
     "success": "#16a34a",
@@ -25,14 +19,14 @@
     "info": "#2563eb"
   },
   "fonts": {
-    "sans": "Inter, Segoe UI, system-ui, sans-serif",
-    "mono": "JetBrains Mono, Fira Code, ui-monospace, monospace"
+    "sans": "Geist Variable, system-ui, sans-serif",
+    "mono": "IBM Plex Mono, ui-monospace, monospace"
   },
   "logo": {
     "light": "branding/logo.svg",
     "dark": "branding/logo-dark.svg",
     "icon": "branding/favicon.svg"
   },
-  "domain": "https://rahulchaube.space",
+  "domain": "https://www.rahulchaube.space",
   "license": "MIT"
 }

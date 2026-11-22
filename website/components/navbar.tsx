@@ -6,7 +6,6 @@ import { Github, Menu, X } from "lucide-react";
 import { site } from "@/lib/site";
 import { Logo } from "./logo";
 import { SearchModal } from "./search-modal";
-import { ThemeToggle } from "./theme-toggle";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -30,7 +29,6 @@ export function Navbar() {
         <div className="desktop-links">{links}</div>
         <div className="nav-tools">
           <SearchModal />
-          <ThemeToggle />
           <a className="github-link" href={site.social.github}>
             <Github size={16} />
             <span>GitHub</span>
