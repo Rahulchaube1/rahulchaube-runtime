@@ -13,6 +13,7 @@ import time
 from pathlib import Path
 
 PACKAGE = "yocto-queue"
+PACKAGE_MANIFEST = "package.json"
 VERSION = "1.2.2"
 DIGEST = "2eabf3096793c43934ef127fb50238dcba93074fb54f943fc62aeab616769dfc"
 
@@ -20,7 +21,7 @@ DIGEST = "2eabf3096793c43934ef127fb50238dcba93074fb54f943fc62aeab616769dfc"
 def write_manifests(directory):
     module_url = f"https://cdn.jsdelivr.net/npm/{PACKAGE}@{VERSION}/index.js"
     (directory / "rc.json").write_text(json.dumps({"dependencies": {PACKAGE: {"url": module_url, "sha256": DIGEST}}}))
-    (directory / "package.json").write_text(json.dumps({"private": True, "dependencies": {PACKAGE: VERSION}}))
+    (directory / PACKAGE_MANIFEST).write_text(json.dumps({"private": True, "dependencies": {PACKAGE: VERSION}}))
 
 
 def install(command, directory, environment, engine):
@@ -40,7 +41,7 @@ def benchmark(root, executables, samples):
     online = {"rc": ["install"], "bun": ["install", *bun_flags], "npm": ["install", *npm_flags]}
     offline = {"rc": ["install", "--offline"], "bun": ["install", "--offline", "--frozen-lockfile", *bun_flags],
                "npm": ["ci", "--offline", *npm_flags]}
-    manifests = {"rc": ["rc.json"], "bun": ["package.json", "bun.lock"], "npm": ["package.json", "package-lock.json"]}
+    manifests = {"rc": ["rc.json"], "bun": [PACKAGE_MANIFEST, "bun.lock"], "npm": [PACKAGE_MANIFEST, "package-lock.json"]}
     for engine, flags in online.items():
         seed = root / engine
         seed.mkdir()
