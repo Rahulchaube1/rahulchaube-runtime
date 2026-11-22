@@ -35,7 +35,7 @@ export function Hero() {
           <div className="engine-frame">
             <Image
               src="/rc-engine.webp"
-              alt="An exploded graphite and copper processor engraved with RC"
+              alt="An exploded graphite and copper processor bearing the green RC Runtime logo"
               width={1152}
               height={768}
               sizes="(max-width: 760px) 92vw, 600px"

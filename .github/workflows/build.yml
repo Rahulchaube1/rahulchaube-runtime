@@ -39,9 +39,9 @@ jobs:
       - name: Lint the website
         working-directory: website
         run: bun run lint
-      - name: Verify handbook links and run the published examples
+      - name: Verify website assets, handbook links and published examples
         working-directory: website
-        run: bun test tests/handbook.test.mjs
+        run: bun test tests/
       - name: Build Next.js app
         working-directory: website
         run: bun run build

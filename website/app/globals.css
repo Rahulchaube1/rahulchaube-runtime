@@ -118,9 +118,9 @@ summary {
 }
 .product-mark {
   display: block;
-  width: 32px;
+  width: 37px;
   height: 32px;
-  background: url("/rc-mark-180.png") center / contain no-repeat;
+  background: url("/rc-logo.png") center / contain no-repeat;
 }
 .desktop-links,
 .nav-tools,

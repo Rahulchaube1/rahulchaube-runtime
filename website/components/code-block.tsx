@@ -47,7 +47,7 @@ export function CodeBlock({
         </span>
         <CopyButton text={code} />
       </div>
-      <pre tabIndex={0}>
+      <pre>
         <code>{children ?? code}</code>
       </pre>
     </div>
