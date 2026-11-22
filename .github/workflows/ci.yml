@@ -39,8 +39,9 @@ jobs:
             if [[ "${{ matrix.target }}" == linux-arm64 ]]; then export CGO_CFLAGS="-O2 -g -mno-outline-atomics"; fi
             flags="$flags -linkmode=external -extldflags=-static"
           fi
-          go test -tags netgo,osusergo -ldflags="$flags" ./...
-          go build -tags netgo,osusergo -trimpath -ldflags="$flags" -o rc${{ matrix.suffix }} .
+          go generate .
+          go test -tags netgo,osusergo,rcprecompiled -ldflags="$flags" ./...
+          go build -tags netgo,osusergo,rcprecompiled -trimpath -ldflags="$flags" -o rc${{ matrix.suffix }} .
           ./rc${{ matrix.suffix }} --version
           if [[ "$RUNNER_OS" == Linux ]] && readelf -l rc | grep -q INTERP; then
             echo "Unexpected shared loader" >&2

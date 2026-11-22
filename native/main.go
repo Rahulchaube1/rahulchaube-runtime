@@ -30,6 +30,8 @@ const help = `RC Runtime (RahulChaube Runtime)
 
   rc run [--watch] <file> [--] [args...]    Run JavaScript or TypeScript
   rc build [--watch] <file> --outfile <file>     Bundle an application or ES module
+  rc fmt [--check] [paths...]          Format source or check formatting in CI
+  rc check [files... | -p project]     Check TypeScript types without executing code
   rc test [files...]                   Run tests in isolated JS contexts
   rc init <directory>                  Create an RC Web application with tests
   rc install [--offline]               Install pinned ES modules from rc.json
@@ -75,6 +77,8 @@ func command(args []string) error {
 		return runCommand(tail)
 	case "build":
 		return buildCommand(tail)
+	case "fmt", "check":
+		return languageCommand(args[0], tail)
 	case "test":
 		return testFiles(tail)
 	case "init":

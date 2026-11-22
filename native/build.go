@@ -89,7 +89,7 @@ func bundle(entry, outfile string, test bool) (string, error) {
 // positives in comments and strings just use the general compilation path.
 func loadProgram(entry string, test bool) (string, error) {
 	ext := filepath.Ext(entry)
-	if !test && (ext == ".js" || ext == ".mjs") {
+	if !test && (ext == ".js" || ext == ".mjs" || ext == ".ts" || ext == ".mts") {
 		data, err := os.ReadFile(entry)
 		if err != nil {
 			return "", err
@@ -102,8 +102,37 @@ func loadProgram(entry string, test bool) (string, error) {
 			}
 		}
 		if standalone {
-			return string(data), nil
+			if ext == ".js" || ext == ".mjs" {
+				return string(data), nil
+			}
+			// A project config can change TypeScript emit, even for a single file.
+			// Keep configured entries on the normal resolver and compiler path.
+			if !hasProjectSettings(entry) {
+				result := api.Transform(string(data), api.TransformOptions{
+					Sourcefile: entry, Loader: api.LoaderTS, Format: api.FormatESModule, Target: api.ES2022,
+				})
+				if len(result.Errors) == 0 {
+					return string(result.Code), nil
+				}
+			}
 		}
 	}
 	return bundle(entry, "", test)
+}
+
+func hasProjectSettings(entry string) bool {
+	abs, err := filepath.Abs(entry)
+	if err != nil {
+		return true
+	}
+	for dir := filepath.Dir(abs); ; dir = filepath.Dir(dir) {
+		for _, name := range []string{"rc.json", "tsconfig.json", "package.json"} {
+			if _, err := os.Stat(filepath.Join(dir, name)); !errors.Is(err, os.ErrNotExist) {
+				return true
+			}
+		}
+		if filepath.Dir(dir) == dir {
+			return false
+		}
+	}
 }
