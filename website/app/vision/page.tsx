@@ -1,33 +1,26 @@
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Vision & Mission — RC Runtime",
-  description: "The long-term engineering vision, performance principles, and roadmap for RC Runtime.",
-};
-
-export default function VisionPage() {
+import { ProjectArticle } from "@/components/project-article";
+export const metadata = { title: "Engineering principles", alternates: { canonical: "/vision" } };
+export default function Vision() {
   return (
-    <div className="site-container py-16 font-sans">
-      <div className="max-w-4xl mx-auto space-y-8">
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-zinc-900 dark:text-[#F0F6FC] tracking-tight font-title">
-          Vision &amp; Engineering Philosophy
-        </h1>
-        <div className="space-y-4 text-zinc-700 dark:text-[#8B949E] text-base leading-relaxed">
-          <h2 className="text-xl font-bold text-zinc-900 dark:text-[#F0F6FC] font-title">
-            1. Toolchain Unification
-          </h2>
-          <p>
-            Developers should not need 10 different configuration files and build tools to run a TypeScript application. One binary should handle execution, bundling, testing, and package installation.
-          </p>
-
-          <h2 className="text-xl font-bold text-zinc-900 dark:text-[#F0F6FC] font-title">
-            2. First-Class Diagnostics
-          </h2>
-          <p>
-            Error messages should be actionable. Built-in environment diagnostics (\`doctor\`) and AI error analysis (\`explain\`) dramatically reduce time spent debugging infrastructure issues.
-          </p>
-        </div>
-      </div>
-    </div>
+    <ProjectArticle
+      title="Engineering principles"
+      intro="RC keeps the everyday edit, run, test and build workflow in a single executable."
+    >
+      <h2>Keep installation small</h2>
+      <p>
+        The release carries the native host, JavaScript engine and TypeScript compiler. The installer verifies
+        the archive against its published digest. <a href="/download">Release downloads</a>
+      </p>
+      <h2>Make results reproducible</h2>
+      <p>
+        The benchmark harness records versions, workloads, sample times and memory. Developers can compare the
+        numbers on their own machines. <a href="/docs/benchmarks">Benchmark methodology</a>
+      </p>
+      <h2>Document the host</h2>
+      <p>
+        Each built-in module has a reference and runnable examples. Compatibility guidance describes the APIs
+        available to application code. <a href="/docs/api">Library reference</a>
+      </p>
+    </ProjectArticle>
   );
 }

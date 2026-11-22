@@ -1,0 +1,239 @@
+@media (max-width: 1050px) {
+  .main-nav {
+    gap: 24px;
+  }
+  .desktop-links {
+    gap: 16px;
+  }
+  .search-trigger span,
+  .search-trigger kbd {
+    display: none;
+  }
+  .search-trigger {
+    width: 34px;
+    padding: 0;
+  }
+  .doc-layout {
+    grid-template-columns: 185px minmax(0, 1fr);
+    gap: 28px;
+  }
+  .doc-outline {
+    display: none;
+  }
+  .mobile-outline {
+    display: block;
+    margin: 0 0 22px;
+  }
+  .mobile-outline summary,
+  .side-mobile summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  .mobile-outline a {
+    padding-left: 23px;
+  }
+}
+@media (max-width: 760px) {
+  .main-nav {
+    min-height: 60px;
+  }
+  .desktop-links,
+  .github-link {
+    display: none;
+  }
+  .menu-trigger {
+    display: flex;
+  }
+  .nav-tools {
+    gap: 7px;
+  }
+  .mobile-links {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 10px;
+    padding: 7px 5vw 13px;
+    border-top: 1px solid var(--line);
+    background: var(--bg);
+  }
+  .mobile-links a {
+    padding: 8px;
+  }
+  .hero-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 13px;
+    padding-block: 36px 24px;
+  }
+  .hero h1 {
+    font-size: clamp(54px, 10.7vw, 76px);
+    margin: 20px 0 15px;
+  }
+  .hero-copy p {
+    max-width: 560px;
+  }
+  .hero-actions {
+    margin-top: 18px;
+  }
+  .engine-figure {
+    width: min(100%, 500px);
+    justify-self: center;
+  }
+  .engine-frame {
+    aspect-ratio: 1.85;
+  }
+  .engine-figure figcaption {
+    margin-top: 3px;
+  }
+  .resource-grid {
+    gap: 10px;
+  }
+  .resource-card {
+    padding: 16px;
+  }
+  .resource-card h3 {
+    font-size: 17px;
+  }
+  .resource-card p {
+    font-size: 13px;
+  }
+  .workbench-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+  .workbench h2 br {
+    display: none;
+  }
+  .doc-layout {
+    display: block;
+  }
+  .docs-sidebar {
+    position: static;
+    padding: 12px 0;
+    max-height: none;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    overflow: visible;
+  }
+  .side-desktop {
+    display: none;
+  }
+  .side-mobile {
+    display: block;
+  }
+  .side-mobile nav {
+    padding: 12px 0;
+  }
+  .side-mobile summary svg:last-child {
+    margin-left: auto;
+  }
+  .doc-article {
+    padding-top: 22px;
+  }
+  .footer-grid {
+    grid-template-columns: 1.2fr 1fr;
+    gap: 24px;
+  }
+  .course-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
+  }
+}
+@media (max-width: 550px) {
+  .site-wrap {
+    width: calc(100% - 36px);
+  }
+  .product-logo {
+    font-size: 18px;
+  }
+  .main-nav {
+    gap: 10px;
+  }
+  .product-mark {
+    width: 29px;
+    height: 29px;
+    font-size: 22px;
+  }
+  .hero-actions .btn {
+    font-size: 13px;
+    padding: 11px 12px;
+  }
+  .hero-actions .btn.primary > svg:last-child {
+    display: none;
+  }
+  .stats-grid a {
+    padding: 15px 3px;
+  }
+  .stats-grid a + a {
+    padding-left: 11px;
+  }
+  .stats-grid strong {
+    font-size: 22px;
+  }
+  .stats-grid small {
+    font-size: 10px;
+  }
+  .stats-grid a > span {
+    font-size: 10px;
+    line-height: 1.5;
+  }
+  .stats-grid a > span svg {
+    display: none;
+  }
+  .resource-grid,
+  .directory-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .resource-card {
+    padding: 17px 19px;
+  }
+  .resource-card h3 {
+    font-size: 20px;
+    margin-top: 13px;
+  }
+  .resource-card p {
+    font-size: 14px;
+  }
+  .section-heading {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .footer-grid {
+    gap: 19px;
+  }
+  .footer-bottom {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .course-banner {
+    padding: 14px;
+    gap: 10px;
+  }
+  .course-banner strong {
+    font-size: 16px;
+  }
+  .lesson-list a {
+    grid-template-columns: 35px minmax(0, 1fr) auto;
+    gap: 10px;
+  }
+  .lesson-num {
+    width: 34px;
+    height: 34px;
+  }
+  .lesson-list h2 {
+    font-size: 18px;
+  }
+  .article-actions {
+    flex-wrap: wrap;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  a,
+  button {
+    transition:
+      background-color 0.16s,
+      border-color 0.16s,
+      color 0.16s;
+  }
+}

@@ -9,3 +9,5 @@
 - [Supported features](reference/feature-matrix.md)
 - [Benchmarks](../benchmarks/README.md)
 - [Online documentation](https://www.rahulchaube.space/docs)
+
+[Developer handbook](https://www.rahulchaube.space/docs) · [Learn RC course](https://www.rahulchaube.space/learn) · [Editable guide sources](../website/content/docs)

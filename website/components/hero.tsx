@@ -1,28 +1,57 @@
 import Link from "next/link";
-import { ArrowRight, Terminal } from "lucide-react";
-import { TerminalDemo } from "./terminal-demo";
+import Image from "next/image";
+import { ArrowRight, ArrowUpRight, BookOpen, Cpu, Terminal } from "lucide-react";
+import { site } from "@/lib/site";
 
 export function Hero() {
   return (
-    <section className="border-b border-zinc-200 dark:border-vscode-border">
-      <div className="mx-auto grid max-w-6xl items-center gap-10 px-6 py-16 md:py-24 lg:grid-cols-2">
-        <div>
-          <h1 className="font-hero text-5xl font-bold tracking-tight sm:text-6xl">
-            RC <span className="block text-emerald-700 dark:text-brand-lime">Runtime</span>
+    <section className="hero">
+      <div className="site-wrap hero-grid">
+        <div className="hero-copy">
+          <Link className="release-pill" href="/releases">
+            <span className="release-dot" />v{site.version} is available <ArrowUpRight size={13} />
+          </Link>
+          <h1>
+            Build with
+            <br />
+            <span>
+              RC Runtime<span className="hero-dot">.</span>
+            </span>
           </h1>
-          <p className="mt-5 max-w-md text-lg leading-relaxed text-zinc-600 dark:text-zinc-300">
-            Run JavaScript and TypeScript, test a module, or start an HTTP server with RC Web. One standalone executable, built by Rahul Chaube and released under MIT.
+          <p>
+            A standalone JavaScript and TypeScript runtime. Run scripts, bundle modules, test code and serve
+            HTTP with one native executable.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3 font-semibold">
-            <Link href="/download" className="inline-flex items-center gap-2 rounded-lg bg-brand-lime px-5 py-3 text-ink-900 hover:brightness-95">
-              <Terminal size={18} /> Install the CLI
+          <div className="hero-actions">
+            <Link className="btn primary" href="/download">
+              <Terminal size={17} /> Install RC Runtime <ArrowRight size={16} />
             </Link>
-            <Link href="/docs/getting-started" className="inline-flex items-center gap-2 rounded-lg border border-zinc-300 px-5 py-3 dark:border-vscode-border">
-              Quick start <ArrowRight size={16} />
+            <Link className="btn secondary" href="/docs">
+              <BookOpen size={16} /> Read the docs
             </Link>
           </div>
         </div>
-        <TerminalDemo />
+        <figure className="engine-figure">
+          <div className="engine-frame">
+            <Image
+              src="/rc-engine.webp"
+              alt="An exploded graphite and copper processor engraved with RC"
+              width={1152}
+              height={768}
+              sizes="(max-width: 760px) 92vw, 600px"
+              preload
+              unoptimized
+            />
+          </div>
+          <figcaption>
+            <span>
+              <Cpu size={13} /> QuickJS-NG <i>/</i> esbuild
+            </span>
+            <Link href="/docs/architecture">
+              Architecture <ArrowUpRight size={13} />
+            </Link>
+          </figcaption>
+        </figure>
       </div>
     </section>
   );

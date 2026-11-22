@@ -1,0 +1,429 @@
+.course-grid {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.72fr) 1.6fr;
+  gap: 28px;
+  align-items: start;
+}
+.course-panel {
+  padding: 27px;
+}
+.course-total {
+  font-size: 40px;
+  font-weight: 610;
+  letter-spacing: -0.05em;
+  margin: 14px 0;
+}
+.course-total small {
+  color: var(--muted);
+  font-size: 16px;
+  letter-spacing: normal;
+}
+.course-panel progress {
+  display: block;
+  width: 100%;
+  height: 6px;
+  border: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  color: var(--accent-bg);
+  background: var(--line);
+}
+.course-panel progress::-webkit-progress-bar {
+  background: var(--line);
+}
+.course-panel progress::-webkit-progress-value {
+  background: var(--accent-bg);
+}
+.course-panel progress::-moz-progress-bar {
+  background: var(--accent-bg);
+}
+.course-panel p {
+  margin: 15px 0 20px;
+}
+.lesson-list {
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+.lesson-list a {
+  display: grid;
+  grid-template-columns: 44px 1fr auto;
+  align-items: center;
+  gap: 18px;
+  padding: 20px 5px;
+  border-bottom: 1px solid var(--line);
+}
+.lesson-num {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--accent);
+  font: 14px var(--mono);
+}
+.lesson-list h2,
+.directory-card h2 {
+  font-size: clamp(19px, 1.6vw, 23px);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+}
+.lesson-list a > svg,
+.directory-card li svg {
+  color: var(--subtle);
+}
+.lesson-list a:hover h2 {
+  color: var(--accent);
+}
+.directory-search,
+.search-input {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.directory-search {
+  max-width: 720px;
+  padding: 6px 6px 6px 15px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--panel);
+  color: var(--muted);
+}
+.directory-search input,
+.search-input input {
+  flex: 1;
+  min-width: 0;
+  color: var(--text);
+  background: transparent;
+  outline: none;
+}
+.directory-search:focus-within,
+.search-input:focus-within {
+  border-color: var(--accent);
+}
+.directory-search .btn {
+  min-height: 34px;
+  padding: 8px 15px;
+}
+.course-banner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  margin: 24px 0;
+  border: 1px solid color-mix(in srgb, var(--accent) 32%, var(--line));
+  background: linear-gradient(110deg, var(--tint), var(--panel));
+  border-radius: 10px;
+}
+.course-banner strong,
+.course-banner small {
+  display: block;
+}
+.course-banner strong {
+  font-size: 18px;
+}
+.course-banner small {
+  color: var(--muted);
+  font-size: 13px;
+}
+.course-banner > svg {
+  margin-left: auto;
+  color: var(--accent);
+}
+.directory-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  align-items: start;
+}
+.directory-card {
+  padding: 23px;
+}
+.directory-card p {
+  margin: 4px 0 13px;
+}
+.directory-card li {
+  border-top: 1px solid var(--line);
+}
+.directory-card li a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 1px;
+  color: var(--text);
+  font-size: 14px;
+}
+.directory-card li a:hover,
+.directory-results a:hover strong {
+  color: var(--accent);
+}
+.directory-results {
+  margin-top: 35px;
+}
+.directory-results h2 {
+  font-size: 25px;
+}
+.directory-results li {
+  border-bottom: 1px solid var(--line);
+}
+.directory-results li a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 15px 0;
+}
+.directory-results li a span > * {
+  display: block;
+}
+.directory-results li small,
+.breadcrumbs {
+  font: 11px var(--mono);
+  color: var(--subtle);
+}
+.directory-results li strong {
+  font-weight: 600;
+}
+.directory-results li span span {
+  font-size: 14px;
+  color: var(--muted);
+}
+.doc-layout {
+  display: grid;
+  grid-template-columns: minmax(175px, 205px) minmax(0, 1fr) 155px;
+  gap: clamp(24px, 3.6vw, 52px);
+  align-items: start;
+}
+.docs-sidebar,
+.doc-outline {
+  position: sticky;
+  top: 69px;
+  max-height: calc(100dvh - 69px);
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line) transparent;
+}
+.docs-sidebar {
+  border-right: 1px solid var(--line);
+  padding: 28px 15px 30px 0;
+}
+.side-mobile,
+.mobile-outline {
+  display: none;
+}
+.side-overview,
+.side-group a {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  padding: 5px 9px;
+  border-radius: 4px;
+  color: var(--muted);
+}
+.side-group {
+  margin-top: 17px;
+}
+.side-group h2,
+.doc-outline h2 {
+  margin: 0 0 6px;
+  padding-left: 9px;
+  font-size: 12px;
+  font-weight: 660;
+}
+.side-group a[aria-current] {
+  background: var(--tint);
+  color: var(--accent);
+  font-weight: 600;
+}
+.side-group a:hover,
+.side-overview:hover,
+.doc-outline a:hover,
+.article-actions a:hover {
+  color: var(--accent);
+}
+.doc-article {
+  min-width: 0;
+  padding: 35px 0 55px;
+}
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 24px;
+}
+.breadcrumbs a:hover {
+  color: var(--accent);
+}
+.lesson-label {
+  display: inline-block;
+  margin-bottom: 8px;
+}
+.lesson-label span {
+  color: var(--subtle);
+  margin: 0 3px;
+}
+.doc-article h1,
+.simple-article h1 {
+  font-size: clamp(35px, 3.7vw, 54px);
+  font-weight: 630;
+  letter-spacing: -0.06em;
+  line-height: 1.08;
+}
+.doc-summary {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--muted);
+  padding: 12px 0 22px;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 25px;
+}
+.doc-outline {
+  padding: 41px 0;
+}
+.doc-outline h2 {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0;
+}
+.doc-outline nav {
+  border-left: 1px solid var(--line);
+  margin-top: 12px;
+}
+.doc-outline a,
+.mobile-outline a {
+  display: block;
+  padding: 5px 0 5px 12px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.prose-rc {
+  line-height: 1.72;
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+.prose-rc > h2 {
+  font-size: clamp(23px, 2.1vw, 30px);
+  margin: 34px 0 12px;
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: -0.036em;
+}
+.prose-rc > h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 24px 0 9px;
+}
+.prose-rc > h2:first-child {
+  margin-top: 0;
+}
+.prose-rc p,
+.prose-rc li {
+  color: var(--muted);
+}
+.prose-rc p {
+  margin: 12px 0;
+}
+.prose-rc a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose-rc strong {
+  color: var(--text);
+  font-weight: 630;
+}
+.prose-rc :not(pre) > code,
+.inline-code {
+  background: var(--raised);
+  color: var(--text);
+  padding: 2px 5px;
+  border-radius: 4px;
+  font: 0.86em/1.6 var(--mono);
+}
+.prose-rc ul,
+.prose-rc ol {
+  padding-left: 23px;
+  margin: 14px 0;
+}
+.prose-rc ul {
+  list-style: disc;
+}
+.prose-rc ol {
+  list-style: decimal;
+}
+.prose-rc li {
+  padding-left: 3px;
+  margin: 5px 0;
+}
+.table-scroll {
+  overflow-x: auto;
+  margin: 16px 0;
+}
+.prose-rc table,
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  text-align: left;
+}
+.prose-rc th,
+.prose-rc td,
+.data-table th,
+.data-table td {
+  border-bottom: 1px solid var(--line);
+  padding: 10px 12px;
+  vertical-align: top;
+}
+.prose-rc th,
+.data-table thead {
+  color: var(--text);
+  background: var(--raised);
+}
+.prose-rc td,
+.data-table td {
+  color: var(--muted);
+}
+.data-table td {
+  font-variant-numeric: tabular-nums;
+}
+.article-actions,
+.doc-pager {
+  margin-top: 28px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+.article-actions a,
+.doc-pager small {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--subtle);
+}
+.lesson-complete[aria-pressed="true"] {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.doc-pager {
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  align-items: stretch;
+}
+.doc-pager a {
+  max-width: 49%;
+  font-weight: 550;
+  font-size: 14px;
+}
+.doc-pager .next {
+  margin-left: auto;
+  text-align: right;
+}
+.doc-pager .next small {
+  justify-content: flex-end;
+}

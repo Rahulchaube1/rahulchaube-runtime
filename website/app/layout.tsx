@@ -1,133 +1,96 @@
-import type { Metadata } from "next";
-import "@fontsource-variable/inter/wght.css";
+import type { Metadata, Viewport } from "next";
+import "@fontsource-variable/geist/wght.css";
+import "@fontsource/ibm-plex-mono/latin-400.css";
 import "./globals.css";
+import "@/styles/home.css";
+import "@/styles/handbook.css";
+import "@/styles/pages.css";
+import "@/styles/responsive.css";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.domain),
-  title: {
-    default: `${site.name} — ${site.tagline}`,
-    template: `%s · ${site.name}`,
-  },
+  title: { default: "RC Runtime · JavaScript and TypeScript", template: "%s · RC Runtime" },
   description: site.description,
+  applicationName: site.name,
+  authors: [{ name: "Rahul Chaube", url: "https://github.com/Rahulchaube1" }],
   keywords: [
-    "javascript",
-    "typescript",
-    "runtime",
-    "rahulchaube-cli",
-    "node",
-    "package manager",
-    "bundler",
-    "rahulchaube",
-    "rahulchaube runtime",
-    "developer platform",
-    "v8",
-    "javascriptcore"
+    "RC Runtime",
+    "RahulChaube Runtime",
+    "JavaScript",
+    "TypeScript",
+    "RC Web",
+    "QuickJS-NG",
+    "esbuild",
   ],
   manifest: "/site.webmanifest",
-  icons: {
-    icon: [
-      { url: "/logo.png", type: "image/png" },
-      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-    ],
-    apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
-    ],
-  },
-  alternates: {
-    canonical: site.domain,
-    types: {
-      "application/rss+xml": `${site.domain}/feed.xml`,
-    },
-  },
+  icons: { icon: [{ url: "/rc-mark-32.png", sizes: "32x32", type: "image/png" }], apple: "/rc-mark-180.png" },
+  alternates: { types: { "application/rss+xml": "/feed.xml" } },
   openGraph: {
-    title: site.name,
+    title: "RC Runtime",
     description: site.description,
-    url: site.domain,
     siteName: site.name,
-    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: site.name }],
     type: "website",
+    images: [{ url: "/rc-social.jpg", width: 1200, height: 630, alt: "RC Runtime by Rahul Chaube" }],
   },
-  twitter: {
-    card: "summary_large_image",
-    title: site.name,
-    description: site.description,
-    images: ["/social-card.png"],
-  },
+  twitter: { card: "summary_large_image", images: ["/rc-social.jpg"] },
+};
+export const viewport: Viewport = {
+  colorScheme: "dark light",
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#111213" },
+    { media: "(prefers-color-scheme: light)", color: "#f8f7f3" },
+  ],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const jsonLdGraph = {
+  const schema = {
     "@context": "https://schema.org",
     "@graph": [
       {
         "@type": "SoftwareApplication",
-        "@id": `${site.domain}/#software`,
         name: site.name,
+        alternateName: "RahulChaube Runtime",
+        softwareVersion: site.version,
         operatingSystem: "Linux, macOS, Windows",
         applicationCategory: "DeveloperApplication",
-        softwareVersion: site.version,
-        license: site.social.github + "/blob/main/LICENSE.md",
-        author: { "@id": `${site.domain}/#person` },
-        downloadUrl: `${site.domain}/download`,
-        offers: {
-          "@type": "Offer",
-          price: "0",
-          priceCurrency: "USD",
-        },
         description: site.description,
+        author: { "@type": "Person", name: "Rahul Chaube", url: "https://github.com/Rahulchaube1" },
+        license: site.social.github + "/blob/main/LICENSE.md",
+        downloadUrl: site.domain + "/download",
+        offers: { "@type": "Offer", price: 0, priceCurrency: "USD" },
       },
       {
         "@type": "WebSite",
-        "@id": `${site.domain}/#website`,
-        url: site.domain,
         name: site.name,
-        description: site.description,
+        url: site.domain,
         potentialAction: {
           "@type": "SearchAction",
-          target: `${site.domain}/docs?q={search_term_string}`,
+          target: site.domain + "/docs?q={search_term_string}",
           "query-input": "required name=search_term_string",
         },
       },
-      {
-        "@type": "Organization",
-        "@id": `${site.domain}/#organization`,
-        name: site.name,
-        url: site.domain,
-        logo: `${site.domain}/logo.png`,
-      },
-      {
-        "@type": "Person",
-        "@id": `${site.domain}/#person`,
-        name: "Rahul Chaube",
-        url: "https://github.com/Rahulchaube1",
-      },
     ],
   };
-
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      className="dark"
-    >
+    <html lang="en" className="dark" suppressHydrationWarning>
       <head>
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-        <link rel="icon" type="image/png" href="/logo.png" />
-        <link rel="manifest" href="/site.webmanifest" />
         <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdGraph) }}
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{if(localStorage.getItem('theme')==='light')document.documentElement.classList.remove('dark')}catch{}",
+          }}
         />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       </head>
-      <body className="bg-[#F4F8F6] dark:bg-[#071A16] text-zinc-900 dark:text-[#F0F6FC] antialiased selection:bg-[#2FA866] selection:text-white font-sans transition-colors duration-200 overflow-x-hidden w-full min-w-[320px]">
+      <body>
+        <a className="skip" href="#main-content">
+          Skip to content
+        </a>
         <Navbar />
-        <main className="min-h-[70vh] w-full overflow-x-hidden">{children}</main>
+        <main id="main-content">{children}</main>
         <Footer />
       </body>
     </html>

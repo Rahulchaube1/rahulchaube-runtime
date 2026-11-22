@@ -12,9 +12,10 @@ The official website for RC Runtime, served at
 
 | Route | Description |
 | --- | --- |
-| `/` | CLI examples, developer resources, project templates |
+| `/` | Runtime overview, measured results and starter commands |
 | `/download` | Installation commands and platform archives |
-| `/docs` | Documentation with sidebar (MDX-like content) |
+| `/docs` | Searchable handbook with grouped guides and API references |
+| `/learn` | Five lessons with progress saved in the browser |
 | `/blog` | Developer blog with RSS-style posts |
 | `/benchmarks` | Measured startup, TypeScript, CPU, memory and executable size |
 | `/roadmap` | Public roadmap with progress |
@@ -27,6 +28,10 @@ npm run dev      # http://localhost:3000
 npm run build    # production build
 npm run typecheck
 ```
+
+## Edit the handbook
+
+Guide text lives in `content/docs/<slug>.md`. Register guides and lesson order in `lib/doc-catalog.ts`. Search, navigation, section outlines and the sitemap use the same guide sources. Run `bun test tests/handbook.test.mjs` from this directory to check the links and execute the documented course with the packaged RC binary.
 
 ## SEO
 

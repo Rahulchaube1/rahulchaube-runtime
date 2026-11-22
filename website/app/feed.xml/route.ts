@@ -1,8 +1,9 @@
+import { site } from "@/lib/site";
 import { posts } from "@/lib/blog";
 import { NextResponse } from "next/server";
 
 export function GET() {
-  const baseUrl = "https://rahulchaube.space";
+  const baseUrl = site.domain;
 
   const rssItems = posts
     .map(
@@ -13,7 +14,7 @@ export function GET() {
       <guid>${baseUrl}/blog/${post.slug}</guid>
       <pubDate>${new Date(post.date).toUTCString()}</pubDate>
       <description><![CDATA[${post.description}]]></description>
-    </item>`
+    </item>`,
     )
     .join("");
 

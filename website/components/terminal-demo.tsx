@@ -1,31 +1,58 @@
 "use client";
-
 import { useState } from "react";
 import { Terminal } from "lucide-react";
-import { CodeBlock } from "./code-block";
+import { CopyButton } from "./code-block";
 
 const examples = [
-  { label: "Run", instruction: "Save the first line as hello.ts, then run it from your terminal.", file: 'console.log("Hello, runtime!");', command: "rc run hello.ts", output: "Hello, runtime!" },
-  { label: "Create", instruction: "Create an RC Web application with a passing route test.", command: "rc init hello" },
-  { label: "Diagnose", instruction: "Check your engine, project files, and installation.", command: "rc doctor" },
+  {
+    label: "Create",
+    title: "Create a project",
+    cmd: "rc init hello",
+    output: ["Created hello", '  cd "hello"', "  rc test", "  rc run server.ts"],
+  },
+  {
+    label: "Test",
+    title: "Run the starter tests inside hello",
+    cmd: "rc test",
+    output: ["app.test.ts", "  pass greets a visitor by name"],
+  },
+  {
+    label: "Serve",
+    title: "Start the server inside hello",
+    cmd: "rc run server.ts",
+    output: ["Listening on http://127.0.0.1:3000"],
+  },
 ];
-
 export function TerminalDemo() {
   const [selected, setSelected] = useState(0);
   const example = examples[selected];
   return (
-    <div className="min-w-0 rounded-2xl border border-vscode-border bg-ink-800 p-5 text-vscode-text shadow-xl sm:p-7">
-      <div className="mb-5 flex items-center gap-2 border-b border-vscode-border pb-4 font-mono text-sm"><Terminal size={17} className="text-brand-lime" /> CLI examples</div>
-      <fieldset className="flex gap-2" aria-label="Command examples">
-        {examples.map(({ label }, index) => (
-          <button key={label} aria-pressed={selected === index} onClick={() => setSelected(index)}
-            className="rounded-md border border-vscode-border px-3 py-1.5 text-sm aria-pressed:bg-brand-lime aria-pressed:text-ink-900">{label}</button>
+    <div className="terminal-demo">
+      <div className="terminal-title">
+        <span>
+          <Terminal size={15} /> rc <i>/</i> terminal
+        </span>
+        <div className="terminal-dots" aria-hidden="true">
+          <i />
+          <i />
+          <i />
+        </div>
+      </div>
+      <fieldset className="terminal-tabs" aria-label="Command examples">
+        {examples.map((item, i) => (
+          <button type="button" key={item.label} onClick={() => setSelected(i)} aria-pressed={selected === i}>
+            {item.label}
+          </button>
         ))}
       </fieldset>
-      <p className="mt-5 text-sm leading-relaxed text-zinc-300">{example.instruction}</p>
-      {example.file && <CodeBlock code={example.file} lang="hello.ts" />}
-      <CodeBlock key={example.command} code={example.command} lang="Terminal" />
-      {example.output && <p className="font-mono text-sm text-brand-lime"><span className="sr-only">Output </span>{example.output}</p>}
+      <div className="terminal-content">
+        <p># {example.title}</p>
+        <div className="terminal-line">
+          <span>$</span> <code>{example.cmd}</code>
+          <CopyButton text={example.cmd} label="Copy terminal command" />
+        </div>
+        <pre>{example.output.join("\n")}</pre>
+      </div>
     </div>
   );
 }

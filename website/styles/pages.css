@@ -1,0 +1,232 @@
+.download-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(230px, 0.8fr);
+  gap: 18px;
+  align-items: start;
+}
+.install-panel,
+.info-panel {
+  min-width: 0;
+  padding: 24px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.install-panel h2,
+.info-panel h2,
+.info-panel h3 {
+  font-size: 20px;
+  font-weight: 610;
+  letter-spacing: -0.035em;
+}
+.install-panel > p,
+.info-panel p,
+.info-panel li,
+.page-section > p,
+.environment-list {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--muted);
+}
+.info-panel p {
+  margin: 10px 0 15px;
+}
+.info-panel .text-link {
+  display: flex;
+  width: fit-content;
+  margin: 7px 0;
+  color: var(--accent);
+}
+.install-panel .code-block {
+  margin: 10px 0 14px;
+}
+.platform-switch {
+  display: flex;
+  gap: 6px;
+  margin: 17px 0 9px;
+}
+.platform-switch button {
+  padding: 5px 11px;
+  border-radius: 4px;
+  color: var(--muted);
+  font-size: 13px;
+  border: 1px solid var(--line);
+}
+.platform-switch button[aria-pressed="true"] {
+  color: var(--accent);
+  background: var(--tint);
+  border-color: var(--accent);
+}
+.page-section {
+  margin-top: 42px;
+}
+.page-section > h2,
+.page-section .section-heading h2 {
+  font-size: clamp(24px, 2.7vw, 35px);
+  font-weight: 610;
+  line-height: 1.25;
+  letter-spacing: -0.04em;
+}
+.page-section > p {
+  margin: 9px 0 14px;
+  max-width: 85ch;
+}
+.button-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 15px;
+}
+.archive-list {
+  margin-top: 15px;
+  border-top: 1px solid var(--line);
+}
+.archive-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+.archive-row > div {
+  min-width: 0;
+}
+.archive-row strong,
+.archive-row small {
+  display: block;
+}
+.archive-row small {
+  font: 11px/1.7 var(--mono);
+  color: var(--muted);
+}
+.archive-row details {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 5px;
+}
+.archive-row summary {
+  width: fit-content;
+}
+.archive-row code {
+  display: block;
+  overflow-wrap: anywhere;
+  color: var(--accent);
+}
+.archive-row .btn {
+  min-height: 32px;
+  padding: 7px 10px;
+  font-size: 12px;
+}
+.release-changes {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+.release-changes h3 {
+  text-transform: capitalize;
+}
+.info-panel ul {
+  margin-top: 9px;
+  padding-left: 17px;
+  list-style: disc;
+}
+.metric-select {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.metric-select select {
+  padding: 5px 8px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  color: var(--text);
+  background: var(--panel);
+}
+.data-table thead th {
+  font-size: 12px;
+}
+.data-table td {
+  font-family: var(--mono);
+}
+.data-table td.rc-result {
+  color: var(--accent);
+}
+.install-data {
+  max-width: 650px;
+}
+.environment-list {
+  list-style: disc;
+  padding-left: 20px;
+}
+.environment-list strong {
+  font-weight: 550;
+}
+.simple-article {
+  max-width: 795px;
+}
+.simple-article > .text-link {
+  margin-bottom: 20px;
+}
+.simple-article .page-intro {
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+}
+.license-copy {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font: 13px/1.65 var(--mono);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 18px;
+  border-radius: 8px;
+}
+.note-list {
+  margin-bottom: 18px;
+}
+.note-list > a {
+  display: block;
+  padding: 22px 0;
+  border-top: 1px solid var(--line);
+}
+.note-list small {
+  color: var(--accent);
+  font: 11px var(--mono);
+}
+.note-list h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 22px;
+  line-height: 1.3;
+  font-weight: 580;
+  margin: 5px 0;
+}
+.note-list p,
+.archive-note {
+  color: var(--muted);
+}
+.note-list a:hover h2,
+.archive-note a {
+  color: var(--accent);
+}
+.archive-note {
+  margin: 15px 0;
+  padding: 13px;
+  background: var(--tint);
+  border-radius: 6px;
+}
+@media (max-width: 760px) {
+  .download-grid,
+  .release-changes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .install-panel,
+  .info-panel {
+    padding: 18px;
+  }
+}

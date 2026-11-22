@@ -1,27 +1,43 @@
-"use client";
-
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { docSections, docs } from "@/lib/docs";
+import { BookOpen, ChevronDown, GraduationCap } from "lucide-react";
+import { sections, guides, docUrl } from "@/lib/doc-catalog";
 
-export function DocsSidebar() {
-  const pathname = usePathname();
+export function DocsSidebar({ active }: { active: string }) {
+  const nav = (
+    <nav aria-label="Handbook chapters">
+      <Link className="side-overview" href="/docs">
+        <BookOpen size={15} /> Handbook overview
+      </Link>
+      <Link className="side-overview" href="/learn">
+        <GraduationCap size={16} /> Learn RC
+      </Link>
+      {sections.map((section) => (
+        <div className="side-group" key={section.id}>
+          <h2>{section.title}</h2>
+          {guides
+            .filter((guide) => guide.section === section.id)
+            .map((guide) => (
+              <Link
+                key={guide.slug}
+                href={docUrl(guide)}
+                aria-current={active === guide.slug ? "page" : undefined}
+              >
+                {guide.title}
+              </Link>
+            ))}
+        </div>
+      ))}
+    </nav>
+  );
   return (
-    <aside className="hidden w-60 shrink-0 border-r border-zinc-200 p-4 dark:border-vscode-border sm:block">
-      <nav aria-label="Documentation" className="space-y-4 text-sm">
-        {docSections.map(section => (
-          <div key={section}>
-            <p className="mb-1 font-semibold">{section}</p>
-            {docs.filter(doc => doc.section === section).map(doc => {
-              const href = "/docs/" + doc.slug;
-              return <Link key={href} href={href} aria-current={pathname === href ? "page" : undefined}
-                className="block rounded px-2 py-1 text-zinc-600 hover:underline aria-[current=page]:font-semibold dark:text-zinc-300">
-                {doc.title}
-              </Link>;
-            })}
-          </div>
-        ))}
-      </nav>
+    <aside className="docs-sidebar">
+      <div className="side-desktop">{nav}</div>
+      <details className="side-mobile" key={active}>
+        <summary>
+          <BookOpen size={16} /> Browse the handbook <ChevronDown size={15} />
+        </summary>
+        {nav}
+      </details>
     </aside>
   );
 }
