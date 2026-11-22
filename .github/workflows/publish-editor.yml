@@ -84,7 +84,9 @@ jobs:
       - name: Publish to Visual Studio Marketplace
         if: matrix.registry == 'marketplace'
         env:
-          VSCE_PAT: ${{ secrets.VSCE_PAT || secrets.VS_MARKETPLACE_TOKEN }}
+          VSCE_PAT: >-
+            ${{ secrets.VSCE_PAT || secrets.VS_MARKETPLACE_TOKEN || secrets.VSCE_TOKEN ||
+                secrets.VSCODE_MARKETPLACE_TOKEN || secrets.VSCODE_MARKETPLACE_PAT }}
         run: |
           flags=()
           if [[ -z "$VSCE_PAT" ]]; then
@@ -95,7 +97,9 @@ jobs:
       - name: Publish to Open VSX
         if: matrix.registry == 'open-vsx'
         env:
-          OVSX_PAT: ${{ secrets.OVSX_PAT || secrets.OPEN_VSX_TOKEN }}
+          OVSX_PAT: >-
+            ${{ secrets.OVSX_PAT || secrets.OPEN_VSX_TOKEN || secrets.OVSX_TOKEN ||
+                secrets.OPEN_VSX_PAT || secrets.OPENVSX_TOKEN || secrets.OPENVSX_PAT }}
         run: |
           flags=()
           if [[ -z "$OVSX_PAT" ]]; then
