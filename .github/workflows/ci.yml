@@ -35,6 +35,8 @@ jobs:
           flags="-s -w"
           if [[ "$RUNNER_OS" == Linux ]]; then
             export CC=musl-gcc
+            # musl reads the ELF stack size when creating threads for the language service.
+            export CGO_LDFLAGS="-Wl,-z,stack-size=8388608"
             # Ubuntu's arm64 GCC otherwise links a glibc-specific outlined atomic helper.
             if [[ "${{ matrix.target }}" == linux-arm64 ]]; then export CGO_CFLAGS="-O2 -g -mno-outline-atomics"; fi
             flags="$flags -linkmode=external -extldflags=-static"
