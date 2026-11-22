@@ -7,16 +7,22 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "oxlint --react-plugin --nextjs-plugin --deny-warnings app components lib tests next.config.mjs postcss.config.mjs tailwind.config.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource-variable/geist": "5.3.0",
+    "@fontsource/ibm-plex-mono": "5.3.0",
     "clsx": "^2.1.1",
+    "hast-util-to-jsx-runtime": "2.3.7",
+    "highlight.js": "11.12.0",
+    "lowlight": "3.3.0",
     "lucide-react": "^0.460.0",
     "next": "^16.2.12",
     "react": "19.0.0",
     "react-dom": "19.0.0",
+    "react-markdown": "10.1.0",
+    "remark-gfm": "4.0.1",
     "tailwind-merge": "^2.5.4"
   },
   "devDependencies": {
@@ -24,6 +30,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "autoprefixer": "^10.4.20",
+    "oxlint": "1.94.0",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.15",
     "typescript": "^5.6.3"

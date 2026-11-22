@@ -1,158 +1,161 @@
 "use client";
-
-import { useEffect, useState, useRef } from "react";
-import type { DocPage } from "@/lib/docs";
-import { Search, X, Command, BookOpen, ChevronRight } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ArrowDown, ArrowUp, BookOpen, CornerDownLeft, Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { docUrl, getSection } from "@/lib/doc-catalog";
+import { searchGuides, type SearchEntry } from "@/lib/doc-search";
 
 export function SearchModal() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [active, setActive] = useState(0);
+  const [index, setIndex] = useState<SearchEntry[]>([]);
+  const [error, setError] = useState(false);
   const dialog = useRef<HTMLDialogElement>(null);
+  const input = useRef<HTMLInputElement>(null);
+  const list = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const [docs, setDocs] = useState<DocPage[]>([]);
-  const [loadError, setLoadError] = useState(false);
+  const results = query.trim() ? searchGuides(index, query) : index.slice(0, 6);
 
   useEffect(() => {
-    if (!isOpen || docs.length) return;
-    setLoadError(false);
-    import("@/lib/docs").then(module => setDocs(module.docs)).catch(() => setLoadError(true));
-  }, [isOpen, docs.length]);
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-        e.preventDefault();
-        setIsOpen((prev) => !prev);
-      }
-      if (e.key === "Escape") {
-        setIsOpen(false);
+    const keys = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        setOpen((previous) => !previous);
       }
     };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener("keydown", keys);
+    return () => window.removeEventListener("keydown", keys);
   }, []);
-
   useEffect(() => {
-    if (isOpen) dialog.current?.showModal();
-    else dialog.current?.close();
-  }, [isOpen]);
-
-  const results = query.trim()
-    ? docs.filter(
-        (d) =>
-          d.title.toLowerCase().includes(query.toLowerCase()) ||
-          d.section.toLowerCase().includes(query.toLowerCase()) ||
-          d.body.toLowerCase().includes(query.toLowerCase())
-      )
-    : docs.slice(0, 6);
-
-  useEffect(() => {
-    setSelectedIndex(0);
-  }, [query]);
-
-  const handleSelect = (slug: string) => {
-    setIsOpen(false);
-    setQuery("");
-    router.push(`/docs/${slug}`);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (!results.length) return;
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setSelectedIndex((prev) => (prev + 1) % results.length);
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setSelectedIndex((prev) => (prev - 1 + results.length) % results.length);
-    } else if (e.key === "Enter" && results[selectedIndex]) {
-      e.preventDefault();
-      handleSelect(results[selectedIndex].slug);
+    if (!open) {
+      dialog.current?.close();
+      return;
     }
-  };
+    dialog.current?.setAttribute("closedby", "any");
+    dialog.current?.showModal();
+    input.current?.focus();
+  }, [open]);
+  useEffect(() => {
+    if (!open || index.length) return;
+    const request = new AbortController();
+    fetch("/docs/search-index.json", { signal: request.signal })
+      .then((response) => {
+        if (!response.ok) throw new Error("Search index unavailable");
+        return response.json() as Promise<SearchEntry[]>;
+      })
+      .then(setIndex)
+      .catch(() => {
+        if (!request.signal.aborted) setError(true);
+      });
+    return () => request.abort();
+  }, [open, index.length]);
+  useEffect(() => {
+    list.current?.children[active]?.scrollIntoView({ block: "nearest" });
+  }, [active]);
+  function select(slug: string) {
+    setOpen(false);
+    setQuery("");
+    setActive(0);
+    router.push("/docs/" + slug);
+  }
 
-  let emptyMessage = `No matching documentation for “${query}”.`;
-  if (!docs.length) emptyMessage = "Loading documentation…";
-  if (loadError) emptyMessage = "Search could not load. Close and reopen to retry.";
-
+  let emptyMessage = "Loading guides…";
+  if (index.length) emptyMessage = "No guides match this search.";
+  if (error) emptyMessage = "Search could not load. Reopen search to retry.";
   return (
     <>
-      {/* Trigger Button */}
-      <button
+      <div className="search-control">
+        <button
+          type="button"
+          className="search-trigger"
+          aria-label="Search documentation"
+          aria-keyshortcuts="Control+K Meta+K"
+          onClick={() => setOpen(true)}
+        >
+          <Search size={16} />
+          <span>Search documentation</span>
+        </button>
+        <kbd aria-hidden="true">⌘ K</kbd>
+      </div>
+      <dialog
+        className="search-dialog"
+        ref={dialog}
         aria-label="Search documentation"
-        onClick={() => setIsOpen(true)}
-        className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-[#161B22] border border-zinc-200 dark:border-[#30363D] text-zinc-600 dark:text-[#8B949E] hover:text-zinc-900 dark:hover:text-[#F0F6FC] hover:border-zinc-300 dark:hover:border-[#484F58] text-xs transition-all w-full sm:w-64 font-sans"
+        onClose={() => {
+          setOpen(false);
+          setError(false);
+        }}
       >
-        <Search className="w-3.5 h-3.5 text-zinc-500 dark:text-[#8B949E]" />
-        <span className="hidden sm:block flex-1 text-left font-medium">Search documentation...</span>
-        <kbd className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-zinc-200 dark:bg-[#1C2128] text-[10px] text-zinc-600 dark:text-[#8B949E] border border-zinc-300 dark:border-[#30363D] font-mono">
-          <Command className="w-2.5 h-2.5" /> K
-        </kbd>
-      </button>
-
-      {/* Modal Backdrop */}
-      <dialog ref={dialog} aria-label="Search documentation" onClose={() => setIsOpen(false)}
-        className="mx-auto mt-16 w-[calc(100%-2rem)] max-w-xl rounded-xl border border-zinc-200 bg-white p-0 text-zinc-900 shadow-2xl backdrop:bg-black/70 sm:mt-24 dark:border-[#30363D] dark:bg-[#161B22] dark:text-white">
-        {isOpen && <>
-            {/* Input Bar */}
-            <div className="flex items-center px-4 py-3 border-b border-zinc-200 dark:border-[#30363D] gap-3">
-              <Search className="w-4 h-4 text-blue-500 shrink-0" />
-              <input
-                type="text"
-                onKeyDown={handleKeyDown}
-                autoFocus
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                aria-label="Search query"
-                placeholder="Search documentation, commands, APIs..."
-                className="bg-transparent text-xs text-zinc-900 dark:text-[#F0F6FC] placeholder-zinc-400 dark:placeholder-[#8B949E] focus:outline-none w-full font-mono"
-              />
-                <button aria-label="Close search" onClick={() => setIsOpen(false)} className="text-zinc-400 dark:text-[#8B949E] hover:text-zinc-900 dark:hover:text-[#F0F6FC]">
-                  <X className="w-4 h-4" />
-                </button>
-            </div>
-
-            {/* Results List */}
-            <div className="max-h-80 overflow-y-auto p-2">
-              {results.length === 0 ? (
-                <div className="p-8 text-center text-xs text-zinc-500 dark:text-[#8B949E]">
-                  {emptyMessage}
-                </div>
-              ) : (
-                results.map((doc, idx) => (
-                  <button
-                    key={doc.slug}
-                    onClick={() => handleSelect(doc.slug)}
-                    className={`w-full text-left px-3 py-2.5 rounded-lg transition-all flex items-center justify-between text-xs ${
-                      selectedIndex === idx
-                        ? "bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/30 font-medium"
-                        : "text-zinc-900 dark:text-[#F0F6FC] hover:bg-zinc-100 dark:hover:bg-[#1C2128]"
-                    }`}
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <BookOpen className="w-4 h-4 text-zinc-400 dark:text-[#8B949E] shrink-0" />
-                      <div>
-                        <div className="font-semibold text-xs">{doc.title}</div>
-                        <div className="text-[10px] text-zinc-500 dark:text-[#8B949E] font-mono">{doc.section}</div>
-                      </div>
-                    </div>
-                    <ChevronRight className="w-3.5 h-3.5 text-zinc-400 dark:text-[#8B949E]" />
-                  </button>
-                ))
-              )}
-            </div>
-
-            {/* Footer */}
-            <div className="px-4 py-2 border-t border-zinc-200 dark:border-[#30363D] bg-zinc-50 dark:bg-[#0D1117] text-[10px] text-zinc-500 dark:text-[#8B949E] flex items-center justify-between font-mono">
-              <span className="flex items-center gap-3">
-                <span>↑↓ Navigate</span>
-                <span>↵ Select</span>
-                <span>ESC Close</span>
-              </span>
-              <span>RahulChaube Docs v1.0</span>
-            </div>
-        </>}
+        <div className="search-inner">
+          <div className="search-input">
+            <Search size={19} />
+            <input
+              ref={input}
+              aria-label="Search query"
+              placeholder="Search guides, commands and APIs"
+              value={query}
+              onChange={(event) => {
+                setQuery(event.target.value);
+                setActive(0);
+              }}
+              onKeyDown={(event) => {
+                if (!results.length) return;
+                if (event.key === "Enter") {
+                  event.preventDefault();
+                  select(results[active].slug);
+                }
+                if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+                  event.preventDefault();
+                  setActive(
+                    (active + (event.key === "ArrowDown" ? 1 : -1) + results.length) % results.length,
+                  );
+                }
+              }}
+            />
+            <button
+              type="button"
+              className="icon-button"
+              aria-label="Close search"
+              onClick={() => setOpen(false)}
+            >
+              <X size={17} />
+            </button>
+          </div>
+          <div className="search-results" aria-label="Search results" ref={list}>
+            {results.map((guide, i) => (
+              <a
+                key={guide.slug}
+                href={docUrl(guide)}
+                data-active={i === active}
+                onClick={(event) => {
+                  if (!event.metaKey && !event.ctrlKey) {
+                    event.preventDefault();
+                    select(guide.slug);
+                  }
+                }}
+              >
+                <BookOpen size={17} />
+                <span>
+                  <strong>{guide.title}</strong>
+                  <small>{getSection(guide.section).title}</small>
+                </span>
+                <CornerDownLeft size={14} />
+              </a>
+            ))}
+            {!results.length && <output>{emptyMessage}</output>}
+          </div>
+          <div className="search-help">
+            <span>
+              <ArrowUp size={12} />
+              <ArrowDown size={12} /> Navigate
+            </span>
+            <span>
+              <CornerDownLeft size={12} /> Open
+            </span>
+            <span>Esc to close</span>
+          </div>
+        </div>
       </dialog>
     </>
   );

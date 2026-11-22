@@ -1,48 +1,27 @@
-import type { Metadata } from "next";
+import Link from "next/link";
+import { ProjectArticle } from "@/components/project-article";
 import { site } from "@/lib/site";
-
-export const metadata: Metadata = {
-  title: "Community & Support — RC Runtime",
-  description: "Join the RC Runtime community on GitHub and X (Twitter).",
-};
-
-export default function CommunityPage() {
+export const metadata = { title: "Community", alternates: { canonical: "/community" } };
+export default function Community() {
   return (
-    <div className="site-container py-16 font-sans">
-      <div className="max-w-4xl mx-auto space-y-8">
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-zinc-900 dark:text-[#F0F6FC] tracking-tight font-title">
-          Community &amp; Developer Ecosystem
-        </h1>
-        <p className="text-zinc-600 dark:text-[#8B949E] text-base">
-          Connect with developers and maintainers building high-performance JavaScript applications.
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <a
-            href={site.social.issues}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-6 rounded-2xl bg-white dark:bg-[#0E2923] border border-zinc-200 dark:border-[#163830] hover:border-[#2FA866] transition-colors shadow-sm"
-          >
-            <h3 className="text-lg font-bold text-zinc-900 dark:text-[#F0F6FC] font-title mb-2">GitHub issues</h3>
-            <p className="text-sm text-zinc-600 dark:text-[#8B949E]">
-              Report reproducible issues, request features and share project feedback.
-            </p>
-          </a>
-
-          <a
-            href={site.social.x}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-6 rounded-2xl bg-white dark:bg-[#0E2923] border border-zinc-200 dark:border-[#163830] hover:border-[#2FA866] transition-colors shadow-sm"
-          >
-            <h3 className="text-lg font-bold text-zinc-900 dark:text-[#F0F6FC] font-title mb-2">X (Twitter)</h3>
-            <p className="text-sm text-zinc-600 dark:text-[#8B949E]">
-              Follow official platform announcements, release notes, and performance benchmark updates.
-            </p>
-          </a>
-        </div>
-      </div>
-    </div>
+    <ProjectArticle title="Community" intro="Follow releases, ask questions and contribute to RC Runtime.">
+      <h2>Talk about a change</h2>
+      <p>
+        Use GitHub Issues for bug reports and feature requests. Include the RC version, operating system and a
+        small example that shows the behavior.
+      </p>
+      <p>
+        <a href={site.social.issues}>Project issues</a> ·{" "}
+        <Link href="/docs/contributing">Contribution guide</Link>
+      </p>
+      <h2>Follow the project</h2>
+      <p>
+        <Link href="/blog">Engineering notes</Link> ·{" "}
+        <a rel="alternate" type="application/rss+xml" href={site.feed}>
+          RSS feed
+        </a>{" "}
+        · <a href={site.social.x}>Rahul on X</a> · <a href={site.social.linkedin}>Rahul on LinkedIn</a>
+      </p>
+    </ProjectArticle>
   );
 }

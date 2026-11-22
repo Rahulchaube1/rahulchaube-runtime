@@ -36,6 +36,12 @@ jobs:
       - name: Install dependencies
         working-directory: website
         run: bun install --frozen-lockfile --ignore-scripts
+      - name: Lint the website
+        working-directory: website
+        run: bun run lint
+      - name: Verify website assets, handbook links and published examples
+        working-directory: website
+        run: bun test tests/
       - name: Build Next.js app
         working-directory: website
         run: bun run build

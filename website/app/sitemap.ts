@@ -1,14 +1,24 @@
 import type { MetadataRoute } from "next";
-import { docs } from "@/lib/docs";
+import { guides, docUrl } from "@/lib/doc-catalog";
+import { posts } from "@/lib/blog";
 import { site } from "@/lib/site";
-
 export default function sitemap(): MetadataRoute.Sitemap {
-  const routes = ["", "/download", "/docs", "/benchmarks", "/blog", "/roadmap", "/releases", "/license", "/about", "/community", ...docs.map(doc => "/docs/" + doc.slug)];
-  const now = new Date();
-  return routes.map((r) => ({
-    url: `${site.domain}${r}`,
-    lastModified: now,
-    changeFrequency: "weekly",
-    priority: r === "" ? 1 : 0.7,
-  }));
+  const pages = [
+    "/",
+    "/download",
+    "/learn",
+    "/docs",
+    "/benchmarks",
+    "/blog",
+    "/roadmap",
+    "/releases",
+    "/license",
+    "/about",
+    "/community",
+    "/security",
+    "/vision",
+    ...guides.map(docUrl),
+    ...posts.map((post) => "/blog/" + post.slug),
+  ];
+  return pages.map((path) => ({ url: new URL(path, site.domain).href, priority: path === "/" ? 1 : 0.7 }));
 }

@@ -3,30 +3,39 @@ import Link from "next/link";
 import { getPost, posts } from "@/lib/blog";
 import { Markdown } from "@/components/markdown";
 import type { Metadata } from "next";
-
+type Props = Readonly<{ params: Promise<{ slug: string }> }>;
 export function generateStaticParams() {
-  return posts.map((p) => ({ slug: p.slug }));
+  return posts.map(({ slug }) => ({ slug }));
 }
-
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = getPost(slug);
-  return { title: post?.title ?? "Blog", description: post?.description };
+  return post
+    ? { title: post.title, description: post.description, alternates: { canonical: "/blog/" + slug } }
+    : {};
 }
-
-export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  const post = getPost(slug);
+export default async function BlogPost({ params }: Props) {
+  const post = getPost((await params).slug);
   if (!post) notFound();
   return (
-    <article className="mx-auto max-w-3xl px-4 py-16">
-      <Link href="/blog" className="text-sm text-brand">← Back to blog</Link>
-      <p className="mt-4 text-xs uppercase tracking-wide text-brand">{post.category}</p>
-      <h1 className="mt-2 text-4xl font-extrabold">{post.title}</h1>
-      <p className="mt-2 text-sm text-ink-700 dark:text-white/60">{post.date} · {post.author}</p>
-      <div className="mt-8">
-        <Markdown source={post.body} />
-      </div>
+    <article className="site-wrap page-shell simple-article">
+      <Link className="text-link" href="/blog">
+        ← Engineering notes
+      </Link>
+      <header className="page-intro">
+        <div className="section-kicker">
+          {post.date} · {post.category}
+        </div>
+        <h1>{post.title}</h1>
+        <p>{post.author}</p>
+      </header>
+      {post.slug !== "standalone-rc-runtime" && (
+        <div className="archive-note">
+          Project archive. This article describes an earlier CLI.{" "}
+          <Link href="/docs">Read the current handbook →</Link>
+        </div>
+      )}
+      <Markdown source={post.body.replace(/^# [^\n]+\n+/, "")} />
     </article>
   );
 }

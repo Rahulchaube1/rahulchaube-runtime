@@ -1,15 +1,8 @@
-export function Logo({
-  className = "h-10 w-auto",
-}: {
-  className?: string;
-  showWordmark?: boolean;
-  useFullBanner?: boolean;
-}) {
+export function Logo() {
   return (
-    <img
-      src="/rahulchaube-runtimelogo.png"
-      alt="RC Runtime Logo"
-      className={`object-contain select-none ${className}`}
-    />
+    <span className="product-logo">
+      <span className="product-mark" aria-hidden="true" />
+      <span>RC Runtime</span>
+    </span>
   );
 }

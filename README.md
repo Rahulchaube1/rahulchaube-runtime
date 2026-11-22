@@ -2,7 +2,7 @@
 
 RC Runtime is Rahul Chaube’s open-source JavaScript and TypeScript runtime. One native executable runs scripts, bundles modules, tests applications, and serves HTTP with RC Web. The release includes its JavaScript engine and TypeScript compiler. You can run `rc` on a machine without Node.js, npm, Bun, or a GitHub account.
 
-[Website](https://www.rahulchaube.space/) · [Documentation](https://www.rahulchaube.space/docs/getting-started) · [Downloads and SHA-256 checksums](https://www.rahulchaube.space/download) · [Benchmarks](https://www.rahulchaube.space/benchmarks) · [MIT license](LICENSE.md)
+[Website](https://www.rahulchaube.space/) · [Developer handbook](https://www.rahulchaube.space/docs) · [Learn RC](https://www.rahulchaube.space/learn) · [Downloads and SHA-256 checksums](https://www.rahulchaube.space/download) · [Benchmarks](https://www.rahulchaube.space/benchmarks) · [MIT license](LICENSE.md)
 
 ## Install
 

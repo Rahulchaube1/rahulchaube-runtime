@@ -1,26 +1,34 @@
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "About — RC Runtime",
-  description: "About RC Runtime, engineering philosophy, platform architecture, and developer platform vision.",
+import Link from "next/link";
+import { ProjectArticle } from "@/components/project-article";
+import { site } from "@/lib/site";
+export const metadata = {
+  title: "About RC Runtime",
+  description: "Meet Rahul Chaube and learn how RC Runtime is built.",
+  alternates: { canonical: "/about" },
 };
-
-export default function AboutPage() {
+export default function About() {
   return (
-    <div className="site-container py-16 font-sans">
-      <div className="max-w-4xl mx-auto space-y-8">
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-zinc-900 dark:text-[#F0F6FC] tracking-tight font-title">
-          About RC Runtime
-        </h1>
-        <div className="space-y-4 text-zinc-700 dark:text-[#8B949E] text-base leading-relaxed">
-          <p>
-            Rahul Chaube created RC Runtime (RahulChaube Runtime) to run JavaScript and TypeScript from one native executable. The Go host embeds QuickJS-NG and esbuild, and includes RC Web, a test runner and filesystem helpers.
-          </p>
-          <p>
-            The source is available under the MIT License. You can build the executable yourself, report a problem or contribute a change on GitHub.
-          </p>
-        </div>
-      </div>
-    </div>
+    <ProjectArticle
+      title="About RC Runtime"
+      intro="Rahul Chaube created RC Runtime (RahulChaube Runtime) to run JavaScript and TypeScript from one native executable."
+    >
+      <h2>The runtime</h2>
+      <p>
+        The Go host embeds QuickJS-NG and esbuild. The executable includes RC Web, a test runner and
+        filesystem helpers. You can use the distribution, build it from source or contribute a change under
+        the MIT License.
+      </p>
+      <p>
+        <Link href="/docs/architecture">Runtime architecture</Link> ·{" "}
+        <Link href="/docs/contributing">Build from source</Link> ·{" "}
+        <Link href="/vision">Engineering principles</Link>
+      </p>
+      <h2>Rahul Chaube</h2>
+      <p>
+        <a href="https://www.rahulchaube1.com/">Portfolio</a> ·{" "}
+        <a href="https://github.com/Rahulchaube1">GitHub</a> · <a href={site.social.linkedin}>LinkedIn</a> ·{" "}
+        <a href={site.social.x}>X</a> · <a href="https://www.rahulchaube1.com/contact">Contact</a>
+      </p>
+    </ProjectArticle>
   );
 }

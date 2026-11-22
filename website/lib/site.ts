@@ -1,16 +1,10 @@
 import release from "./release-manifest.json";
-
-export interface DownloadTarget {
-  os: string;
-  arch: string;
-  label: string;
-}
-
 export const site = {
   name: "RC Runtime",
   shortName: "RC Runtime",
   company: "RahulChaube",
   domain: "https://www.rahulchaube.space",
+  feed: "/feed.xml",
   tagline: "Standalone JavaScript and TypeScript runtime by Rahul Chaube.",
   description:
     "Run JavaScript and TypeScript, bundle modules, test code and serve HTTP with RC Web. RC Runtime is open source under the MIT License.",
@@ -22,20 +16,10 @@ export const site = {
     issues: "https://github.com/Rahulchaube1/rahulchaube-runtime/issues",
   },
   nav: [
-    { label: "Overview", href: "/" },
-    { label: "Download", href: "/download" },
-    { label: "Releases", href: "/releases" },
     { label: "Docs", href: "/docs" },
+    { label: "Learn", href: "/learn" },
+    { label: "Downloads", href: "/download" },
     { label: "Benchmarks", href: "/benchmarks" },
-    { label: "Roadmap", href: "/roadmap" },
-    { label: "Blog", href: "/blog" },
+    { label: "Releases", href: "/releases" },
   ],
 };
-
-export const downloadTargets: DownloadTarget[] = [
-  { os: "windows", arch: "x64", label: "Windows x64" },
-  { os: "macos", arch: "x64", label: "macOS Intel" },
-  { os: "macos", arch: "arm64", label: "macOS Apple Silicon" },
-  { os: "linux", arch: "x64", label: "Linux x64" },
-  { os: "linux", arch: "arm64", label: "Linux ARM64" },
-];

@@ -1,0 +1,2 @@
+# Published module digests must match these bytes on every checkout.
+website/public/modules/*.mjs text eol=lf

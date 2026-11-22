@@ -11,27 +11,13 @@ the standalone MIT-licensed JavaScript and TypeScript runtime by Rahul Chaube.
 | Primary (dark) | `branding/logo-dark.svg` | Dark backgrounds |
 | Icon | `branding/favicon.svg` | Favicon, app icon, social |
 
-The mark is a rotated rounded square ("diamond") representing a polished gem —
-fast, sharp, premium. Always preserve padding around the mark (≥ 25% of its size).
+Rahul Chaube’s folded lime-to-emerald mark contains the terminal prompt in its right half. The original artwork is [logo.png](logo.png). The website uses it on a deep green background in navigation, icons, the processor illustration and sharing previews.
 
-## Colors
+Website icons preserve the mark’s proportions and gradient. To export them from the original file, install Pillow and run `python scripts/export_official_branding.py` from the repository root.
 
-| Token | Hex | Usage |
-| --- | --- | --- |
-| Primary | `#a21caf` | Brand, links, focus |
-| Accent | `#d946ef` | Highlights, gradients |
-| Background (dark) | `#0b0b0f` | App background |
-| Background (light) | `#ffffff` | App background |
-| Success | `#16a34a` | Positive states |
-| Warning | `#f59e0b` | Cautions |
-| Error | `#dc2626` | Failures |
+## Website colors and type
 
-## Typography
-
-- **Sans:** Inter, Segoe UI, system-ui
-- **Mono:** JetBrains Mono, Fira Code, ui-monospace
-
-Use weight 700–800 for headlines, 400–500 for body.
+The logo backdrop is `#071a16`. The website pairs graphite surfaces with copper accents. Geist is the site typeface and IBM Plex Mono is used for code and terminal output. Theme colors are defined in [globals.css](../website/app/globals.css).
 
 ## Voice
 

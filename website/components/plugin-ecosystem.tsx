@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 const PLUGINS = [
@@ -63,9 +64,9 @@ export function PluginEcosystem() {
 
             <div className="flex items-center justify-between pt-4 border-t border-zinc-100 dark:border-[#163830] text-xs sm:text-sm text-zinc-500 dark:text-[#8B949E]">
               <span>Downloads: <strong className="text-zinc-900 dark:text-[#F0F6FC]">{plugin.downloads}</strong></span>
-              <a href="/docs" className="text-[#2FA866] dark:text-[#A8F05B] font-bold hover:underline flex items-center gap-1.5">
+              <Link href="/docs" className="text-[#2FA866] dark:text-[#A8F05B] font-bold hover:underline flex items-center gap-1.5">
                 Docs <ArrowRight className="w-4 h-4" />
-              </a>
+              </Link>
             </div>
           </div>
         ))}
