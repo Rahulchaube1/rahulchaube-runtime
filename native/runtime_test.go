@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 )
 
 func fixture(t *testing.T, dir, name, content string) string {
@@ -118,5 +119,53 @@ func TestPinnedModuleInstall(t *testing.T) {
 	data, _ := os.ReadFile(dest)
 	if string(data) != body {
 		t.Fatal("overwrote a valid module on failure")
+	}
+}
+
+func TestInstallFetchesDistinctDigestsConcurrently(t *testing.T) {
+	arrivals := make(chan string, 3)
+	release := make(chan struct{})
+	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		arrivals <- r.URL.Path
+		<-release
+		fmt.Fprint(w, r.URL.Path)
+	}))
+	defer server.Close()
+	released := false
+	defer func() {
+		if !released {
+			close(release)
+		}
+	}()
+	pin := func(path string) dependency {
+		return dependency{URL: server.URL + path, SHA256: fmt.Sprintf("%x", sha256.Sum256([]byte(path)))}
+	}
+	deps := map[string]dependency{"alpha": pin("/a"), "alias": pin("/a"), "beta": pin("/b")}
+	names := []string{"alias", "alpha", "beta"}
+	dir, cache := t.TempDir(), t.TempDir()
+	finished := make(chan error, 1)
+	go func() { finished <- installDependencies(names, deps, dir, cache, server.Client(), false) }()
+	paths := make(map[string]bool)
+	for range 2 {
+		select {
+		case path := <-arrivals:
+			paths[path] = true
+		case <-time.After(5 * time.Second):
+			t.Fatal("distinct modules must download concurrently")
+		}
+	}
+	close(release)
+	released = true
+	if err := <-finished; err != nil {
+		t.Fatal(err)
+	}
+	if !paths["/a"] || !paths["/b"] || len(arrivals) != 0 {
+		t.Fatal("expected one request per digest", paths)
+	}
+	for _, dep := range deps {
+		data, err := os.ReadFile(modulePath(dir, dep.SHA256))
+		if err != nil || !matches(data, dep.SHA256) {
+			t.Fatal("missing verified module", dep.URL, err)
+		}
 	}
 }

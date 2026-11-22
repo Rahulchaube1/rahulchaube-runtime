@@ -83,3 +83,13 @@ func TestTransformKeepsProjectSettings(t *testing.T) {
 		t.Fatal("fast path ignored an invalid project configuration")
 	}
 }
+
+func TestCheckDiagnosesErrorsInProjectDeclarations(t *testing.T) {
+	dir := t.TempDir()
+	fixture(t, dir, "tsconfig.json", `{"include":["*.ts"]}`)
+	fixture(t, dir, "main.ts", "export const n = 42;")
+	fixture(t, dir, "custom.d.ts", "export type Broken = MissingType;")
+	if err := languageCommand("check", []string{"-p", dir}); err == nil || !strings.Contains(err.Error(), "TS2304") {
+		t.Fatalf("project declaration diagnostic was skipped: %v", err)
+	}
+}

@@ -55,7 +55,8 @@
   const defaults = {
     target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext, moduleResolution: ts.ModuleResolutionKind.Bundler,
     lib: ["lib.es2022.d.ts"], strict: true, allowJs: true, checkJs: true, allowImportingTsExtensions: true,
-    noEmit: true, types: [],
+    // The embedded standard library is versioned with this compiler. User declarations still receive diagnostics.
+    skipDefaultLibCheck: true, noEmit: true, types: [],
   };
   let options = defaults;
   let names = files;
