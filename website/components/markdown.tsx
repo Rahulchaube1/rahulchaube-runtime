@@ -21,6 +21,11 @@ const languageNames: Record<string, string> = {
   json: "JSON",
 };
 
+export function highlightCode(code: string, language?: string) {
+  if (!language || !highlighter.registered(language)) return code;
+  return toJsxRuntime(highlighter.highlight(language, code), { Fragment, jsx, jsxs });
+}
+
 const components: Components = {
   h2: ({ children }) => <h2 id={headingId(String(children))}>{children}</h2>,
   table: ({ children }) => (
@@ -32,13 +37,9 @@ const components: Components = {
     if (!isValidElement<{ children: string; className?: string }>(children)) return <pre>{children}</pre>;
     const language = children.props.className?.replace(/^language-/, "");
     const code = String(children.props.children).replace(/\n$/, "");
-    const tokens =
-      language && highlighter.registered(language)
-        ? toJsxRuntime(highlighter.highlight(language, code), { Fragment, jsx, jsxs })
-        : code;
     return (
       <CodeBlock code={code} lang={language && (languageNames[language] || language)}>
-        {tokens}
+        {highlightCode(code, language)}
       </CodeBlock>
     );
   },

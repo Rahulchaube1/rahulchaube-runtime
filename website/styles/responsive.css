@@ -63,7 +63,7 @@
   }
   .hero-grid {
     grid-template-columns: minmax(0, 1fr);
-    gap: 13px;
+    gap: 24px;
     padding-block: 36px 24px;
   }
   .hero h1 {
@@ -76,15 +76,12 @@
   .hero-actions {
     margin-top: 18px;
   }
-  .engine-figure {
-    width: min(100%, 500px);
+  .runtime-figure {
+    width: min(100%, 560px);
     justify-self: center;
   }
-  .engine-frame {
-    aspect-ratio: 1.85;
-  }
-  .engine-figure figcaption {
-    margin-top: 3px;
+  .runtime-stage {
+    padding: clamp(26px, 6vw, 44px) clamp(15px, 5vw, 35px);
   }
   .resource-grid {
     gap: 10px;
@@ -160,6 +157,14 @@
   }
   .hero-actions .btn.primary > svg:last-child {
     display: none;
+  }
+  .runtime-window {
+    font-size: 12px;
+  }
+  .runtime-filebar,
+  .runtime-output,
+  .runtime-source {
+    padding-inline: 12px;
   }
   .stats-grid a {
     padding: 15px 3px;

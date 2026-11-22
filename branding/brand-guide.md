@@ -11,13 +11,13 @@ the standalone MIT-licensed JavaScript and TypeScript runtime by Rahul Chaube.
 | Primary (dark) | `branding/logo-dark.svg` | Dark backgrounds |
 | Icon | `branding/favicon.svg` | Favicon, app icon, social |
 
-Rahul Chaube’s folded lime-to-emerald mark contains the terminal prompt in its right half. The original artwork is [logo.png](logo.png). The website uses it on a deep green background in navigation, icons, the processor illustration and sharing previews.
+Rahul Chaube’s folded lime-to-emerald mark contains the terminal prompt in its right half. The original artwork is [logo.png](logo.png). The website uses it on a deep green background in navigation, app icons and sharing previews. The homepage pairs its folded shapes with a TypeScript example and the output from the RC terminal.
 
 Website icons preserve the mark’s proportions and gradient. To export them from the original file, install Pillow and run `python scripts/export_official_branding.py` from the repository root.
 
 ## Website colors and type
 
-The logo backdrop is `#071a16`. The website pairs graphite surfaces with copper accents. Geist is the site typeface and IBM Plex Mono is used for code and terminal output. Theme colors are defined in [globals.css](../website/app/globals.css).
+The logo backdrop is `#071a16`. Lime `#aee75a` and emerald `#199050` come from the original artwork. The dark theme uses pine surfaces with lime links. Light pages use deeper emerald links for legibility. Action icons use the same palette and resource icons carry the diagonal fold from the mark. Geist is the site typeface and IBM Plex Mono is used for code and terminal output. Theme colors are defined in [globals.css](../website/app/globals.css).
 
 ## Voice
 

@@ -70,8 +70,12 @@
   letter-spacing: -0.035em;
 }
 .lesson-list a > svg,
-.directory-card li svg {
-  color: var(--subtle);
+.directory-card li svg,
+.side-overview svg,
+.doc-outline h2 svg,
+.directory-search > svg,
+.article-actions svg {
+  color: var(--icon);
 }
 .lesson-list a:hover h2 {
   color: var(--accent);

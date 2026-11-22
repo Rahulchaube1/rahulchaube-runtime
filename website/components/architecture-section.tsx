@@ -1,6 +1,6 @@
 "use client";
 
-import { Cpu, Layers, Zap } from "lucide-react";
+import { CodeXml, Layers, Zap } from "lucide-react";
 
 export function ArchitectureSection() {
   return (
@@ -19,7 +19,7 @@ export function ArchitectureSection() {
         <div className="p-8 rounded-2xl bg-white dark:bg-[#0E2923] border border-zinc-200 dark:border-[#163830] shadow-md space-y-5 hover-card-lift hover:border-[#2FA866]/60 flex flex-col justify-between">
           <div className="space-y-4">
             <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center text-[#2FA866] dark:text-[#A8F05B]">
-              <Cpu className="w-6 h-6" />
+              <CodeXml className="w-6 h-6" />
             </div>
             <h3 className="text-xl font-bold text-zinc-900 dark:text-[#F0F6FC]">
               Native Execution Core

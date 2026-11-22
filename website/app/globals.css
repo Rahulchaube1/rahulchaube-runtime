@@ -4,35 +4,50 @@
 
 :root {
   color-scheme: light;
-  --bg: #f8f7f3;
-  --panel: #fffefa;
-  --raised: #f0eee8;
-  --text: #1d1c1b;
-  --muted: #555650;
-  --subtle: #686762;
-  --line: #d8d6ce;
-  --accent: #a63d0b;
-  --accent-bg: #ff8b51;
-  --tint: #fae7db;
-  --header: rgba(248, 247, 243, 0.95);
-  --figure: #131415;
-  --on-btn: #211510;
+  --brand-lime: #aee75a;
+  --brand-emerald: #199050;
+  --brand-ink: #071a16;
+  --bg: #f5f8f2;
+  --panel: #fcfef9;
+  --raised: #eaf1e6;
+  --text: #12271b;
+  --muted: #455d4d;
+  --subtle: #536a5a;
+  --line: #cedacd;
+  --accent: #17623a;
+  --accent-end: #14744a;
+  --icon: #23794a;
+  --accent-bg: var(--brand-lime);
+  --accent-hover: #bff183;
+  --tint: #e2f0dc;
+  --header: rgb(245 248 242 / 95%);
+  --on-btn: #102b18;
+  --console-bg: #0a1913;
+  --console-top: #13271c;
+  --console-line: #2f4938;
+  --console-text: #edf7ed;
+  --console-muted: #aec2ae;
+  --syntax-keyword: #b9ed72;
+  --syntax-string: #86dfaa;
+  --syntax-type: #a6ded2;
+  --syntax-number: #d0e5a1;
   --sans: "Geist Variable", "Inter Variable", system-ui, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, monospace;
 }
 html.dark {
   color-scheme: dark;
-  --bg: #111213;
-  --panel: #191a1b;
-  --raised: #202122;
-  --text: #f5f4ef;
-  --muted: #b0b0ac;
-  --subtle: #a1a19d;
-  --line: #313232;
-  --accent: #ffa16d;
-  --accent-bg: #ff9157;
-  --tint: #30241e;
-  --header: rgba(17, 18, 19, 0.94);
+  --bg: #0a1612;
+  --panel: #10211a;
+  --raised: #192d23;
+  --text: #eff7ed;
+  --muted: #b3c6b6;
+  --subtle: #9bb29e;
+  --line: #2b4032;
+  --accent: var(--brand-lime);
+  --accent-end: #57cd85;
+  --icon: #89d89a;
+  --tint: #203725;
+  --header: rgb(10 22 18 / 95%);
 }
 html {
   scroll-padding-top: 90px;
@@ -46,8 +61,8 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 ::selection {
-  color: #201710;
-  background: #ffad78;
+  color: var(--on-btn);
+  background: var(--brand-lime);
 }
 :focus-visible {
   outline: 2px solid var(--accent);
@@ -188,11 +203,17 @@ summary {
   font-weight: 600;
   padding: 0 11px;
 }
+.nav-tools svg,
+.social-links svg,
+.search-results a > svg:first-child,
+.search-help svg {
+  color: var(--icon);
+}
 .icon-button:hover,
 .search-trigger:hover,
 .github-link:hover {
-  color: var(--text);
-  border-color: var(--subtle);
+  color: var(--accent);
+  border-color: var(--icon);
 }
 .theme-sun,
 .dark .theme-moon,
@@ -295,7 +316,7 @@ summary {
   box-shadow: 0 18px 65px #0006;
 }
 .search-dialog::backdrop {
-  background: #08090aca;
+  background: rgb(4 17 10 / 80%);
 }
 .search-input {
   padding: 12px 15px;
@@ -321,6 +342,9 @@ summary {
 }
 .search-results a > svg:last-child {
   margin-left: auto;
+}
+.search-results a[data-active="true"] > svg {
+  color: var(--accent);
 }
 .search-results a[data-active="true"],
 .search-results a:hover {

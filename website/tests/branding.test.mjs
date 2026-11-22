@@ -10,7 +10,12 @@ test("public brand assets and app manifests use the official RC logo exports", (
   expect(asset("logo.png")).toEqual(original);
   expect(dimensions(asset("rc-logo.png"))).toEqual([187, 162]);
   const published = JSON.parse(asset("site.webmanifest").toString("utf8"));
-  expect(published.icons).toEqual(manifest().icons);
+  const app = manifest();
+  const palette = JSON.parse(readFileSync(new URL("../../branding/colors.json", import.meta.url), "utf8"));
+  expect(published.icons).toEqual(app.icons);
+  expect(published.theme_color).toBe(app.theme_color);
+  expect(published.background_color).toBe(app.background_color);
+  expect(app.theme_color).toBe(palette.dark.background);
   for (const { src, sizes } of published.icons) {
     const icon = asset(src.slice(1));
     expect(dimensions(icon).join("x")).toBe(sizes);

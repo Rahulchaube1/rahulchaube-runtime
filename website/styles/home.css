@@ -18,7 +18,7 @@
 .hero-grid {
   position: relative;
   display: grid;
-  grid-template-columns: 1fr 1.04fr;
+  grid-template-columns: minmax(0, 0.98fr) minmax(0, 1.06fr);
   gap: 30px;
   align-items: center;
   padding-block: clamp(56px, 6vw, 84px) clamp(52px, 5vw, 72px);
@@ -59,11 +59,12 @@
   color: var(--accent);
   white-space: nowrap;
 }
-.dark .hero h1 > span {
-  color: #ff9a61;
-}
-.hero-dot {
-  color: var(--accent);
+@supports (background-clip: text) {
+  .hero h1 > span {
+    background: linear-gradient(105deg, var(--accent) 20%, var(--accent-end));
+    background-clip: text;
+    color: transparent;
+  }
 }
 .hero-copy > p {
   max-width: 455px;
@@ -95,7 +96,7 @@
   background: var(--accent-bg);
 }
 .btn.primary:hover {
-  background: #ffa871;
+  background: var(--accent-hover);
 }
 .btn.secondary {
   color: var(--text);
@@ -107,44 +108,114 @@
 .directory-card a:hover {
   border-color: var(--accent);
 }
-.engine-figure {
-  margin: 0;
+.runtime-figure {
   min-width: 0;
-  align-self: center;
+  margin: 0;
 }
-.engine-frame {
+.runtime-stage {
   position: relative;
-  aspect-ratio: 1.5;
-  background: var(--figure);
+  isolation: isolate;
   overflow: hidden;
   border: 1px solid var(--line);
-  border-radius: 13px;
+  border-radius: 15px;
+  background: var(--brand-ink);
+  padding: clamp(44px, 4.8vw, 73px) clamp(26px, 3.8vw, 56px);
 }
-.engine-frame img {
+.runtime-art {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+.runtime-window {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--console-text);
+  background: var(--console-bg);
+  border: 1px solid #455e43;
+  border-radius: 10px;
+  box-shadow: 0 18px 40px rgb(2 13 8 / 45%);
+  font: 13px/1.65 var(--mono);
+}
+.runtime-filebar,
+.runtime-filebar > span,
+.runtime-filebar a,
+.runtime-command {
+  display: flex;
+  align-items: center;
+}
+.runtime-filebar {
+  justify-content: space-between;
+  padding: 5px 12px 5px 19px;
+  background: var(--console-top);
+  border-bottom: 1px solid var(--console-line);
+}
+.runtime-filebar > span {
+  gap: 9px;
+  font-size: 12px;
+}
+.runtime-filebar > span svg,
+.runtime-command > svg {
+  color: var(--brand-lime);
+}
+.runtime-filebar a {
+  justify-content: center;
+  width: 32px;
+  height: 30px;
+  border-radius: 4px;
+  color: var(--console-muted);
+}
+.runtime-filebar a:hover {
+  color: var(--brand-lime);
+  background: var(--console-line);
+}
+.runtime-source {
+  padding: clamp(16px, 2.25vw, 31px) 19px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.9;
+}
+.runtime-output {
+  padding: 13px 15px 19px 19px;
+  border-top: 1px solid var(--console-line);
+  background: #081510;
+}
+.runtime-command {
+  gap: 8px;
+  line-height: 1.5;
+}
+.runtime-command code {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.runtime-command .copy-button {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.runtime-output samp {
   display: block;
+  padding-left: 25px;
+  color: var(--syntax-string);
+  font: inherit;
 }
-.dark .engine-frame {
-  border-color: transparent;
-  background: transparent;
-  border-radius: 0;
-  mask-image:
-    linear-gradient(90deg, transparent 0%, #000 8%, #000 96%, transparent),
-    linear-gradient(0deg, transparent 0%, #000 10%, #000 92%, transparent);
-  mask-composite: intersect;
+.runtime-window :focus-visible,
+.terminal-demo :focus-visible,
+.code-block :focus-visible {
+  outline-color: var(--brand-lime);
+  outline-offset: 1px;
 }
-.engine-figure figcaption {
+.runtime-figure figcaption {
   display: flex;
   justify-content: space-between;
   color: var(--subtle);
   gap: 12px;
-  margin: 10px 4px 0;
+  margin: 10px 3px 0;
   font: 11px/1.5 var(--mono);
 }
-.engine-figure figcaption span,
-.engine-figure figcaption a,
+.runtime-figure figcaption span,
+.runtime-figure figcaption a,
 .text-link,
 .section-kicker,
 .tile-icon,
@@ -155,12 +226,16 @@
   align-items: center;
   gap: 8px;
 }
-.engine-figure figcaption i,
+.runtime-figure figcaption svg,
+.text-link svg {
+  color: var(--icon);
+}
+.runtime-figure figcaption i,
 .terminal-title i {
   color: var(--subtle);
   font-style: normal;
 }
-.engine-figure figcaption a:hover,
+.runtime-figure figcaption a:hover,
 .text-link:hover {
   color: var(--accent);
 }
@@ -202,7 +277,7 @@
   font-size: 12px;
 }
 .stats-grid a > span svg {
-  color: var(--subtle);
+  color: var(--icon);
 }
 .home-section {
   padding-block: clamp(44px, 5vw, 72px);
@@ -256,11 +331,23 @@
   width: 41px;
   height: 41px;
   justify-content: center;
-  color: var(--accent);
-  background: var(--tint);
-  border: 1px solid color-mix(in srgb, var(--accent) 24%, transparent);
-  border-radius: 9px;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  color: var(--on-btn);
+  background: linear-gradient(145deg, #c4ef82 2%, var(--brand-lime) 40%, #70c879);
+  border-radius: 9px 9px 9px 3px;
   flex-shrink: 0;
+}
+.tile-icon::after {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 57%, rgb(15 107 55 / 23%) 58%, transparent 88%);
+  content: "";
+}
+.card-icons > svg {
+  color: var(--icon);
 }
 .resource-card h3 {
   font-size: 20px;
@@ -306,9 +393,9 @@
 }
 .terminal-demo,
 .code-block {
-  background: #161718;
-  color: #eeeee9;
-  border: 1px solid #353536;
+  background: var(--console-bg);
+  color: var(--console-text);
+  border: 1px solid var(--console-line);
   border-radius: 10px;
   overflow: hidden;
   font-family: var(--mono);
@@ -319,13 +406,17 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  border-bottom: 1px solid #353536;
-  background: #202122;
-  color: #c2c1bb;
+  border-bottom: 1px solid var(--console-line);
+  background: var(--console-top);
+  color: var(--console-muted);
 }
 .terminal-title {
   padding: 12px 18px;
   font-size: 12px;
+}
+.terminal-title svg,
+.code-top > span svg {
+  color: var(--brand-lime);
 }
 .terminal-title > span,
 .code-top > span,
@@ -339,23 +430,23 @@
 .terminal-dots i {
   width: 7px;
   height: 7px;
-  background: #5a5c58;
+  background: #57745c;
   border-radius: 50%;
 }
 .terminal-tabs {
   gap: 0;
   padding: 0 18px;
-  border-bottom: 1px solid #323334;
+  border-bottom: 1px solid var(--console-line);
 }
 .terminal-tabs button {
-  color: #abaea9;
+  color: var(--console-muted);
   font-size: 12px;
   padding: 9px 13px;
   border-bottom: 2px solid transparent;
 }
 .terminal-tabs button[aria-pressed="true"] {
-  color: #ffa16d;
-  border-color: #ff9157;
+  color: var(--brand-lime);
+  border-color: var(--brand-lime);
 }
 .terminal-content {
   padding: 17px 20px 22px;
@@ -363,18 +454,18 @@
   font-size: 13px;
 }
 .terminal-content p {
-  color: #a4a5a1;
+  color: var(--console-muted);
   font-size: 12px;
   margin: 0 0 8px;
 }
 .terminal-line > span {
-  color: #ffa16d;
+  color: var(--brand-lime);
 }
 .terminal-line .copy-button {
   margin-left: auto;
 }
 .terminal-content pre {
-  color: #bbcbc0;
+  color: #c2dac6;
   font-size: 12px;
   margin-top: 9px;
 }
@@ -385,13 +476,13 @@
   min-width: 32px;
   min-height: 30px;
   justify-content: center;
-  color: #c4c4be;
+  color: var(--console-muted);
   border-radius: 4px;
   font: 11px var(--mono);
 }
 .copy-button:hover {
   color: white;
-  background: #383938;
+  background: var(--console-line);
 }
 .code-block {
   margin: 16px 0 22px;
@@ -408,26 +499,36 @@
   line-height: 1.65;
 }
 
-.code-block .hljs-keyword,
-.code-block .hljs-literal,
-.code-block .hljs-selector-tag {
-  color: #ffa47c;
+.syntax .hljs-keyword,
+.syntax .hljs-literal,
+.syntax .hljs-selector-tag {
+  color: var(--syntax-keyword);
 }
-.code-block .hljs-string,
-.code-block .hljs-regexp,
-.code-block .hljs-attr {
-  color: #bdd9af;
+.syntax .hljs-string,
+.syntax .hljs-regexp,
+.syntax .hljs-attr {
+  color: var(--syntax-string);
 }
-.code-block .hljs-built_in,
-.code-block .hljs-type,
-.code-block .hljs-title {
-  color: #a9ccec;
+.syntax .hljs-built_in,
+.syntax .hljs-type,
+.syntax .hljs-title {
+  color: var(--syntax-type);
 }
-.code-block .hljs-number,
-.code-block .hljs-variable {
-  color: #e4bf8b;
+.syntax .hljs-number,
+.syntax .hljs-variable {
+  color: var(--syntax-number);
 }
-.code-block .hljs-comment,
-.code-block .hljs-meta {
-  color: #a8aaa7;
+.syntax .hljs-comment,
+.syntax .hljs-meta {
+  color: var(--console-muted);
+}
+
+@media (forced-colors: active) {
+  .hero h1 > span {
+    background: none;
+    color: CanvasText;
+  }
+  .tile-icon {
+    border: 1px solid CanvasText;
+  }
 }
