@@ -42,8 +42,9 @@ jobs:
           go test -tags netgo,osusergo -ldflags="$flags" ./...
           go build -tags netgo,osusergo -trimpath -ldflags="$flags" -o rc${{ matrix.suffix }} .
           ./rc${{ matrix.suffix }} --version
-          if [[ "$RUNNER_OS" == Linux ]]; then
-            if readelf -l rc | grep -q INTERP; then echo "Unexpected shared loader" >&2; exit 1; fi
+          if [[ "$RUNNER_OS" == Linux ]] && readelf -l rc | grep -q INTERP; then
+            echo "Unexpected shared loader" >&2
+            exit 1
           fi
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:

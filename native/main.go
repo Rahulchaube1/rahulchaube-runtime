@@ -72,34 +72,9 @@ func command(args []string) error {
 	case "doctor":
 		fmt.Printf("RC Runtime v%s\nPlatform %s/%s\nJavaScript QuickJS-NG\nCompiler esbuild\n", version, runtime.GOOS, runtime.GOARCH)
 	case "run":
-		live := len(tail) > 0 && tail[0] == "--watch"
-		if live {
-			tail = tail[1:]
-		}
-		if len(tail) == 0 {
-			return errors.New("usage: rc run [--watch] <file> [--] [args...]")
-		}
-		argv := tail[1:]
-		if len(argv) > 0 && argv[0] == "--" {
-			argv = argv[1:]
-		}
-		if live {
-			return watch(tail[0], "", argv)
-		}
-		return execute(tail[0], argv, false)
+		return runCommand(tail)
 	case "build":
-		live := len(tail) > 0 && tail[0] == "--watch"
-		if live {
-			tail = tail[1:]
-		}
-		if len(tail) != 3 || tail[1] != "--outfile" {
-			return errors.New("usage: rc build [--watch] <file> --outfile <file>")
-		}
-		if live {
-			return watch(tail[0], tail[2], nil)
-		}
-		_, err := bundle(tail[0], tail[2], false)
-		return err
+		return buildCommand(tail)
 	case "test":
 		return testFiles(tail)
 	case "init":
@@ -116,6 +91,39 @@ func command(args []string) error {
 		return fmt.Errorf("unknown command %q (see rc --help)", args[0])
 	}
 	return nil
+}
+
+func runCommand(tail []string) error {
+	live := len(tail) > 0 && tail[0] == "--watch"
+	if live {
+		tail = tail[1:]
+	}
+	if len(tail) == 0 {
+		return errors.New("usage: rc run [--watch] <file> [--] [args...]")
+	}
+	argv := tail[1:]
+	if len(argv) > 0 && argv[0] == "--" {
+		argv = argv[1:]
+	}
+	if live {
+		return watch(tail[0], "", argv)
+	}
+	return execute(tail[0], argv, false)
+}
+
+func buildCommand(tail []string) error {
+	live := len(tail) > 0 && tail[0] == "--watch"
+	if live {
+		tail = tail[1:]
+	}
+	if len(tail) != 3 || tail[1] != "--outfile" {
+		return errors.New("usage: rc build [--watch] <file> --outfile <file>")
+	}
+	if live {
+		return watch(tail[0], tail[2], nil)
+	}
+	_, err := bundle(tail[0], tail[2], false)
+	return err
 }
 
 func scaffold(dir string) error {
@@ -135,25 +143,32 @@ func scaffold(dir string) error {
 	return nil
 }
 
+func discoverTests() ([]string, error) {
+	var files []string
+	err := filepath.WalkDir(".", func(path string, entry fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		name := entry.Name()
+		if entry.IsDir() && path != "." && (strings.HasPrefix(name, ".") || name == "node_modules" || name == "dist") {
+			return filepath.SkipDir
+		}
+		stem := strings.TrimSuffix(name, filepath.Ext(name))
+		if entry.Type().IsRegular() && (strings.HasSuffix(stem, ".test") || strings.HasSuffix(stem, ".spec")) {
+			switch filepath.Ext(name) {
+			case ".js", ".mjs", ".cjs", ".ts", ".mts", ".cts", ".jsx", ".tsx":
+				files = append(files, path)
+			}
+		}
+		return nil
+	})
+	return files, err
+}
+
 func testFiles(files []string) error {
 	if len(files) == 0 {
-		err := filepath.WalkDir(".", func(path string, entry fs.DirEntry, err error) error {
-			if err != nil {
-				return err
-			}
-			name := entry.Name()
-			if entry.IsDir() && path != "." && (strings.HasPrefix(name, ".") || name == "node_modules" || name == "dist") {
-				return filepath.SkipDir
-			}
-			stem := strings.TrimSuffix(name, filepath.Ext(name))
-			if entry.Type().IsRegular() && (strings.HasSuffix(stem, ".test") || strings.HasSuffix(stem, ".spec")) {
-				switch filepath.Ext(name) {
-				case ".js", ".mjs", ".cjs", ".ts", ".mts", ".cts", ".jsx", ".tsx":
-					files = append(files, path)
-				}
-			}
-			return nil
-		})
+		var err error
+		files, err = discoverTests()
 		if err != nil {
 			return err
 		}

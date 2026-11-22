@@ -9,12 +9,23 @@ export function equal(actual, expected) {
 export function assert(value, message = "Assertion failed") {
   if (!value) throw new Error(message);
 }
+async function runCase({ name, fn }) {
+  try {
+    await fn();
+    console.log("  pass", name);
+    return 0;
+  } catch (error) {
+    console.error("  fail", name, String(error), error?.stack ?? "");
+    return 1;
+  }
+}
+async function* runCases() {
+  for (const entry of cases) yield runCase(entry);
+}
 export async function runTests() {
   if (!cases.length) throw new Error("No tests registered with rc:test");
+  // Each test starts after the preceding test has settled in this JS context.
   let failed = 0;
-  for (const { name, fn } of cases) {
-    try { await fn(); console.log("  pass", name); }
-    catch (error) { failed++; console.error("  fail", name, String(error), error?.stack ?? ""); }
-  }
+  for await (const count of runCases()) failed += count;
   if (failed) throw new Error(`${failed} of ${cases.length} tests failed`);
 }

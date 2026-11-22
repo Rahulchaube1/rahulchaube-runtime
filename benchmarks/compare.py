@@ -29,14 +29,28 @@ def measure(command, directory, expected):
         return round(elapsed, 3), round(usage.ru_maxrss / divisor, 3)
 
 
-def run():
-    parser = argparse.ArgumentParser(description=__doc__)
-    for name in ["rc", "bun", "node", "npm"]:
-        parser.add_argument("--" + name, default=name)
-    parser.add_argument("--samples", type=int, default=25)
-    args = parser.parse_args()
-    if args.samples < 1 or not hasattr(os, "wait4"):
-        parser.error("Use Linux or macOS and specify at least one sample")
+def sample_workload(commands, directory, expected, rng, count):
+    samples = {engine: [] for engine in commands}
+    for round_no in range(count + 3):
+        order = list(commands)
+        rng.shuffle(order)
+        for engine in order:
+            observation = measure(commands[engine], directory, expected)
+            if round_no >= 3:
+                samples[engine].append(observation)
+    result = {}
+    for engine, observations in samples.items():
+        times, memory = zip(*observations)
+        result[engine] = {
+            "median_ms": round(statistics.median(times), 2),
+            "p95_ms": round(sorted(times)[math.ceil(.95 * len(times)) - 1], 2),
+            "peak_mib": round(statistics.median(memory), 2),
+            "samples_ms": times,
+        }
+    return result
+
+
+def load_engines(parser, args):
     engines = {}
     for name in ["rc", "bun", "node", "npm"]:
         executable = shutil.which(getattr(args, name))
@@ -48,6 +62,18 @@ def run():
             "version": subprocess.check_output([executable, "--version"], text=True).strip(),
             "executable_mib": None if name == "npm" else round(os.stat(executable).st_size / 2**20, 2),
         }
+    return engines
+
+
+def run():
+    parser = argparse.ArgumentParser(description=__doc__)
+    for name in ["rc", "bun", "node", "npm"]:
+        parser.add_argument("--" + name, default=name)
+    parser.add_argument("--samples", type=int, default=25)
+    args = parser.parse_args()
+    if args.samples < 1 or not hasattr(os, "wait4"):
+        parser.error("Use Linux or macOS and specify at least one sample")
+    engines = load_engines(parser, args)
     # npm launches the same Node executable through its ordinary package script.
     os.environ["PATH"] = str(Path(engines["node"]["path"]).parent) + os.pathsep + os.environ["PATH"]
     workloads = {
@@ -70,23 +96,7 @@ def run():
                 "rc": [engines["rc"]["path"], "run", filename], "bun": [engines["bun"]["path"], filename],
                 "node": [engines["node"]["path"], filename], "npm": [engines["npm"]["path"], "run", "--silent", name],
             }
-            samples = {engine: [] for engine in commands}
-            for round_no in range(args.samples + 3):
-                order = list(commands)
-                rng.shuffle(order)
-                for engine in order:
-                    observation = measure(commands[engine], directory, expected)
-                    if round_no >= 3:
-                        samples[engine].append(observation)
-            result[name] = {}
-            for engine, observations in samples.items():
-                times, memory = zip(*observations)
-                result[name][engine] = {
-                    "median_ms": round(statistics.median(times), 2),
-                    "p95_ms": round(sorted(times)[math.ceil(.95 * len(times)) - 1], 2),
-                    "peak_mib": round(statistics.median(memory), 2),
-                    "samples_ms": times,
-                }
+            result[name] = sample_workload(commands, directory, expected, rng, args.samples)
     cpu = platform.processor()
     if platform.system() == "Linux":
         cpu = next((line.split(":", 1)[1].strip() for line in Path("/proc/cpuinfo").read_text().splitlines()

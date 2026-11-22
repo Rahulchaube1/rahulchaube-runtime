@@ -8,12 +8,12 @@ const workloads = { hello: "Hello world", typescript: "Two-file TypeScript impor
 const metrics = { median_ms: "Median time (ms)", p95_ms: "p95 time (ms)", peak_mib: "Median peak RSS (MiB)" } as const;
 
 export function BenchmarkChart() {
-  const [metric, choose] = useState<keyof typeof metrics>("median_ms");
+  const [metric, setMetric] = useState<keyof typeof metrics>("median_ms");
   return (
     <section aria-label="Measured performance" className="space-y-4">
       <label className="flex flex-wrap items-center gap-3 text-sm font-medium">
-        Metric
-        <select value={metric} onChange={event => choose(event.target.value as keyof typeof metrics)}
+        <span>Metric</span>
+        <select value={metric} onChange={event => setMetric(event.target.value as keyof typeof metrics)}
           className="rounded-md border border-zinc-400 bg-white px-3 py-2 dark:bg-ink-800">
           {Object.entries(metrics).map(([key, label]) => <option value={key} key={key}>{label}</option>)}
         </select>

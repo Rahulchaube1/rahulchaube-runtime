@@ -134,7 +134,8 @@ func (h *httpHost) serveRequest(server int64, w http.ResponseWriter, r *http.Req
 	}) {
 		return
 	}
-	defer h.enqueue(context.Background(), func() { delete(h.pending, id) })
+	// Cleanup must reach the event loop even when the client has disconnected.
+	defer h.enqueue(context.WithoutCancel(ctx), func() { delete(h.pending, id) })
 	select {
 	case res := <-reply:
 		for name, value := range res.Headers {

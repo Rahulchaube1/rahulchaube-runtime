@@ -55,6 +55,27 @@ func evalProgram(file, code string, args []string) error {
 	defer ctx.Close()
 	h := newHTTPHost(ctx)
 	defer h.shutdown()
+	installBindings(ctx, h, args)
+	bridge := ctx.Eval(source("modules/host.js"))
+	defer bridge.Free()
+	if bridge.IsException() {
+		return jsError(ctx)
+	}
+	h.bridge = bridge
+	entry, err := filepath.Abs(file)
+	if err != nil {
+		return err
+	}
+	result := ctx.Eval(code, js.EvalFlagModule(true), js.EvalFileName(entry))
+	defer result.Free()
+	if result.IsException() {
+		return jsError(ctx)
+	}
+
+	return runEventLoop(ctx, h, result)
+}
+
+func installBindings(ctx *js.Context, h *httpHost, args []string) {
 	host := ctx.NewObject()
 	if args == nil {
 		args = []string{}
@@ -85,22 +106,9 @@ func evalProgram(file, code string, args []string) error {
 	})
 	h.bind(host)
 	ctx.Globals().Set("__rcHost", host)
-	bridge := ctx.Eval(source("modules/host.js"))
-	defer bridge.Free()
-	if bridge.IsException() {
-		return jsError(ctx)
-	}
-	h.bridge = bridge
-	entry, err := filepath.Abs(file)
-	if err != nil {
-		return err
-	}
-	result := ctx.Eval(code, js.EvalFlagModule(true), js.EvalFileName(entry))
-	defer result.Free()
-	if result.IsException() {
-		return jsError(ctx)
-	}
+}
 
+func runEventLoop(ctx *js.Context, h *httpHost, result *js.Value) error {
 	for {
 		delay := ctx.LoopOnce()
 		if delay == -2 || ctx.HasException() {
@@ -117,32 +125,37 @@ func evalProgram(file, code string, args []string) error {
 			return h.err
 		}
 		if delay < 0 && len(h.listeners) == 0 && len(h.pending) == 0 {
-			switch result.PromiseState() {
-			case js.PromisePending:
-				return errors.New("top-level await is pending with no active timers or servers")
-			case js.PromiseRejected:
-				reason := result.PromiseResult()
-				defer reason.Free()
-				return errors.New(reason.ToString())
-			}
-			return nil
+			return moduleCompletion(result)
 		}
-		if delay == 0 {
-			continue
+		if delay != 0 {
+			h.waitForEvent(delay)
 		}
-		var tick <-chan time.Time
-		var timer *time.Timer
-		if delay > 0 {
-			timer = time.NewTimer(time.Duration(delay) * time.Millisecond)
-			tick = timer.C
-		}
-		select {
-		case event := <-h.events:
-			event()
-		case <-tick:
-		}
-		if timer != nil {
-			timer.Stop()
-		}
+	}
+}
+
+func moduleCompletion(result *js.Value) error {
+	switch result.PromiseState() {
+	case js.PromisePending:
+		return errors.New("top-level await is pending with no active timers or servers")
+	case js.PromiseRejected:
+		reason := result.PromiseResult()
+		defer reason.Free()
+		return errors.New(reason.ToString())
+	}
+	return nil
+}
+
+func (h *httpHost) waitForEvent(delay int) {
+	if delay < 0 {
+		event := <-h.events
+		event()
+		return
+	}
+	timer := time.NewTimer(time.Duration(delay) * time.Millisecond)
+	defer timer.Stop()
+	select {
+	case event := <-h.events:
+		event()
+	case <-timer.C:
 	}
 }

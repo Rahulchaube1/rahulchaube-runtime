@@ -3,7 +3,7 @@ set -euo pipefail
 
 install_rc() {
   local platform arch target filename origin metadata version digest url requested="" dry=0
-  local dest stage actual installed profile shell_name line local_archive
+  local dest stage actual installed profile shell_name line local_archive option
   case "$(uname -s)" in Linux) platform=linux ;; Darwin) platform=darwin ;; *) echo "Unsupported operating system" >&2; return 1 ;; esac
   case "$(uname -m)" in x86_64|amd64) arch=x64 ;; arm64|aarch64) arch=arm64 ;; *) echo "Unsupported processor" >&2; return 1 ;; esac
   target="$platform-$arch"
@@ -11,10 +11,11 @@ install_rc() {
   origin="${RAHULCHAUBE_INSTALL_ORIGIN:-https://www.rahulchaube.space}"
   local_archive="${RAHULCHAUBE_INSTALL_ARCHIVE_DIR:-}"
   while [[ $# -gt 0 ]]; do
-    case "$1" in
+    option="$1"
+    case "$option" in
       --version) [[ $# -gt 1 ]] || { echo "Missing version" >&2; return 1; }; requested="${2#v}"; shift 2 ;;
       --dry-run) dry=1; shift ;;
-      *) echo "Unknown installer option: $1" >&2; return 1 ;;
+      *) echo "Unknown installer option: $option" >&2; return 1 ;;
     esac
   done
   if [[ -n "$local_archive" ]]; then

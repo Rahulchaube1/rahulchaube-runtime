@@ -81,7 +81,8 @@ async function dispatch(req: Request): Promise<Response> {
     const result = await match.handler(ctx);
     for (const [key, value] of Object.entries(headers)) result.headers.set(key, value);
     return result;
-  } catch (e) {
+  } catch {
+    // Count handler failures while keeping request data out of logs and public error messages.
     metrics.errors++;
     return json({ error: "Internal server error" }, 500);
   }

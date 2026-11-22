@@ -23,4 +23,4 @@ async function main() {
   console.log("\n[Note] All benchmarks executed live using performance.now(). Zero fabricated metrics.");
 }
 
-main().catch(error => { console.error(error); process.exitCode = 1; });
+await main();

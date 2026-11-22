@@ -7,6 +7,17 @@ export const json = (value, status = 200) => ({
   status, headers: { "Content-Type": "application/json; charset=utf-8" }, body: JSON.stringify(value),
 });
 
+function matchPath(pattern, parts, params) {
+  for (let i = 0; i < pattern.length; i++) {
+    if (pattern[i].startsWith(":") && parts[i]) {
+      params[pattern[i].slice(1)] = decodeURIComponent(parts[i]);
+    } else if (pattern[i] !== parts[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+
 export function createApp() {
   const routes = [];
   function on(method, path, handler) {
@@ -22,15 +33,13 @@ export function createApp() {
     for (const route of routes) {
       if (route.method !== method || route.parts.length !== parts.length) continue;
       const params = Object.create(null);
-      let matches = true;
-      for (let i = 0; i < parts.length; i++) {
-        const pattern = route.parts[i];
-        if (pattern.startsWith(":") && parts[i]) {
-          try { params[pattern.slice(1)] = decodeURIComponent(parts[i]); }
-          catch { return text("Invalid path encoding", 400); }
-        } else if (pattern !== parts[i]) { matches = false; break; }
+      try {
+        if (!matchPath(route.parts, parts, params)) continue;
+      } catch (error) {
+        if (error instanceof URIError) return text("Invalid path encoding", 400);
+        throw error;
       }
-      if (matches) return await route.handler({ headers: {}, query: {}, body: "", ...request, params });
+      return route.handler({ headers: {}, query: {}, body: "", ...request, params });
     }
     return text("Not found", 404);
   }
