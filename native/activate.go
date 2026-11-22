@@ -15,7 +15,7 @@ func activate(stage, dest string) error {
 	if runtime.GOOS == "windows" {
 		bin += ".exe"
 	}
-	paths := []string{"runtime", "packages/rahulchaube-cli", "bin/rahulchaube", "bin/rahulchaube.cmd", bin, "LICENSE.md", "licenses"}
+	paths := []string{bin, "LICENSE.md", "licenses"}
 	for _, name := range paths {
 		if _, err := os.Stat(filepath.Join(stage, name)); err != nil {
 			return err

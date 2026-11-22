@@ -29,7 +29,7 @@ install_rc() {
   [[ -z "$requested" || "$requested" == "$version" ]] || { echo "This installer provides v$version" >&2; return 1; }
   if [[ "$dry" == 1 ]]; then echo "RC Runtime v$version is available for $target"; return; fi
 
-  dest="${RAHULCHAUBE_INSTALL_DIR:-$HOME/.rahulchaube}"
+  dest="${RC_INSTALL_DIR:-${RAHULCHAUBE_INSTALL_DIR:-$HOME/.rc-runtime}}"
   mkdir -p "$dest"
   dest="$(cd "$dest" && pwd)"
   stage="$(mktemp -d "$dest/.install-XXXXXX")"
@@ -45,14 +45,14 @@ install_rc() {
     "$stage/bin/rc" __activate "$stage" "$dest"
   )
   echo "Installed RC Runtime v$version to $dest/bin"
-  if [[ -z "${RAHULCHAUBE_INSTALL_DIR:-}" && -z "$requested" ]]; then
+  if [[ -z "${RC_INSTALL_DIR:-${RAHULCHAUBE_INSTALL_DIR:-}}" && -z "$requested" ]]; then
     shell_name="${SHELL:-sh}"
     case "${shell_name##*/}" in
       zsh) profile="$HOME/.zshrc" ;;
       bash) profile="$HOME/.bashrc"; if [[ -f "$HOME/.bash_profile" ]]; then profile="$HOME/.bash_profile"; fi ;;
       *) profile="$HOME/.profile" ;;
     esac
-    line='export PATH="$HOME/.rahulchaube/bin:$PATH"'
+    line='export PATH="$HOME/.rc-runtime/bin:$PATH"'
     if ! grep -Fqx "$line" "$profile" 2>/dev/null; then printf '\n%s\n' "$line" >> "$profile"; fi
     printf 'Open a new terminal or run %s\n' "$line"
   fi

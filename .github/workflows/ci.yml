@@ -1,4 +1,4 @@
-name: RahulChaube Runtime CI/CD Pipeline
+name: RC Runtime CI
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   native:
-    name: Compile and exercise Blyx on ${{ matrix.target }}
+    name: Build and test RC Runtime on ${{ matrix.target }}
     strategy:
       fail-fast: false
       matrix:
@@ -21,13 +21,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
-        with:
-          repository: Rahulchaube1/blyxxxx
-          ref: 2b6bd149ee898e05bb4b4e7f87e392baa7786071
-          path: .blyx-compiler
-          persist-credentials: false
-      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
       - uses: actions/setup-go@v5
         with:
           go-version: '1.26.11'
@@ -36,19 +29,11 @@ jobs:
         working-directory: native
         run: |
           go test ./...
-          go build -trimpath -ldflags="-s -w" -o ../packages/rahulchaube-cli/bin/rc${{ matrix.suffix }} .
-      - run: cargo build --locked --release --manifest-path .blyx-compiler/Cargo.toml -p blyxc
-      - run: bun installer/build-native.ts .blyx-compiler/target/release/blyxc${{ matrix.suffix }} packages/rahulchaube-cli/bin
-      - run: bun test tests/native-cli.test.ts tests/live-runtime.test.ts
-        env:
-          RAHUL_TEST_NATIVE: "1"
+          go build -trimpath -ldflags="-s -w" -o rc${{ matrix.suffix }} .
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: native-${{ matrix.target }}
-          path: |
-            packages/rahulchaube-cli/bin/rahulchaube-native${{ matrix.suffix }}
-            packages/rahulchaube-cli/bin/blyxc${{ matrix.suffix }}
-            packages/rahulchaube-cli/bin/rc${{ matrix.suffix }}
+          path: native/rc${{ matrix.suffix }}
           if-no-files-found: error
 
       - name: Verify the published VSIX in desktop VS Code

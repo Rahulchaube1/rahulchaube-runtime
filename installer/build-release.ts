@@ -16,7 +16,7 @@ import { resolve, join } from "node:path";
 import { execFileSync } from "node:child_process";
 
 import { tmpdir } from "node:os";
-import cliPackage from "../packages/rahulchaube-cli/package.json";
+
 
 export interface TargetConfig {
   name: string;
@@ -34,51 +34,19 @@ export const RELEASE_TARGETS: TargetConfig[] = [
   { name: "darwin-arm64", os: "darwin", arch: "arm64", archiveName: "runtime-darwin-arm64.tar.gz", isZip: false },
 ];
 
-function stageNativeTools(target: TargetConfig, nativeDir: string, stageCli: string) {
-  const suffix = target.os === "windows" ? ".exe" : "";
-  for (const tool of ["rahulchaube-native", "blyxc"]) {
-    const bin = join(stageCli, "bin", tool);
-    rmSync(bin + (suffix ? "" : ".exe"), { force: true });
-    cpSync(resolve(nativeDir, "native-" + target.name, tool + suffix), bin + suffix);
-    chmodSync(bin + suffix, 0o755);
-  }
-}
-
 export function buildReleaseArtifacts(outputDir: string = "dist", nativeDir: string = ".native-artifacts"): void {
   const rootDir = process.cwd();
   const distPath = resolve(rootDir, outputDir);
   mkdirSync(distPath, { recursive: true });
   const stagingDir = mkdtempSync(join(tmpdir(), "rahul-release-"));
 
-  // Prepare staged file layout
-  const stageRuntime = join(stagingDir, "runtime");
-  const stageCli = join(stagingDir, "packages", "rahulchaube-cli");
+  const version = readFileSync(join(rootDir, "native/VERSION"), "utf8").trim();
   const stageBin = join(stagingDir, "bin");
-
-  mkdirSync(stageRuntime, { recursive: true });
-  mkdirSync(stageCli, { recursive: true });
-  mkdirSync(stageBin, { recursive: true });
-
-  // Copy runtime engine and CLI package into staging
-  cpSync(join(rootDir, "runtime"), stageRuntime, { recursive: true });
-  const cliSource = join(rootDir, "packages", "rahulchaube-cli");
-  for (const file of ["src", "blyx", "package.json", "README.md"]) {
-    cpSync(join(cliSource, file), join(stageCli, file), { recursive: true });
-  }
-  mkdirSync(join(stageCli, "bin"));
-  for (const name of ["rahulchaube.ts", "package-cli.ts"]) {
-    cpSync(join(cliSource, "bin", name), join(stageCli, "bin", name));
-  }
-  cpSync(join(rootDir, "installer/Blyx-LICENSE-MIT"), join(stageCli, "Blyx-LICENSE-MIT"));
+  mkdirSync(stageBin);
   cpSync(join(rootDir, "LICENSE.md"), join(stagingDir, "LICENSE.md"));
-  cpSync(join(rootDir, "licenses"), join(stagingDir, "licenses"), { recursive: true });
-
-  writeFileSync(join(stageBin, "rahulchaube.cmd"), [
-    "@echo off", String.raw`"%~dp0..\packages\rahulchaube-cli\bin\rahulchaube-native.exe" %*`, "exit /b %errorlevel%", ""
-  ].join("\r\n"));
-  writeFileSync(join(stageBin, "rahulchaube"), [
-    "#!/bin/sh", 'exec "${0%/*}/../packages/rahulchaube-cli/bin/rahulchaube-native" "$@"', ""
-  ].join("\n"), { mode: 0o755 });
+  cpSync(join(rootDir, "licenses"), join(stagingDir, "licenses"), {
+    recursive: true, filter: path => !path.endsWith("Bun-notices.md"),
+  });
 
   // Finish every platform archive before replacing any previously built distribution.
   const complete = mkdtempSync(join(distPath, ".build-"));
@@ -88,7 +56,6 @@ export function buildReleaseArtifacts(outputDir: string = "dist", nativeDir: str
   try {
     for (const t of RELEASE_TARGETS) {
       const archivePath = join(complete, t.archiveName);
-      stageNativeTools(t, nativeDir, stageCli);
       const rc = t.isZip ? "rc.exe" : "rc";
       rmSync(join(stageBin, t.isZip ? "rc" : "rc.exe"), { force: true });
       cpSync(resolve(nativeDir, "native-" + t.name, rc), join(stageBin, rc));
@@ -119,9 +86,9 @@ export function buildReleaseArtifacts(outputDir: string = "dist", nativeDir: str
 
   // Write version.json
   const downloadUrl = "https://raw.githubusercontent.com/Rahulchaube1/rahulchaube-runtime/refs/heads/main/dist";
-  writeFileSync(join(distPath, "VERSION"), cliPackage.version + "\n");
+  writeFileSync(join(distPath, "VERSION"), version + "\n");
   const versionJson = {
-    version: cliPackage.version,
+    version: version,
     channel: "stable",
     launcher: "rc",
     release: "https://www.rahulchaube.space/releases",

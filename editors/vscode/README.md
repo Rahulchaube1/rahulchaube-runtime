@@ -1,27 +1,19 @@
-# RahulChaube Runtime for VS Code
+# RC Runtime for VS Code
 
-Run, watch and hot reload JavaScript or TypeScript with **RC Runtime** from the editor. Output and errors appear in the integrated task terminal.
-
-1. Install RahulChaube Runtime 1.2.0 or later and Bun on the machine where your workspace runs. [Runtime downloads](https://www.rahulchaube.space/download)
-2. Open a saved JS, JSX, TS or TSX file in a trusted workspace.
-3. Click the eye icon or choose **RC Runtime: Watch Current File**. Save a change in the entry file or an imported module to restart the app.
+Install RC Runtime 1.3 and open a saved JavaScript or TypeScript file in a trusted workspace. The extension locates the native `rc` executable on PATH or under `~/.rc-runtime/bin`. Set **RC Runtime: Executable Path** for a custom install. [Download RC Runtime and the VSIX](https://www.rahulchaube.space/download#vscode)
 
 | Command | Behavior |
 | --- | --- |
-| **RC Runtime: Run Current File** | Starts the active file once. |
-| **RC Runtime: Watch Current File** | Restarts the app with fresh process state after a saved module changes. |
-| **RC Runtime: Hot Reload Current File** | Re-evaluates changed modules in the running process. Values stored on `globalThis` can survive reloads. |
-| **RC Runtime: Stop Running Task** | Stops the task for the active file or lets you choose a running RC task. |
-
-Commands save pending edits to the entry file before launch. The working directory is the containing workspace folder. Single-file windows use the file’s directory. The extension also supports MJS, CJS, MTS and CTS.
-
-For a custom installation, set **RC Runtime: Executable Path** to the absolute path to the CLI. On Windows the standard native executable is under `%USERPROFILE%\.rahulchaube\packages\rahulchaube-cli\bin\rahulchaube-native.exe`.
-
-Download the VSIX and use **Extensions: Install from VSIX…** for manual installation. [Editor downloads](https://www.rahulchaube.space/download#vscode)
+| Run Current File | Runs the entry with `rc run`. |
+| Watch Current File | Restarts on changes to the entry or its imports. |
+| Test Current File | Runs the active file with `rc test`. |
+| Stop Running Task | Stops the selected runtime task. |
 
 ## Connect with Rahul Chaube
 
 [Portfolio](https://www.rahulchaube1.com/) · [GitHub](https://github.com/Rahulchaube1) · [LinkedIn](https://www.linkedin.com/in/rahulchaube1) · [Hugging Face](https://huggingface.co/oncody) · [X](https://x.com/RahulChaube_) · [EverestQ](https://www.everestqai.com/) · [Contact](https://www.rahulchaube1.com/contact)
+
+### Rahul’s other projects
 
 [Blyx website](https://www.blyx-lang.space/) · [BlyxTorch](https://www.blyx-lang.space/packages/blyxtorch) · [Handbook](https://doc.blyx-lang.space/) · [Community](https://www.blyx-lang.space/community)
 

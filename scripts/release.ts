@@ -10,10 +10,6 @@ import { join } from "node:path";
 import { execFileSync } from "node:child_process";
 
 const root = join(import.meta.dir, "..");
-const pkg = JSON.parse(
-  readFileSync(join(root, "packages", "rahulchaube-cli", "package.json"), "utf8"),
-) as { version: string };
-
-const tag = `v${pkg.version}`;
+const tag = "v" + readFileSync(join(root, "native/VERSION"), "utf8").trim();
 execFileSync("git", ["tag", tag], { cwd: root, stdio: "inherit" });
 console.log(`[release] Tagged ${tag}. Push with: git push origin ${tag}`);

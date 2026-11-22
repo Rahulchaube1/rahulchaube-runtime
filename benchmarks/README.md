@@ -1,44 +1,17 @@
-# Benchmarks
+# Comparing RC Runtime
 
-RahulChaube Runtime tracks performance with a reference benchmark suite.
-
-## Run locally
+On Linux or macOS, place RC Runtime, Bun, Node.js 24+ and npm on PATH. Run the comparison with Python 3.9 or newer.
 
 ```sh
-cd benchmarks
-rahulchaube install
-rahulchaube run suite.bench.ts
+python3 benchmarks/compare.py --samples 25 > results.json
 ```
 
-The suite measures real, machine-local timings for representative workloads
-(array ops, object allocation, string concat, recursion).
+Pass `--rc`, `--bun`, `--node` or `--npm` to select a specific executable. The harness verifies the exact output and exit status of each program. Each engine gets three warmups followed by interleaved fresh processes in a seeded random order. The OS file cache stays warm. Elapsed time includes process startup and exit.
 
-## Reporting
+The programs print a constant, import a typed value from a second file, or perform one million integer additions. npm runs each program as a package script using Node. These workloads measure script execution. They do not exercise dependency resolution, package installation or sustained HTTP traffic.
 
-- Save results to `benchmarks/data/` as JSON.
-- **Never publish numbers as project-wide claims** unless they come from a
-  standardized, repeatable environment.
-- `benchmarks/data/example.json` is **placeholder** data only — it is clearly
-  labeled and must not be cited as a result.
+The JSON includes the OS, CPU, versions, sample times, median, p95, binary size and median per-run peak resident memory from `wait4`. Binary size describes the executable file only. Peak RSS for a package script is the operating system’s per-process high-water measurement. Results depend on the hardware and software versions.
 
-## Website
+[Published measurements](https://www.rahulchaube.space/benchmarks) · [Raw JSON](https://www.rahulchaube.space/benchmarks.json)
 
-The `/benchmarks` page renders charts **only when real data is present**, and
-shows a clear "example data" label for placeholders. We do not claim
-RahulChaube Runtime is faster than Bun or Node unless benchmarks demonstrate it.
-
-### Compare installed CLI startup
-
-Use the two installed launchers on the same machine. For example, measure 50 fresh CLI processes per release with hyperfine. Repeat with `--help` or `run ./hello.ts` to compare other workloads.
-
-```sh
-hyperfine --shell=none --warmup 5 --runs 50 '/path/to/old/bin/rahulchaube --version' '/path/to/new/bin/rahulchaube --version'
-```
-
-## Connect with Rahul Chaube
-
-[Portfolio](https://www.rahulchaube1.com/) · [GitHub](https://github.com/Rahulchaube1) · [LinkedIn](https://www.linkedin.com/in/rahulchaube1) · [Hugging Face](https://huggingface.co/oncody) · [X](https://x.com/RahulChaube_) · [EverestQ](https://www.everestqai.com/) · [Contact](https://www.rahulchaube1.com/contact)
-
-[Blyx website](https://www.blyx-lang.space/) · [BlyxTorch](https://www.blyx-lang.space/packages/blyxtorch) · [Handbook](https://doc.blyx-lang.space/) · [Community](https://www.blyx-lang.space/community)
-
-Support Rahul’s open-source work through [GitHub Sponsors](https://github.com/sponsors/Rahulchaube1) or [Buy Me a Coffee](https://buymeacoffee.com/rahulchaube).
+The older Bun-hosted tooling microbenchmarks remain available with `bun benchmarks/runner.ts`.

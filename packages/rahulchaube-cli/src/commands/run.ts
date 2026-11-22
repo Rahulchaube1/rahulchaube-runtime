@@ -26,7 +26,6 @@ async function runLive(mode: "--watch" | "--hot", path: string, args: string[]):
 }
 
 export async function run(args: string[], flags: Record<string, unknown>): Promise<number> {
-  if (args[0]?.endsWith(".blyx")) return (await import("./blyx.ts")).blyxFile("run", args, flags);
   const target = args[0];
   if (!target) {
     log.error("No script or file target specified.");

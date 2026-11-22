@@ -5,6 +5,7 @@ import (
 	"embed"
 	"errors"
 	"fmt"
+	"io"
 	"io/fs"
 	"os"
 	"path/filepath"
@@ -27,8 +28,8 @@ func source(name string) string {
 
 const help = `RC Runtime (RahulChaube Runtime)
 
-  rc run <file> [--] [arguments...]    Run JavaScript or TypeScript
-  rc build <file> --outfile <file>     Bundle an application or ES module
+  rc run [--watch] <file> [--] [args...]    Run JavaScript or TypeScript
+  rc build [--watch] <file> --outfile <file>     Bundle an application or ES module
   rc test [files...]                   Run tests in isolated JS contexts
   rc init <directory>                  Create an RC Web application with tests
   rc install [--offline]               Install pinned ES modules from rc.json
@@ -50,6 +51,15 @@ func command(args []string) error {
 	}
 	tail := args[1:]
 	switch args[0] {
+	case "__run-compiled":
+		if len(tail) < 1 {
+			return errors.New("missing script name")
+		}
+		data, err := io.ReadAll(os.Stdin)
+		if err != nil {
+			return err
+		}
+		return evalProgram(tail[0], string(data), tail[1:])
 	case "__activate":
 		if len(tail) != 2 {
 			return errors.New("expected staging and installation directories")
@@ -62,17 +72,31 @@ func command(args []string) error {
 	case "doctor":
 		fmt.Printf("RC Runtime v%s\nPlatform %s/%s\nJavaScript QuickJS-NG\nCompiler esbuild\n", version, runtime.GOOS, runtime.GOARCH)
 	case "run":
+		live := len(tail) > 0 && tail[0] == "--watch"
+		if live {
+			tail = tail[1:]
+		}
 		if len(tail) == 0 {
-			return errors.New("usage: rc run <file> [--] [arguments...]")
+			return errors.New("usage: rc run [--watch] <file> [--] [args...]")
 		}
 		argv := tail[1:]
 		if len(argv) > 0 && argv[0] == "--" {
 			argv = argv[1:]
 		}
+		if live {
+			return watch(tail[0], "", argv)
+		}
 		return execute(tail[0], argv, false)
 	case "build":
+		live := len(tail) > 0 && tail[0] == "--watch"
+		if live {
+			tail = tail[1:]
+		}
 		if len(tail) != 3 || tail[1] != "--outfile" {
-			return errors.New("usage: rc build <file> --outfile <file>")
+			return errors.New("usage: rc build [--watch] <file> --outfile <file>")
+		}
+		if live {
+			return watch(tail[0], tail[2], nil)
 		}
 		_, err := bundle(tail[0], tail[2], false)
 		return err

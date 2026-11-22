@@ -40,6 +40,10 @@ func execute(file string, args []string, test bool) error {
 	if err != nil {
 		return err
 	}
+	return evalProgram(file, code, args)
+}
+
+func evalProgram(file, code string, args []string) error {
 	runtime.LockOSThread()
 	defer runtime.UnlockOSThread()
 	rt := js.NewRuntime()

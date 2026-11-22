@@ -23,22 +23,14 @@ async function resolveRuntime(configured) {
     }
     return configured;
   }
-  const installDir = process.env.RAHULCHAUBE_INSTALL_DIR || path.join(homedir(), ".rahulchaube");
+  const installDir = process.env.RC_INSTALL_DIR || path.join(homedir(), ".rc-runtime");
   const dirs = (process.env.PATH || "").split(path.delimiter).filter(dir => path.isAbsolute(dir));
-  const found = await Promise.all([...new Set(dirs)].map(async dir => {
-    const command = path.join(dir, windows ? "rahulchaube.exe" : "rahulchaube");
-    if (await executable(command)) return command;
-    // Windows installations expose a .cmd shim on PATH. Run its native sibling directly.
-    if (windows && await executable(path.join(dir, "rahulchaube.cmd"))) {
-      const native = path.join(dir, "../packages/rahulchaube-cli/bin/rahulchaube-native.exe");
-      if (await executable(native)) return native;
-    }
-  }));
-  const command = found.find(Boolean);
-  if (command) return command;
-  const fallback = path.join(installDir, "packages/rahulchaube-cli/bin", windows ? "rahulchaube-native.exe" : "rahulchaube-native");
-  if (await executable(fallback)) return fallback;
-  throw new Error("Install RahulChaube Runtime 1.2.0 or later, or set RC Runtime: Executable Path.");
+  dirs.push(path.join(installDir, "bin"));
+  for (const dir of new Set(dirs)) {
+    const file = path.join(dir, windows ? "rc.exe" : "rc");
+    if (await executable(file)) return file;
+  }
+  throw new Error("Install RC Runtime 1.3 or set RC Runtime: Executable Path.");
 }
 
 module.exports = { resolveRuntime, supportsFile };

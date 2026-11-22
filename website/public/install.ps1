@@ -29,7 +29,7 @@ function Install-RCRuntime {
     if ($version -notmatch '^\d+\.\d+\.\d+$' -or $digest -notmatch '^[0-9a-f]{64}$') { throw "Invalid release metadata" }
     if ($requested -and $requested -ne $version) { throw "This installer provides v$version" }
     if ($dryRun) { Write-Output "RC Runtime v$version is available for win-x64"; return }
-    $dest = if ($env:RAHULCHAUBE_INSTALL_DIR) { $env:RAHULCHAUBE_INSTALL_DIR } else { Join-Path $HOME ".rahulchaube" }
+    $dest = if ($env:RC_INSTALL_DIR) { $env:RC_INSTALL_DIR } elseif ($env:RAHULCHAUBE_INSTALL_DIR) { $env:RAHULCHAUBE_INSTALL_DIR } else { Join-Path $HOME ".rc-runtime" }
     $dest = [IO.Path]::GetFullPath($dest)
     $stage = Join-Path $dest (".install-" + [guid]::NewGuid())
     [IO.Directory]::CreateDirectory($stage) | Out-Null
@@ -51,7 +51,7 @@ function Install-RCRuntime {
     } finally { Remove-Item -LiteralPath $stage -Recurse -Force }
     $bin = Join-Path $dest "bin"
     Write-Output "Installed RC Runtime v$version to $bin"
-    if (-not $env:RAHULCHAUBE_INSTALL_DIR -and -not $requested) {
+    if (-not $env:RC_INSTALL_DIR -and -not $env:RAHULCHAUBE_INSTALL_DIR -and -not $requested) {
         $userPath = [Environment]::GetEnvironmentVariable("Path", "User")
         if (($userPath -split ";") -notcontains $bin) { [Environment]::SetEnvironmentVariable("Path", "$bin;$userPath", "User") }
         if (($env:Path -split ";") -notcontains $bin) { $env:Path = "$bin;$env:Path" }

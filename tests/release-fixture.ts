@@ -8,9 +8,7 @@ export function nativeFixture(): string {
   for (const t of RELEASE_TARGETS) {
     const dir = join(root, "native-" + t.name);
     mkdirSync(dir);
-    for (const tool of ["blyxc", "rahulchaube-native", "rc"]) {
-      writeFileSync(join(dir, tool + (t.isZip ? ".exe" : "")), t.name + "/" + tool);
-    }
+    writeFileSync(join(dir, t.isZip ? "rc.exe" : "rc"), t.name + "/rc");
   }
   return root;
 }

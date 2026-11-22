@@ -14,15 +14,15 @@ import (
 
 // compile both installed libraries and the entry into one ESM graph, preserving
 // top-level await and static/dynamic literal imports without a JS host process.
-func bundle(entry, outfile string, test bool) (string, error) {
+func buildOptions(entry, outfile string, test bool) (api.BuildOptions, error) {
 	abs, err := filepath.Abs(entry)
 	if err != nil {
-		return "", err
+		return api.BuildOptions{}, err
 	}
 	if info, err := os.Stat(abs); err != nil {
-		return "", err
+		return api.BuildOptions{}, err
 	} else if !info.Mode().IsRegular() {
-		return "", fmt.Errorf("expected a file: %s", entry)
+		return api.BuildOptions{}, fmt.Errorf("expected a file: %s", entry)
 	}
 	options := api.BuildOptions{
 		EntryPoints: []string{abs}, Bundle: true, Format: api.FormatESModule, Platform: api.PlatformNeutral,
@@ -46,7 +46,7 @@ func bundle(entry, outfile string, test bool) (string, error) {
 	}
 	configDir, config, err := findConfig(filepath.Dir(abs))
 	if err != nil {
-		return "", err
+		return api.BuildOptions{}, err
 	}
 	if config != nil {
 		options.Alias = make(map[string]string, len(config.Dependencies))
@@ -62,9 +62,17 @@ func bundle(entry, outfile string, test bool) (string, error) {
 	if outfile != "" {
 		options.Outfile, err = filepath.Abs(outfile)
 		if err != nil {
-			return "", err
+			return api.BuildOptions{}, err
 		}
 		options.Write = true
+	}
+	return options, nil
+}
+
+func bundle(entry, outfile string, test bool) (string, error) {
+	options, err := buildOptions(entry, outfile, test)
+	if err != nil {
+		return "", err
 	}
 	result := api.Build(options)
 	if len(result.Errors) > 0 {
