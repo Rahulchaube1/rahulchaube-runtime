@@ -24,7 +24,7 @@ Run it from that directory.
 rc run hello.ts -- Rahul
 ```
 
-The terminal prints `Hello, Rahul!`. Run it again without an argument to see `Hello, world!`. The type annotation is removed during execution. If you need type diagnostics, use a TypeScript checker with the declarations from an RC starter.
+The terminal prints `Hello, Rahul!`. Run it again without an argument to see `Hello, world!`. The type annotation is removed during execution. Run `rc check hello.ts` to check the file with RC’s bundled TypeScript declarations. [Type checking](/docs/check)
 
 ## Continue with HTTP
 

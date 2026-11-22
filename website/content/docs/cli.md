@@ -7,6 +7,17 @@
 
 For example, `rc run hello.ts -- "two words" --verbose` passes two values into the program. Use a relative or absolute entry filename.
 
+## Format and check
+
+| Command | Behavior |
+| --- | --- |
+| `rc fmt [paths...]` | Format JS, TS, JSX or TSX in the selected files or directories. |
+| `rc fmt --check [paths...]` | Report files that need formatting and exit with a failure status if any differ. |
+| `rc check [files...]` | Check project or selected source types using the nearest tsconfig. |
+| `rc check -p tsconfig.json` | Use a specific project configuration. |
+
+[Formatting guide](/docs/fmt) · [Type checking guide](/docs/check)
+
 ## Build and test
 
 | Command | Behavior |

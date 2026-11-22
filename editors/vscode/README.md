@@ -1,10 +1,10 @@
 # RC Runtime for VS Code
 
-Run, watch and test JavaScript or TypeScript from the editor using Rahul Chaube’s open-source RC Runtime.
+Format, type-check, run, watch and test JavaScript or TypeScript from the editor using Rahul Chaube’s open-source RC Runtime.
 
 ## Install
 
-1. Install RC Runtime 1.3 on the machine where your workspace runs. Open a terminal there and run `rc --version`. [Runtime downloads](https://www.rahulchaube.space/download)
+1. Install RC Runtime 1.4 or newer on the machine where your workspace runs. Open a terminal there and run `rc --version`. [Runtime downloads](https://www.rahulchaube.space/download)
 2. Download the editor extension, open the Extensions view, select **Install from VSIX…** from its menu and choose the downloaded file. The same package works with desktop VS Code, VSCodium and code-server. [Official VSIX](https://www.rahulchaube.space/download#vscode)
 3. Open a trusted workspace and save a JavaScript or TypeScript file. Open the Command Palette and choose **RC Runtime: Run Current File**.
 
@@ -17,6 +17,8 @@ The extension finds `rc` on PATH or under `~/.rc-runtime/bin`. For a custom inst
 | Run Current File | Runs the entry with `rc run`. |
 | Watch Current File | Restarts on changes to the entry or its imports. |
 | Test Current File | Runs the active file with `rc test`. |
+| Format Current File | Saves and formats the active source file with `rc fmt`. |
+| Check Current File | Runs `rc check` using the nearest project configuration and prints diagnostics in the task terminal. |
 | Stop Running Task | Stops the selected runtime task. |
 
 ## Connect with Rahul Chaube

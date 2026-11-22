@@ -7,10 +7,10 @@
   "accent": "#199050",
   "accentHex": 1675344,
   "dark": {
-    "background": "#000000",
-    "surface": "#060a07",
-    "text": "#eff7ed",
-    "muted": "#b0c0b3"
+    "background": "#0d1117",
+    "surface": "#151b23",
+    "text": "#f0f6fc",
+    "muted": "#b1bac4"
   },
   "semantic": {
     "success": "#16a34a",

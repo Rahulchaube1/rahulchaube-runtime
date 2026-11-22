@@ -26,8 +26,10 @@ async function run() {
   const command = name => vscode.commands.executeCommand("rcRuntime." + name);
   const result = () => existsSync(marker) ? readFileSync(marker, "utf8") : "";
   const tasks = () => vscode.tasks.taskExecutions.filter(x => x.task.definition.type === "rahulchaube-runtime");
+  const exits = new Map();
   const ended = vscode.tasks.onDidEndTaskProcess(event => {
     if (event.execution.task.definition.type === "rahulchaube-runtime") {
+      exits.set(event.execution.task.definition.mode, event.exitCode);
       console.log("RC Runtime task ended", event.execution.task.name, event.exitCode);
     }
   });
@@ -45,6 +47,19 @@ async function run() {
   try {
     await command("run");
     await until(() => result() === "1" && tasks().length === 0, "one-shot run to finish");
+    const typed = join(dir, "format me.ts");
+    writeFileSync(typed, 'export const price:number="wrong";');
+    const typedDoc = await vscode.workspace.openTextDocument(typed);
+    await vscode.window.showTextDocument(typedDoc);
+    await command("fmt");
+    await until(() => exits.get("fmt") === 0 && tasks().length === 0, "formatter task");
+    assert.equal(readFileSync(typed, "utf8").trim(), 'export const price: number = "wrong";');
+    await command("check");
+    await until(() => exits.get("check") === 1 && tasks().length === 0, "type error");
+    writeFileSync(typed, "export const price: number = 21;");
+    await command("check");
+    await until(() => exits.get("check") === 0 && tasks().length === 0, "corrected type check");
+    await vscode.window.showTextDocument(doc);
     await exerciseLive("watch", "2");
     writeFileSync(entry, 'import {test} from "rc:test"; import {writeText} from "rc:fs"; test("editor", () => writeText("output.txt", "tested"));');
     await command("test");
@@ -53,6 +68,6 @@ async function run() {
     ended.dispose();
     for (const task of tasks()) task.terminate();
   }
-  console.log("RC Runtime packaged VSIX ran, watched, tested and stopped real tasks.");
+  console.log("RC Runtime packaged VSIX formatted, checked, ran, watched, tested and stopped real tasks.");
 }
 module.exports = { run };

@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, expect, test } from "bun:test";
 import { createHash } from "node:crypto";
-import { execFileSync, spawn } from "node:child_process";
+import { execFileSync, spawn, spawnSync } from "node:child_process";
 import { once } from "node:events";
 import { createInterface } from "node:readline";
 import {
@@ -162,4 +162,59 @@ test("the public pinned-module example matches the library shipped by the websit
   writeFileSync(join(app, "main.ts"), snippets("package-manager", "ts")[0]);
   expect(run(app, "install", "--offline")).toContain("Verified 1");
   expect(run(app, "run", "main.ts").trim()).toBe("Hello, Ada! — powered by RC Runtime\n42");
+});
+
+test("the six command guides match the released CLI", () => {
+  const project = join(tmp, "commands");
+  mkdirSync(project);
+  writeFileSync(join(project, "price.ts"), snippets("fmt", "ts")[0]);
+  expect(spawnSync(rc, ["fmt", "--check", "price.ts"], { cwd: project }).status).toBe(1);
+  run(project, "fmt", "price.ts");
+  run(project, "fmt", "--check", "price.ts");
+  expect(run(project, "run", "price.ts").trim()).toBe("42");
+
+  writeFileSync(join(project, "price.ts"), snippets("check", "ts")[0]);
+  const diagnostic = spawnSync(rc, ["check", "price.ts"], { cwd: project, encoding: "utf8" });
+  expect(diagnostic.status).toBe(1);
+  expect(diagnostic.stderr).toContain("TS2322");
+  writeFileSync(join(project, "price.ts"), snippets("check", "ts")[0].replace('"21"', "21"));
+  expect(run(project, "check", "price.ts")).toContain("Checked 1 source file");
+
+  writeFileSync(join(project, "answer.ts"), snippets("build", "ts")[0]);
+  run(project, "build", "answer.ts", "--outfile", "dist/answer.mjs");
+  expect(run(project, "run", "dist/answer.mjs").trim()).toBe("42");
+  writeFileSync(join(project, "math.test.ts"), snippets("test", "ts")[0]);
+  expect(run(project, "test", "math.test.ts")).toContain("pass awaits a result");
+  writeFileSync(join(project, "hello.ts"), snippets("run", "ts")[0]);
+  expect(run(project, "run", "hello.ts", "--", "Rahul").trim()).toBe("Hello, Rahul!");
+
+  const manifest = JSON.parse(snippets("package-manager", "json")[0]);
+  const { sha256 } = manifest.dependencies.hello;
+  const modules = join(project, ".rc", "modules");
+  mkdirSync(modules, { recursive: true });
+  copyFileSync(join(website, "public/modules/hello-1.0.0.mjs"), join(modules, sha256 + ".mjs"));
+  writeFileSync(join(project, "rc.json"), JSON.stringify(manifest));
+  expect(run(project, "install", "--offline")).toContain("Verified 1 modules");
+}, 25000);
+
+test("each command chart is backed by complete samples from this release", () => {
+  const report = JSON.parse(readFileSync(join(website, "public/toolkit-benchmarks.json"), "utf8"));
+  const names = guides.filter(guide => guide.section === "commands").map(guide => guide.slug);
+  expect(Object.keys(report.commands)).toEqual(names);
+  expect(report.version).toBe(run(tmp, "--version").trim());
+  expect(report.samples).toBeGreaterThanOrEqual(11);
+  expect(report.warmups).toBeGreaterThan(0);
+  for (const name of names) {
+    const { rows } = report.commands[name];
+    expect(rows.map(row => row.size)).toEqual([1, 8, 32]);
+    for (const row of rows) {
+      const samples = [...row.samples_ms].sort((a, b) => a - b);
+      expect(samples).toHaveLength(report.samples);
+      expect(samples[0]).toBeGreaterThan(0);
+      const middle = Math.floor(samples.length / 2);
+      const median = samples.length % 2 ? samples[middle] : (samples[middle - 1] + samples[middle]) / 2;
+      expect(row.median_ms).toBeCloseTo(median, 2);
+      expect(row.p95_ms).toBe(samples[Math.ceil(samples.length * 0.95) - 1]);
+    }
+  }
 });

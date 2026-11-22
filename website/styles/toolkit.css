@@ -1,0 +1,273 @@
+.desktop-links a[aria-current] {
+  color: var(--text);
+  text-decoration: underline;
+  text-decoration-color: var(--active);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 12px;
+}
+.text-link,
+.prose a,
+.breadcrumbs a:hover,
+.side-group a:hover {
+  color: var(--link);
+}
+.text-link:hover,
+.prose a:hover {
+  color: #a5d6ff;
+}
+.command-catalog {
+  padding-block: clamp(46px, 7vw, 94px);
+}
+.toolkit-heading {
+  max-width: 720px;
+}
+.toolkit-heading h2 {
+  margin: 0;
+  font-size: clamp(35px, 4.6vw, 66px);
+  letter-spacing: -0.06em;
+  line-height: 1.05;
+  font-weight: 620;
+  text-wrap: balance;
+}
+.toolkit-heading h2 span {
+  color: var(--brand-lime);
+}
+.toolkit-heading p,
+.tool-description p {
+  color: var(--muted);
+}
+.toolkit-heading p {
+  margin: 15px 0 28px;
+  max-width: 560px;
+}
+.command-jumps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  padding: 5px 0 22px;
+}
+.command-jumps a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 15px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--text);
+  font: 500 13px/1.5 var(--mono);
+}
+.command-jumps svg {
+  color: var(--icon);
+}
+.command-jumps a:hover {
+  background: var(--raised);
+  border-color: var(--subtle);
+}
+.tool-sections {
+  border-top: 1px solid var(--line);
+}
+.tool-section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.98fr);
+  gap: clamp(26px, 7vw, 100px);
+  align-items: center;
+  padding-block: clamp(32px, 4.5vw, 64px);
+  border-bottom: 1px solid var(--line);
+  scroll-margin-top: 20px;
+}
+.tool-description {
+  min-width: 0;
+}
+.tool-signature {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--icon);
+  font: 500 13px/1.4 var(--mono);
+}
+.tool-description h2,
+.tool-description h3 {
+  margin: 10px 0 8px;
+  font-size: clamp(25px, 2.85vw, 39px);
+  line-height: 1.12;
+  letter-spacing: -0.047em;
+  font-weight: 620;
+}
+.tool-description p {
+  font-size: 15px;
+  line-height: 1.65;
+  margin: 0 0 17px;
+  max-width: 520px;
+}
+.tool-command {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  max-width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 10px 13px;
+  background: var(--console-bg);
+}
+.tool-command code {
+  min-width: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font: 13px/1.6 var(--mono);
+  color: var(--console-text);
+}
+.tool-command .copy-button {
+  flex-shrink: 0;
+  margin: 0;
+}
+.tool-description .text-link,
+.command-proof .text-link {
+  margin-top: 13px;
+}
+.command-chart {
+  margin: 0;
+  min-width: 0;
+  padding: clamp(15px, 2.5vw, 27px);
+  border: 1px solid var(--console-line);
+  border-radius: 10px;
+  background: var(--panel);
+}
+.chart-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.chart-top figcaption {
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 620;
+  line-height: 1.4;
+}
+.chart-toggle {
+  display: inline-flex;
+  flex-shrink: 0;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  overflow: hidden;
+}
+.chart-toggle button {
+  color: var(--muted);
+  padding: 3px 8px;
+  font: 12px/1.5 var(--mono);
+}
+.chart-toggle button[aria-pressed="true"] {
+  background: var(--raised);
+  color: var(--text);
+  box-shadow: inset 0 -2px var(--active);
+}
+.chart-toggle button:focus-visible {
+  outline-offset: -2px;
+}
+.bar-table {
+  width: 100%;
+  margin: 19px 0 10px;
+  border-collapse: collapse;
+  font: 12px/1.5 var(--mono);
+}
+.bar-table th,
+.bar-table td {
+  padding: 6px 0;
+}
+.bar-table th {
+  text-align: left;
+  font-weight: 400;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.bar-table .bar-cell {
+  width: 100%;
+  padding-inline: 12px;
+}
+.bar-track {
+  height: 12px;
+  background: repeating-linear-gradient(to right, var(--line) 0 1px, transparent 1px 25%);
+}
+.bar-value {
+  height: 100%;
+  min-width: 2px;
+  border-radius: 0 3px 3px 0;
+  background: linear-gradient(90deg, #31885c, var(--brand-lime));
+}
+.bar-table .chart-value {
+  text-align: right;
+  white-space: nowrap;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.chart-caption {
+  margin: 9px 0 0;
+  color: var(--subtle);
+  font: 11px/1.45 var(--mono);
+}
+.toolkit-method {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  padding-top: 16px;
+  color: var(--subtle);
+  font: 12px/1.5 var(--mono);
+}
+.command-intro {
+  padding-bottom: 0;
+}
+.command-intro + .command-catalog {
+  padding-top: 12px;
+}
+.command-proof {
+  margin-top: 42px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+.command-proof h2 {
+  font-size: 25px;
+  letter-spacing: -0.035em;
+  font-weight: 620;
+}
+.command-proof > p {
+  color: var(--muted);
+  line-height: 1.7;
+  margin: 12px 0;
+}
+.command-proof figure {
+  margin: 20px 0;
+}
+@media (min-width: 981px) and (max-width: 1180px) {
+  .desktop-links {
+    gap: 15px;
+  }
+  .main-nav {
+    gap: 19px;
+  }
+}
+@media (max-width: 760px) {
+  .tool-section {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .command-jumps a {
+    padding: 6px 11px;
+  }
+  .toolkit-method {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+.chart-fixture {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 7px 0 15px;
+}

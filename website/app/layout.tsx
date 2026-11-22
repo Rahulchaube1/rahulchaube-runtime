@@ -5,6 +5,7 @@ import "./globals.css";
 import "@/styles/home.css";
 import "@/styles/handbook.css";
 import "@/styles/pages.css";
+import "@/styles/toolkit.css";
 import "@/styles/responsive.css";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";

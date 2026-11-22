@@ -1,12 +1,12 @@
 {
   "name": "rahulchaube-runtime",
   "displayName": "RC Runtime",
-  "description": "Run JavaScript and TypeScript with RC Runtime. Watch imported files and run RC tests from the editor.",
-  "version": "1.1.1",
+  "description": "Format, type-check, run, watch and test JavaScript and TypeScript using the native RC Runtime.",
+  "version": "1.2.0",
   "publisher": "RahulChaube",
   "license": "MIT",
   "icon": "icon.png",
-  "galleryBanner": {"color": "#000000", "theme": "dark"},
+  "galleryBanner": {"color": "#0d1117", "theme": "dark"},
   "homepage": "https://www.rahulchaube.space/docs/editor",
   "repository": {"type": "git", "url": "https://github.com/Rahulchaube1/rahulchaube-runtime.git", "directory": "editors/vscode"},
   "bugs": {"url": "https://github.com/Rahulchaube1/rahulchaube-runtime/issues"},
@@ -22,13 +22,15 @@
       "required": ["file", "mode"],
       "properties": {
         "file": {"type": "string", "description": "URI of the saved JavaScript or TypeScript file."},
-        "mode": {"type": "string", "enum": ["run", "watch", "test"], "description": "RC Runtime execution mode."}
+        "mode": {"type": "string", "enum": ["run", "watch", "test", "fmt", "check"], "description": "RC Runtime execution mode."}
       }
     }],
     "commands": [
       {"command": "rcRuntime.run", "category": "RC Runtime", "title": "Run Current File", "icon": "$(play)"},
       {"command": "rcRuntime.watch", "category": "RC Runtime", "title": "Watch Current File", "icon": "$(eye)"},
       {"command": "rcRuntime.test", "category": "RC Runtime", "title": "Test Current File", "icon": "$(beaker)"},
+      {"command": "rcRuntime.fmt", "category": "RC Runtime", "title": "Format Current File", "icon": "$(symbol-operator)"},
+      {"command": "rcRuntime.check", "category": "RC Runtime", "title": "Check Current File", "icon": "$(check)"},
       {"command": "rcRuntime.stop", "category": "RC Runtime", "title": "Stop Running Task", "icon": "$(debug-stop)"}
     ],
     "menus": {

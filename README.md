@@ -1,8 +1,8 @@
 # RC Runtime (RahulChaube Runtime)
 
-RC Runtime is Rahul Chaube’s open-source JavaScript and TypeScript runtime. One native executable runs scripts, bundles modules, tests applications, and serves HTTP with RC Web. The release includes its JavaScript engine and TypeScript compiler. You can run `rc` on a machine without Node.js, npm, Bun, or a GitHub account.
+RC Runtime is Rahul Chaube’s open-source JavaScript and TypeScript runtime. One native executable formats source, checks TypeScript, builds modules, runs tests, installs pinned dependencies and runs applications. RC Web provides HTTP routing. The release includes its JavaScript engine and TypeScript compiler. You can run `rc` on a machine without Node.js, npm, Bun, or a GitHub account.
 
-[Website](https://www.rahulchaube.space/) · [Developer handbook](https://www.rahulchaube.space/docs) · [Learn RC](https://www.rahulchaube.space/learn) · [Downloads and SHA-256 checksums](https://www.rahulchaube.space/download) · [Benchmarks](https://www.rahulchaube.space/benchmarks) · [MIT license](LICENSE.md)
+[Website](https://www.rahulchaube.space/) · [Commands and measured workloads](https://www.rahulchaube.space/commands) · [Developer handbook](https://www.rahulchaube.space/docs) · [Learn RC](https://www.rahulchaube.space/learn) · [Downloads and SHA-256 checksums](https://www.rahulchaube.space/download) · [Benchmarks](https://www.rahulchaube.space/benchmarks) · [MIT license](LICENSE.md)
 
 ## Install
 
@@ -24,7 +24,7 @@ RC also has a project-maintained Homebrew tap for macOS and Linux and a Scoop bu
 
 ## Editor extension
 
-Install the native runtime on your workspace machine, then use **Extensions → Install from VSIX…** in VS Code, VSCodium or code-server. Open a saved TypeScript file and choose **RC Runtime: Run Current File**. The extension also includes commands to watch, test and stop a running task. [Download the official VSIX](https://www.rahulchaube.space/download#vscode) · [Editor guide and CLI installation](https://www.rahulchaube.space/docs/editor)
+Install the native runtime on your workspace machine, then use **Extensions → Install from VSIX…** in VS Code, VSCodium or code-server. Open a saved TypeScript file and choose **RC Runtime: Run Current File**. The extension also includes commands to format, type-check, watch, test and stop a running task. [Download the official VSIX](https://www.rahulchaube.space/download#vscode) · [Editor guide and CLI installation](https://www.rahulchaube.space/docs/editor)
 
 ## Build your first HTTP service
 
@@ -49,6 +49,8 @@ app.listen({ port: 3000 });
 
 | Command | What it does |
 | --- | --- |
+| `rc fmt src` / `rc fmt --check src` | Formats JS and TS files or checks their formatting in CI. |
+| `rc check -p tsconfig.json` | Reports TypeScript diagnostics for the project, without executing it. |
 | `rc run app.ts -- one two` | Runs the program and exposes its arguments as `RC.args`. |
 | `rc run --watch app.ts` | Restarts the app when the entry or one of its imports changes. |
 | `rc build app.ts --outfile app.mjs` | Bundles imports into an ES module. Run it with `rc run app.mjs`. |
@@ -62,7 +64,7 @@ The built-in libraries are `rc:web` for HTTP routing, `rc:test` for synchronous 
 
 ## Engines and compatibility
 
-The RC host and CLI are written in Go. QuickJS-NG evaluates JavaScript through quickjs-go. esbuild compiles TypeScript and resolves module graphs, including local ESM, CommonJS and JSON imports. The native host provides timers, files and HTTP. Packages that require Node built-ins, native Node add-ons, browser APIs or Bun globals need a compatible host. TypeScript execution strips types. Use a separate type checker when you need type diagnostics.
+The RC host and CLI are written in Go. QuickJS-NG evaluates JavaScript through quickjs-go. esbuild compiles TypeScript and resolves module graphs, including local ESM, CommonJS and JSON imports. The native host provides timers, files and HTTP. Packages that require Node built-ins, native Node add-ons, browser APIs or Bun globals need a compatible host. TypeScript execution strips types. Run `rc check` for semantic diagnostics with the embedded TypeScript 5.9.3 compiler.
 
 Earlier releases of the `rahulchaube` CLI remain available to existing projects. RC uses the separate `rc` executable and installation directory. [Previous release](https://github.com/Rahulchaube1/rahulchaube-runtime/releases/tag/v1.2.0)
 
@@ -72,12 +74,13 @@ With Go 1.25 or newer and a C compiler installed, build and test the native exec
 
 ```sh
 cd native
-go test ./...
-go build -trimpath -ldflags="-s -w" -o rc .
+go generate .
+go test -tags rcprecompiled ./...
+go build -tags rcprecompiled -trimpath -ldflags="-s -w" -o rc .
 ./rc --version
 ```
 
-The CI matrix builds and exercises the native binaries on each supported target. To reproduce the process benchmarks on Linux or macOS, install Python 3, Bun, Node.js 24+ and npm, then run `python3 benchmarks/compare.py --rc /path/to/rc` from the repository root. [CI](https://github.com/Rahulchaube1/rahulchaube-runtime/actions) · [Methodology](benchmarks/README.md)
+The CI matrix builds and exercises the native binaries on each target. For fully static Linux builds, use the musl compiler and stack-size flags in the [native build workflow](.github/workflows/ci.yml). Rebuild the vendored TypeScript distribution with `python3 scripts/vendor-typescript.py`. To reproduce the process benchmarks on Linux or macOS, install Python 3, Bun, Node.js 24+ and npm, then run `python3 benchmarks/compare.py --rc /path/to/rc` from the repository root. [CI](https://github.com/Rahulchaube1/rahulchaube-runtime/actions) · [Methodology](benchmarks/README.md)
 
 ## License
 

@@ -17,7 +17,7 @@ jobs:
       contents: write
     concurrency: rc-editor-github-release
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
       - name: Prepare the verified editor release
@@ -45,7 +45,7 @@ jobs:
           body: |
             Download the VSIX below. In VS Code, VSCodium or code-server, open Extensions and choose **Install from VSIX…**. To install from a terminal, run `code --install-extension ./${{ env.VSIX_NAME }}`, replacing `code` with `codium` or `code-server` for those editors.
 
-            Install the native RC Runtime on the workspace machine. Open a saved JavaScript or TypeScript file to run, watch or test it from the Command Palette.
+            Install the native RC Runtime on the workspace machine. Open a saved JavaScript or TypeScript file to format, check, run, watch or test it from the Command Palette.
 
             [Editor handbook](https://www.rahulchaube.space/docs/editor) · [Native runtime downloads](https://www.rahulchaube.space/download) · [Rahul Chaube](https://github.com/Rahulchaube1)
       - name: Verify the public release files
@@ -67,17 +67,19 @@ jobs:
       matrix:
         registry: ${{ fromJSON(inputs.registry == 'both' && '["marketplace","open-vsx"]' || format('["{0}"]', inputs.registry)) }}
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           persist-credentials: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: 24
+          package-manager-cache: false
       - name: Verify the distribution package
         run: |
           cd website/public/extensions
           sha256sum --check SHA256SUMS
           version=$(node -p "require('../../../editors/vscode/package.json').version")
+          echo "EDITOR_VERSION=$version" >> "$GITHUB_ENV"
           echo "PACKAGE=$PWD/rahulchaube-runtime-$version.vsix" >> "$GITHUB_ENV"
       - name: Publish to Visual Studio Marketplace
         if: matrix.registry == 'marketplace'
@@ -97,7 +99,51 @@ jobs:
         run: |
           flags=()
           if [[ -z "$OVSX_PAT" ]]; then
-            echo "Using the workflow identity. The first Open VSX release requires an OVSX_PAT repository secret."
+            status=$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' https://open-vsx.org/api/RahulChaube/rahulchaube-runtime/latest)
+            if [[ "$status" == 404 ]]; then
+              echo "::error::First Open VSX release requires the namespace owner's OVSX_PAT in repository Actions secrets."
+              exit 1
+            fi
+            [[ "$status" == 200 ]] || { echo "::error::Open VSX listing lookup returned HTTP $status."; exit 1; }
             flags+=(--trusted-publishing)
+          else
+            status=$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' https://open-vsx.org/api/RahulChaube)
+            if [[ "$status" == 404 ]]; then
+              npx --yes ovsx@1.4.0 create-namespace RahulChaube
+            elif [[ "$status" != 200 ]]; then
+              echo "::error::Open VSX namespace lookup returned HTTP $status."; exit 1
+            fi
           fi
           npx --yes ovsx@1.4.0 publish --skip-duplicate "$PACKAGE" "${flags[@]}"
+      - name: Check that users can download the published version
+        env:
+          REGISTRY: ${{ matrix.registry }}
+        run: |
+          if [[ "$REGISTRY" == marketplace ]]; then
+            url="https://marketplace.visualstudio.com/_apis/public/gallery/publishers/RahulChaube/vsextensions/rahulchaube-runtime/$EDITOR_VERSION/vspackage"
+          else
+            metadata="https://open-vsx.org/api/RahulChaube/rahulchaube-runtime/$EDITOR_VERSION"
+            curl --fail --silent --show-error --retry-all-errors --retry 12 --retry-delay 10 "$metadata" --output "$RUNNER_TEMP/listing.json"
+            url=$(jq -er --arg version "$EDITOR_VERSION" 'select(.version == $version and (.namespace | ascii_downcase) == "rahulchaube" and .name == "rahulchaube-runtime") | .files.download' "$RUNNER_TEMP/listing.json")
+            [[ "$url" == https://* ]] || exit 1
+          fi
+          curl --fail --location --silent --show-error --retry-all-errors --retry 12 --retry-delay 10 "$url" --output "$RUNNER_TEMP/public.vsix"
+          python3 - <<'PYTHON'
+          from zipfile import ZipFile
+          from os import environ
+          from pathlib import Path
+          with ZipFile(Path(environ["RUNNER_TEMP"]) / "public.vsix") as live, ZipFile(environ["PACKAGE"]) as built:
+              for file in built.namelist():
+                  if file.startswith("extension/") and not file.endswith("/") and live.read(file) != built.read(file):
+                      raise SystemExit("Published file differs from release: " + file)
+          PYTHON
+      - name: Explain publisher authorization failure
+        if: failure()
+        env:
+          REGISTRY: ${{ matrix.registry }}
+        run: |
+          if [[ "$REGISTRY" == marketplace ]]; then
+            echo 'For a 401, configure Trusted Publishing under publisher **RahulChaube** for repository **Rahulchaube1/rahulchaube-runtime**, workflow **publish-editor.yml**, branch **main**. This job uses repository-level secrets and no GitHub environment. A Marketplace Manage token in **VSCE_PAT** is also supported.' >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'For a first release, store a namespace-owner token in the repository Actions secret **OVSX_PAT**. The Open VSX account must accept the registry publisher agreement. Subsequent releases can use an Open VSX trusted publisher for this workflow.' >> "$GITHUB_STEP_SUMMARY"
+          fi

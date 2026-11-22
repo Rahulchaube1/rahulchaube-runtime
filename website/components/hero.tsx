@@ -21,7 +21,7 @@ export function Hero() {
       <div className="site-wrap hero-grid">
         <div className="hero-copy">
           <Link className="release-pill" href="/releases">
-            <span className="release-dot" />v{site.version} is available <ArrowUpRight size={13} />
+            <span className="release-dot" />v{site.version} · Release notes <ArrowUpRight size={13} />
           </Link>
           <h1>
             Build with
@@ -31,15 +31,14 @@ export function Hero() {
             </span>
           </h1>
           <p>
-            A standalone JavaScript and TypeScript runtime. Run scripts, bundle modules, test code and serve
-            HTTP with one native executable.
+            Run JavaScript and TypeScript with one native executable. Format and check your code, install dependencies, bundle modules and run your tests.
           </p>
           <div className="hero-actions">
             <Link className="btn primary" href="/download">
               <Terminal size={17} /> Install RC Runtime <ArrowRight size={16} />
             </Link>
-            <Link className="btn secondary" href="/docs">
-              <BookOpen size={16} /> Read the docs
+            <Link className="btn secondary" href="#toolkit">
+              <BookOpen size={16} /> Explore the commands
             </Link>
           </div>
         </div>

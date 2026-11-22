@@ -4,7 +4,7 @@ Rahul Chaube releases RC Runtime’s original code under the MIT License. You ca
 
 ## Third-party notices
 
-The release includes notices for the Go runtime, QuickJS-NG, quickjs-go, esbuild and other distributed components. The archives include `LICENSE.md` and a `licenses` directory alongside the executable. Consult each notice when redistributing a build. [Dependency notices](https://github.com/Rahulchaube1/rahulchaube-runtime/tree/main/licenses)
+The release includes notices for the Go runtime, QuickJS-NG, quickjs-go, esbuild, TypeScript (Apache-2.0) and other distributed components. The archives include `LICENSE.md` and a `licenses` directory alongside the executable. Consult each notice when redistributing a build. [Dependency notices](https://github.com/Rahulchaube1/rahulchaube-runtime/tree/main/licenses)
 
 ## Author and source
 

@@ -13,6 +13,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"sort"
+	"sync"
 	"time"
 )
 
@@ -152,12 +153,43 @@ func installModules(offline bool) error {
 		names = append(names, name)
 	}
 	sort.Strings(names)
-	for _, name := range names {
-		dep := config.Dependencies[name]
-		if err := fetchModule(client, dep, filepath.Join(cache, "rc-runtime", dep.SHA256+".mjs"), modulePath(dir, dep.SHA256), offline); err != nil {
-			return fmt.Errorf("%s: %w", name, err)
-		}
+	if err := installDependencies(names, config.Dependencies, dir, cache, client, offline); err != nil {
+		return err
 	}
 	fmt.Printf("Verified %d modules\n", len(names))
 	return nil
+}
+
+// A digest identifies both the cache file and the installed file. Resolve each
+// once, even when several aliases refer to it, and report errors in manifest order.
+func installDependencies(names []string, deps map[string]dependency, dir, cache string, client *http.Client, offline bool) error {
+	unique := make([]string, 0, len(names))
+	seen := make(map[string]bool)
+	for _, name := range names {
+		digest := deps[name].SHA256
+		if !seen[digest] {
+			unique = append(unique, name)
+			seen[digest] = true
+		}
+	}
+	errs := make([]error, len(unique))
+	jobs := make(chan int)
+	var group sync.WaitGroup
+	for range min(4, len(unique)) {
+		group.Go(func() {
+			for i := range jobs {
+				name := unique[i]
+				dep := deps[name]
+				if err := fetchModule(client, dep, filepath.Join(cache, "rc-runtime", dep.SHA256+".mjs"), modulePath(dir, dep.SHA256), offline); err != nil {
+					errs[i] = fmt.Errorf("%s: %w", name, err)
+				}
+			}
+		})
+	}
+	for i := range unique {
+		jobs <- i
+	}
+	close(jobs)
+	group.Wait()
+	return errors.Join(errs...)
 }
