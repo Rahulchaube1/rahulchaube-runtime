@@ -10,6 +10,7 @@ export const site = {
   description:
     "Run JavaScript and TypeScript, bundle modules, test code and serve HTTP with RC Web. RC Runtime is open source under the MIT License.",
   version: release.version,
+  editorVersion: "1.1.1",
   social: {
     github: "https://github.com/Rahulchaube1/rahulchaube-runtime",
     x: "https://x.com/RahulChaube_",

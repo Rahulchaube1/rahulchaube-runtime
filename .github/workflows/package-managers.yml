@@ -1,0 +1,90 @@
+name: Test package manager installs
+on:
+  push:
+    branches: [main]
+    paths: ['Formula/**', 'bucket/**', 'packaging/winget/**', '.github/workflows/package-managers.yml']
+  pull_request:
+    paths: ['Formula/**', 'bucket/**', 'packaging/winget/**', '.github/workflows/package-managers.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  homebrew:
+    runs-on: macos-latest
+    env:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+      HOMEBREW_NO_INSTALL_CLEANUP: 1
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Install from the tap and run TypeScript
+        run: |
+          brew tap rahulchaube1/rc-runtime "$GITHUB_WORKSPACE"
+          brew install rahulchaube1/rc-runtime/rc-runtime
+          brew test rahulchaube1/rc-runtime/rc-runtime
+          rc doctor
+
+  scoop:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Install from the Scoop bucket and run TypeScript
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $env:SCOOP = Join-Path $env:RUNNER_TEMP 'scoop'
+          $bootstrap = Join-Path $env:RUNNER_TEMP 'install-scoop.ps1'
+          Invoke-WebRequest 'https://raw.githubusercontent.com/ScoopInstaller/Install/1e2f334083d609986d8c8bc9e31ae8e87c39fab4/install.ps1' -OutFile $bootstrap
+          & $bootstrap -ScoopDir $env:SCOOP -RunAsAdmin
+          $scoop = Join-Path $env:SCOOP 'apps/scoop/current/bin/scoop.ps1'
+          $bucketUri = ([uri]$env:GITHUB_WORKSPACE).AbsoluteUri
+          & $scoop bucket add rc-runtime $bucketUri
+          if ($LASTEXITCODE -ne 0) { throw 'Scoop bucket add failed' }
+          & $scoop install --no-update-scoop rc-runtime/rc-runtime
+          if ($LASTEXITCODE -ne 0) { throw 'Scoop install failed' }
+          $entry = Join-Path $env:RUNNER_TEMP 'scoop-test.ts'
+          Set-Content $entry 'const n: number = 21; console.log(n * 2);'
+          if ((& "$env:SCOOP/shims/rc.exe" run $entry) -ne '42' -or $LASTEXITCODE -ne 0) { throw 'Scoop runtime test failed' }
+
+  winget:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Validate and install the WinGet package
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $ProgressPreference = 'SilentlyContinue'
+          $app = Get-AppxPackage Microsoft.DesktopAppInstaller
+          if ($app) { $clientVersion = (& (Join-Path $app.InstallLocation 'winget.exe') --version).Trim().TrimStart('v') }
+          if (!$app -or [version]$clientVersion -lt [version]'1.28') {
+            $release = 'https://github.com/microsoft/winget-cli/releases/download/v1.29.380'
+            $bundle = Join-Path $env:RUNNER_TEMP 'AppInstaller.msixbundle'
+            $dependencies = Join-Path $env:RUNNER_TEMP 'AppInstaller-dependencies'
+            Invoke-WebRequest -UseBasicParsing "$release/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle" -OutFile $bundle
+            Invoke-WebRequest -UseBasicParsing "$release/DesktopAppInstaller_Dependencies.zip" -OutFile "$dependencies.zip"
+            Expand-Archive "$dependencies.zip" $dependencies
+            $frameworks = (Get-ChildItem "$dependencies/x64/*.appx").FullName
+            Add-AppxPackage -Path $bundle -DependencyPath $frameworks
+            $app = Get-AppxPackage Microsoft.DesktopAppInstaller
+          }
+          $winget = Join-Path $app.InstallLocation 'winget.exe'
+          $version = (Get-Content -Raw dist/VERSION).Trim()
+          $manifest = "packaging/winget/$version"
+          & $winget validate --manifest $manifest
+          if ($LASTEXITCODE -ne 0) { throw 'WinGet validation failed' }
+          & $winget settings --enable LocalManifestFiles
+          if ($LASTEXITCODE -ne 0) { throw 'WinGet local manifests could not be enabled' }
+          & $winget install --manifest $manifest --scope user --silent --accept-source-agreements --accept-package-agreements --disable-interactivity
+          if ($LASTEXITCODE -ne 0) { throw 'WinGet install failed' }
+          $entry = Join-Path $env:RUNNER_TEMP 'winget-test.ts'
+          Set-Content $entry 'const n: number = 21; console.log(n * 2);'
+          $cli = Join-Path $env:LOCALAPPDATA 'Microsoft/WinGet/Links/rc.exe'
+          if ((& $cli run $entry) -ne '42' -or $LASTEXITCODE -ne 0) { throw 'WinGet runtime test failed' }

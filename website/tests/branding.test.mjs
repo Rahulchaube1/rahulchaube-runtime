@@ -1,6 +1,9 @@
 import { expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
 import manifest from "../app/manifest.ts";
+import { site } from "../lib/site.ts";
+import editor from "../../editors/vscode/package.json";
 
 const asset = (file) => readFileSync(new URL("../public/" + file, import.meta.url));
 const dimensions = (png) => [png.readUInt32BE(16), png.readUInt32BE(20)];
@@ -24,4 +27,12 @@ test("public brand assets and app manifests use the official RC logo exports", (
   }
   expect(asset("favicon-32x32.png")).toEqual(asset("rc-mark-32.png"));
   expect(asset("apple-touch-icon.png")).toEqual(asset("rc-mark-180.png"));
+});
+
+test("the editor download carries the published version, checksum and official icon", () => {
+  expect(site.editorVersion).toBe(editor.version);
+  expect(readFileSync(new URL("../../editors/vscode/icon.png", import.meta.url))).toEqual(asset("icon-192.png"));
+  const filename = `rahulchaube-runtime-${editor.version}.vsix`;
+  const digest = createHash("sha256").update(asset("extensions/" + filename)).digest("hex");
+  expect(asset("extensions/SHA256SUMS").toString().split(/\r?\n/)).toContain(digest + "  " + filename);
 });

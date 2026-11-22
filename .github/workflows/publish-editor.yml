@@ -36,16 +36,22 @@ jobs:
       - name: Publish to Visual Studio Marketplace
         if: matrix.registry == 'marketplace'
         env:
-          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+          VSCE_PAT: ${{ secrets.VSCE_PAT || secrets.VS_MARKETPLACE_TOKEN }}
         run: |
           flags=()
-          if [[ -z "$VSCE_PAT" ]]; then flags+=(--oidc); fi
-          npx --yes @vscode/vsce@4.1.1 publish --packagePath "$PACKAGE" "${flags[@]}"
+          if [[ -z "$VSCE_PAT" ]]; then
+            echo "Using the repository workflow identity for publisher RahulChaube."
+            flags+=(--oidc)
+          fi
+          npx --yes @vscode/vsce@4.1.1 publish --skip-duplicate --packagePath "$PACKAGE" "${flags[@]}"
       - name: Publish to Open VSX
         if: matrix.registry == 'open-vsx'
         env:
-          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+          OVSX_PAT: ${{ secrets.OVSX_PAT || secrets.OPEN_VSX_TOKEN }}
         run: |
           flags=()
-          if [[ -z "$OVSX_PAT" ]]; then flags+=(--trusted-publishing); fi
-          npx --yes ovsx@1.4.0 publish "$PACKAGE" "${flags[@]}"
+          if [[ -z "$OVSX_PAT" ]]; then
+            echo "Using the workflow identity. The first Open VSX release requires an OVSX_PAT repository secret."
+            flags+=(--trusted-publishing)
+          fi
+          npx --yes ovsx@1.4.0 publish --skip-duplicate "$PACKAGE" "${flags[@]}"

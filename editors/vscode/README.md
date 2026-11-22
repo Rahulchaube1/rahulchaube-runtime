@@ -1,6 +1,16 @@
 # RC Runtime for VS Code
 
-Install RC Runtime 1.3 and open a saved JavaScript or TypeScript file in a trusted workspace. The extension locates the native `rc` executable on PATH or under `~/.rc-runtime/bin`. Set **RC Runtime: Executable Path** for a custom install. [Download RC Runtime and the VSIX](https://www.rahulchaube.space/download#vscode)
+Run, watch and test JavaScript or TypeScript from the editor using Rahul Chaube’s open-source RC Runtime.
+
+## Install
+
+1. Install RC Runtime 1.3 on the machine where your workspace runs. Open a terminal there and run `rc --version`. [Runtime downloads](https://www.rahulchaube.space/download)
+2. Download the editor extension, open the Extensions view, select **Install from VSIX…** from its menu and choose the downloaded file. The same package works with desktop VS Code, VSCodium and code-server. [Official VSIX](https://www.rahulchaube.space/download#vscode)
+3. Open a trusted workspace and save a JavaScript or TypeScript file. Open the Command Palette and choose **RC Runtime: Run Current File**.
+
+The extension finds `rc` on PATH or under `~/.rc-runtime/bin`. For a custom installation, set `rcRuntime.executablePath` to its absolute path on the workspace host. [Editor guide](https://www.rahulchaube.space/docs/editor)
+
+## Commands
 
 | Command | Behavior |
 | --- | --- |

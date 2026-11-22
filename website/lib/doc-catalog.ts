@@ -105,8 +105,8 @@ export const guides = [
   guide(
     "guides",
     "editor",
-    "Use VS Code",
-    "Install the official extension and run, watch or test a saved file.",
+    "Editor extension",
+    "Install the extension in VS Code, VSCodium or code-server and run, watch or test a saved file.",
   ),
   guide(
     "reference",

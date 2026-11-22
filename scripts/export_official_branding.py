@@ -1,4 +1,4 @@
-"""Export website icons from Rahul Chaube's original logo, preserving its aspect ratio."""
+"""Export website and editor icons from Rahul Chaube's original logo."""
 
 from base64 import b64encode
 from pathlib import Path
@@ -54,6 +54,7 @@ def export_assets():
         (destination / "favicon.svg").write_text(
             svg_image(PUBLIC / "icon-128.png", "image/png", 64, 64), encoding="utf-8"
         )
+    copyfile(PUBLIC / "icon-192.png", ROOT / "editors" / "vscode" / "icon.png")
     export_icon(mark, 64, 64).save(
         PUBLIC / "favicon.ico", sizes=[(size, size) for size in (16, 32, 48, 64)]
     )

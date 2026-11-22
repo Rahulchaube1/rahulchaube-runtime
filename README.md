@@ -20,6 +20,12 @@ irm https://www.rahulchaube.space/install.ps1 | iex
 
 Open a new terminal and run `rc --version`. The installer verifies the archive before updating the release files under `~/.rc-runtime`. Archives are available for Linux x64/ARM64, macOS Intel/Apple Silicon and Windows x64.
 
+RC also has a project-maintained Homebrew tap for macOS and Linux and a Scoop bucket for Windows x64. [Homebrew installation](https://www.rahulchaube.space/docs/installation#homebrew) · [Scoop installation](https://www.rahulchaube.space/docs/installation#scoop)
+
+## Editor extension
+
+Install the native runtime on your workspace machine, then use **Extensions → Install from VSIX…** in VS Code, VSCodium or code-server. Open a saved TypeScript file and choose **RC Runtime: Run Current File**. The extension also includes commands to watch, test and stop a running task. [Download the official VSIX](https://www.rahulchaube.space/download#vscode) · [Editor guide and CLI installation](https://www.rahulchaube.space/docs/editor)
+
 ## Build your first HTTP service
 
 ```sh
