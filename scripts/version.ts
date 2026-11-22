@@ -5,8 +5,9 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-const root = join(import.meta.dir, "..", "..");
-const arg = process.argv[2] ?? "patch";
+const root = join(import.meta.dir, "..");
+const arg = process.argv[2]?.replace(/^--/, "") ?? "patch";
+if (!["major", "minor", "patch"].includes(arg)) throw new Error("Expected --major, --minor, or --patch");
 const pkgPath = join(root, "packages", "rahulchaube-cli", "package.json");
 const pkg = JSON.parse(readFileSync(pkgPath, "utf8")) as { version: string };
 
@@ -18,4 +19,5 @@ const next =
 
 pkg.version = next;
 writeFileSync(pkgPath, JSON.stringify(pkg, null, 2) + "\n");
+writeFileSync(join(root, "native/VERSION"), next + "\n");
 console.log(`[version] RahulChaube Runtime -> v${next}`);

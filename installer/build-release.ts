@@ -71,6 +71,7 @@ export function buildReleaseArtifacts(outputDir: string = "dist", nativeDir: str
   }
   cpSync(join(rootDir, "installer/Blyx-LICENSE-MIT"), join(stageCli, "Blyx-LICENSE-MIT"));
   cpSync(join(rootDir, "LICENSE.md"), join(stagingDir, "LICENSE.md"));
+  cpSync(join(rootDir, "licenses"), join(stagingDir, "licenses"), { recursive: true });
 
   writeFileSync(join(stageBin, "rahulchaube.cmd"), [
     "@echo off", String.raw`"%~dp0..\packages\rahulchaube-cli\bin\rahulchaube-native.exe" %*`, "exit /b %errorlevel%", ""
@@ -88,6 +89,10 @@ export function buildReleaseArtifacts(outputDir: string = "dist", nativeDir: str
     for (const t of RELEASE_TARGETS) {
       const archivePath = join(complete, t.archiveName);
       stageNativeTools(t, nativeDir, stageCli);
+      const rc = t.isZip ? "rc.exe" : "rc";
+      rmSync(join(stageBin, t.isZip ? "rc" : "rc.exe"), { force: true });
+      cpSync(resolve(nativeDir, "native-" + t.name, rc), join(stageBin, rc));
+      chmodSync(join(stageBin, rc), 0o755);
       if (t.isZip && process.platform !== "win32") {
         execFileSync("zip", ["-qr", archivePath, "."], { cwd: stagingDir });
       } else {
@@ -113,11 +118,12 @@ export function buildReleaseArtifacts(outputDir: string = "dist", nativeDir: str
   writeFileSync(join(distPath, "SHA256SUMS"), checksumLines, "utf-8");
 
   // Write version.json
-  const downloadUrl = "https://github.com/Rahulchaube1/rahulchaube-runtime/raw/refs/heads/main/dist";
+  const downloadUrl = "https://raw.githubusercontent.com/Rahulchaube1/rahulchaube-runtime/refs/heads/main/dist";
+  writeFileSync(join(distPath, "VERSION"), cliPackage.version + "\n");
   const versionJson = {
     version: cliPackage.version,
     channel: "stable",
-    launcher: "blyx",
+    launcher: "rc",
     release: "https://www.rahulchaube.space/releases",
     downloadUrl,
     assets: Object.fromEntries(RELEASE_TARGETS.map(t => [t.name, `${downloadUrl}/${t.archiveName}`])),

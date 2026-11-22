@@ -1,7 +1,7 @@
 // Shared by the Bash, PowerShell, and repository installers. Run with Bun.
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { homedir } from "node:os";
 
@@ -86,6 +86,18 @@ async function install() {
     writeFileSync(join(stage, filename), bytes);
     const tar = os === "win" ? join(process.env.SystemRoot, "System32", "tar.exe") : "tar";
     execFileSync(tar, ["-xf", join(stage, filename), "-C", stage]);
+    if (release.launcher === "rc") {
+      const binary = join(stage, "bin", os === "win" ? "rc.exe" : "rc");
+      const helper = join(stage, os === "win" ? "setup.exe" : "setup");
+      copyFileSync(binary, helper);
+      if (execFileSync(helper, ["--version"], { encoding: "utf8" }).trim() !== "RC Runtime v" + release.version) {
+        throw new Error("Archive version check failed");
+      }
+      execFileSync(helper, ["__activate", stage, dest], { stdio: "inherit" });
+      activated = true;
+      console.log(`Installed RC Runtime v${release.version}`);
+      return;
+    }
     const cli = join(stage, "packages/rahulchaube-cli/bin", os === "win" ? "rahulchaube-native.exe" : "rahulchaube-native");
     const native = release.launcher === "blyx";
     const args = native ? ["--version"] : ["run", join(stage, "packages/rahulchaube-cli/bin/rahulchaube.ts"), "--version"];

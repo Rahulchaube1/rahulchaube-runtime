@@ -7,17 +7,13 @@
  */
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { execSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
 
-const root = join(import.meta.dir, "..", "..");
+const root = join(import.meta.dir, "..");
 const pkg = JSON.parse(
   readFileSync(join(root, "packages", "rahulchaube-cli", "package.json"), "utf8"),
 ) as { version: string };
 
 const tag = `v${pkg.version}`;
-try {
-  execSync(`git tag ${tag}`, { cwd: root, stdio: "inherit" });
-  console.log(`[release] Tagged ${tag}. Push with: git push origin ${tag}`);
-} catch {
-  console.log(`[release] Tag ${tag} already exists or git unavailable.`);
-}
+execFileSync("git", ["tag", tag], { cwd: root, stdio: "inherit" });
+console.log(`[release] Tagged ${tag}. Push with: git push origin ${tag}`);

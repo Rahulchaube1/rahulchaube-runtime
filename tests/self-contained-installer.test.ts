@@ -11,20 +11,12 @@ test("Install the archive, run the packaged CLI, and preserve the install on che
   mkdirSync(archiveDir);
   const os = process.platform === "win32" ? "win" : process.platform;
   const file = `runtime-${os}-${process.arch}.${os === "win" ? "zip" : "tar.gz"}`;
-  for (const name of ["version.json", file]) copyFileSync(join("dist", name), join(archiveDir, name));
-  const server = Bun.serve({
-    hostname: "127.0.0.1", port: 0,
-    fetch(request) {
-      const url = new URL(request.url);
-      if (url.pathname === "/install-runtime.mjs") return new Response(Bun.file("website/public/install-runtime.mjs"));
-      return new Response(null, { status: 404 });
-    },
-  });
+  for (const name of ["version.json", "VERSION", "SHA256SUMS", file]) copyFileSync(join("dist", name), join(archiveDir, name));
   const windows = process.platform === "win32";
   const exe = windows ? "powershell" : "bash";
   const args = windows ? ["-NoProfile", "-File", "website/public/install.ps1"] : ["website/public/install.sh"];
   const install = () => Bun.spawn([exe, ...args], {
-    env: { ...process.env, RAHULCHAUBE_INSTALL_DIR: dest, RAHULCHAUBE_INSTALL_ARCHIVE_DIR: archiveDir, RAHULCHAUBE_INSTALL_ORIGIN: server.url.origin },
+    env: { ...process.env, RAHULCHAUBE_INSTALL_DIR: dest, RAHULCHAUBE_INSTALL_ARCHIVE_DIR: archiveDir },
     stdout: "pipe", stderr: "pipe",
   });
   const launcher = join(dest, "bin", windows ? "rahulchaube.cmd" : "rahulchaube");
@@ -36,6 +28,15 @@ test("Install the archive, run the packaged CLI, and preserve the install on che
     const firstStatus = await first.exited;
     expect(firstStatus, await new Response(first.stderr).text()).toBe(0);
     expect(run(["--version"]).stdout.toString()).toContain(versionInfo.version);
+    const rc = join(dest, "bin", windows ? "rc.exe" : "rc");
+    const standalone = (...args: string[]) => Bun.spawnSync([rc, ...args], {
+      cwd: dir, env: { ...process.env, PATH: "", Path: "" },
+    });
+    expect(standalone("--version").stdout.toString().trim()).toBe("RC Runtime v" + versionInfo.version);
+    writeFileSync(join(dir, "standalone.ts"), 'const value: number = 42; console.log(value, RC.args.join("|"));');
+    const output = standalone("run", "standalone.ts", "--", "two words", "--flag");
+    expect(output.exitCode, output.stderr.toString()).toBe(0);
+    expect(output.stdout.toString().trim()).toBe("42 two words|--flag");
     writeFileSync(join(dir, "hello.blyx"), 'fn main() { println!(6 * 7); }');
     const interpreted = run(["blyx", "run", "hello.blyx"]);
     expect(interpreted.exitCode).toBe(0);
@@ -52,7 +53,6 @@ test("Install the archive, run the packaged CLI, and preserve the install on che
     expect(readFileSync(join(dest, "cache", "keep"), "utf8")).toBe("existing");
     expect(run(["--help"]).exitCode).toBe(0);
   } finally {
-    server.stop(true);
     rmSync(dir, { recursive: true, force: true });
   }
 }, 30_000);
