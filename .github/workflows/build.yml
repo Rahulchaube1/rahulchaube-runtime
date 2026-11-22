@@ -20,6 +20,8 @@ jobs:
       - name: Typecheck CLI
         working-directory: packages/rahulchaube-cli
         run: bun run typecheck
+      - name: Check types for the standalone starter
+        run: packages/rahulchaube-cli/node_modules/.bin/tsc -p native/starter
       - name: Smoke test CLI
         run: bun packages/rahulchaube-cli/bin/rahulchaube.ts --help
 

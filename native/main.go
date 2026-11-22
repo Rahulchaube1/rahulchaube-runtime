@@ -1,4 +1,4 @@
-// RC Runtime's standalone command. The compatibility CLI is shipped separately.
+// RC Runtime's standalone command.
 package main
 
 import (

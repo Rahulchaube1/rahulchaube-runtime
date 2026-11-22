@@ -30,7 +30,7 @@ export function createApp() {
           catch { return text("Invalid path encoding", 400); }
         } else if (pattern !== parts[i]) { matches = false; break; }
       }
-      if (matches) return await route.handler({ ...request, params });
+      if (matches) return await route.handler({ headers: {}, query: {}, body: "", ...request, params });
     }
     return text("Not found", 404);
   }
