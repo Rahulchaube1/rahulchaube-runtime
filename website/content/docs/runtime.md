@@ -8,7 +8,7 @@ await Promise.resolve();
 console.log("Hello,", name);
 ```
 
-Type annotations are removed before execution. Start with `rc init` to get the editor declarations and `tsconfig.json`. Run a TypeScript checker separately for diagnostics.
+Type annotations are removed before execution. Start with `rc init` to get the editor declarations and `tsconfig.json`. Run [rc check](/docs/check) to find type errors before execution.
 
 ## Host globals
 

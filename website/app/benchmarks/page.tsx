@@ -49,6 +49,11 @@ export default function Benchmarks() {
         </div>
       </section>
       <section className="page-section">
+        <h2>Command workloads</h2>
+        <p>Measure formatting, type checking, bundling, tests, offline installs and execution at three input sizes.</p>
+        <div className="button-row"><Link className="text-link" href="/commands">Explore all six charts →</Link><a className="text-link" download href="/toolkit-benchmarks.json">Download timing samples ↓</a></div>
+      </section>
+      <section className="page-section">
         <h2>Test environment</h2>
         <p>
           {data.date} · {data.cpu} · {data.system}

@@ -30,7 +30,7 @@ async function resolveRuntime(configured) {
     const file = path.join(dir, windows ? "rc.exe" : "rc");
     if (await executable(file)) return file;
   }
-  throw new Error("Install RC Runtime 1.3 or set RC Runtime: Executable Path.");
+  throw new Error("Install RC Runtime 1.4 or newer, or set RC Runtime: Executable Path.");
 }
 
 module.exports = { resolveRuntime, supportsFile };

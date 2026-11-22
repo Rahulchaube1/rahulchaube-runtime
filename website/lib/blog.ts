@@ -11,6 +11,18 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "rc-runtime-1-4", title: "RC Runtime 1.4 brings formatting and type checking",
+    description: "Use the embedded TypeScript tooling from the terminal or editor and reproduce six command workloads.",
+    date: "2026-11-22", tags: ["release", "TypeScript"], category: "Releases", author: "Rahul Chaube",
+    body: `# RC Runtime 1.4
+
+RC now formats JavaScript and TypeScript with rc fmt and checks projects with rc check. The executable includes TypeScript 5.9.3 and its standard declarations. Both commands work offline.
+
+The installer can fetch four distinct pinned modules concurrently. The runtime also uses a direct transform for standalone TypeScript scripts without imports or project configuration.
+
+Open the command toolkit to see examples and measured timings for all six commands. Each chart includes the workload, median, P95 and a link to a guide with the reproduction command. The editor extension adds Format Current File and Check Current File.`,
+  },
+  {
     slug: "standalone-rc-runtime", title: "RC Runtime 1.3 and RC Web",
     description: "Build, serve and test a TypeScript application with the standalone rc executable.",
     date: "2026-11-22", tags: ["release", "RC Web"], category: "Releases", author: "RC Runtime",

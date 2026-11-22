@@ -16,6 +16,6 @@ Each entry under `dependencies` maps an import name to an object containing `url
 
 ## TypeScript and arguments
 
-`rc init` supplies `rc.d.ts` for the built-in modules, `RC` and timers. Its `tsconfig.json` describes a strict, no-emit TypeScript project for your editor. Use `rc build` for the runnable ES module.
+`rc init` supplies `rc.d.ts` for the built-in modules, `RC` and timers. Its `tsconfig.json` describes a strict, no-emit TypeScript project for your editor and `rc check`. The checker loads the same project configuration and reports semantic errors without executing the application. Use `rc build` for the runnable ES module.
 
 Pass application-specific options after the script filename, for example `rc run hello.ts -- Ada`. Read them from `RC.args`. Configure an HTTP listener with the options to `app.listen`. [RC Web](/docs/rc-web)

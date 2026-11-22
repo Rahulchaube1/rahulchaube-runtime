@@ -30,11 +30,11 @@ const assets = Object.entries(versionInfo.assets).map(([target, downloadUrl]) =>
 
 export const releases = [{
   version: manifest.version, tag: `v${manifest.version}`, date: "2026-11-22", isLatest: true,
-  notes: ["Run JavaScript and TypeScript with the standalone rc executable.", "Scaffold and test HTTP services with RC Web."],
+  notes: ["Format JS and TS in place or validate formatting in CI.", "Check project types offline using TypeScript 5.9.3 and the RC declarations."],
   changelog: {
-    features: ["Run, watch and test modules in the CLI or VS Code.", "Install checksum-pinned modules online or from cache."],
-    fixes: ["Restart when an imported module changes and recover after correcting syntax errors."],
-    improvements: ["Install on five native targets without an external JavaScript runtime."],
+    features: ["Run rc fmt and rc check from the CLI and editor.", "Explore six command guides with reproducible workload charts."],
+    fixes: ["Provide the native stack size needed by the embedded TypeScript compiler on static Linux builds."],
+    improvements: ["Fetch up to four distinct pinned modules concurrently.", "Use a direct transform for standalone TypeScript scripts that have no project configuration or module imports."],
   },
   assets,
 }];

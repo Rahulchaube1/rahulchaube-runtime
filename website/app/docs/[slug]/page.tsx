@@ -7,6 +7,8 @@ import { LessonCompletion } from "@/components/lesson-progress";
 import { Markdown } from "@/components/markdown";
 import { docUrl, getGuide, getSection, guides, lessons } from "@/lib/doc-catalog";
 import { guideHeadings, readGuide } from "@/lib/docs";
+import { isCommand } from "@/lib/toolkit";
+import { CommandProof } from "@/components/command-toolkit";
 import { site } from "@/lib/site";
 
 type Props = Readonly<{ params: Promise<{ slug: string }> }>;
@@ -28,7 +30,9 @@ export default async function DocPage({ params }: Props) {
   const sequence = index >= 0 ? lessons : guides.filter((item) => item.section === guide.section);
   const position = sequence.findIndex((item) => item.slug === guide.slug);
   const [previous, next] = [sequence[position - 1], sequence[position + 1]];
+  const command = isCommand(guide.slug) ? guide.slug : undefined;
   const outline = guideHeadings(body);
+  if (command) outline.push({ label: "Measurements", id: "measurements" });
   const anchors = outline.map(({ label, id }) => (
     <a key={id} href={"#" + id}>
       {label}
@@ -66,6 +70,7 @@ export default async function DocPage({ params }: Props) {
           {anchors}
         </details>
         <Markdown source={body} />
+        {command && <CommandProof name={command} />}
         <div className="article-actions">
           {index >= 0 && <LessonCompletion slug={guide.slug} />}
           <a href={site.social.github + "/edit/main/website/content/docs/" + guide.slug + ".md"}>

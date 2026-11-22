@@ -5,12 +5,13 @@ Install Go 1.25 or later, a C compiler and Git. Clone the public repository and 
 ```sh
 git clone https://github.com/Rahulchaube1/rahulchaube-runtime.git
 cd rahulchaube-runtime/native
-go test ./...
-go build -trimpath -o rc .
+go generate .
+go test -tags rcprecompiled ./...
+go build -tags rcprecompiled -trimpath -o rc .
 ./rc --version
 ```
 
-On Windows use `go build -trimpath -o rc.exe .` and `.\rc.exe --version`. The release workflow builds and exercises the supported native targets.
+On Windows use `go build -trimpath -o rc.exe .` and `.\rc.exe --version`. The release workflow builds each target with native QuickJS bytecode. Fully static Linux builds use musl and an 8 MiB native stack. [Release build flags](https://github.com/Rahulchaube1/rahulchaube-runtime/blob/main/.github/workflows/ci.yml)
 
 ## Find the relevant source
 

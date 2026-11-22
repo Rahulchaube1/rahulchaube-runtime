@@ -1,8 +1,15 @@
+import { commandInfo, commandNames } from "./toolkit";
+
 export const sections = [
   {
     id: "essentials",
     title: "Getting started",
     description: "Install RC, run a script and find your way around a project.",
+  },
+  {
+    id: "commands",
+    title: "Command handbook",
+    description: "Six native commands, with examples, CI usage and reproducible measurements.",
   },
   {
     id: "guides",
@@ -60,6 +67,7 @@ export const guides = [
     "Troubleshooting",
     "Resolve common installation, import, listener and test errors.",
   ),
+  ...commandNames.map(name => guide("commands", name, "rc " + name, commandInfo[name].summary)),
   guide(
     "guides",
     "tutorials-first-steps",

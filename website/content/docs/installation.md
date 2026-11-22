@@ -52,10 +52,10 @@ Run `scoop update` followed by `scoop update rc-runtime` to upgrade.
 
 ## WinGet local manifest
 
-The source repository includes a WinGet manifest for Windows x64. With WinGet 1.28 or later, run the following from a checkout of RC Runtime. WinGet verifies the release archive and installs `rc.exe` for your user. [Manifest files](https://github.com/Rahulchaube1/rahulchaube-runtime/tree/main/packaging/winget/1.3.0)
+The source repository includes a WinGet manifest for Windows x64. With WinGet 1.28 or later, run the following from a checkout of RC Runtime. WinGet verifies the release archive and installs `rc.exe` for your user. [Manifest files](https://github.com/Rahulchaube1/rahulchaube-runtime/tree/main/packaging/winget/1.4.0)
 
 ```powershell
-winget install --manifest .\packaging\winget\1.3.0 --scope user
+winget install --manifest .\packaging\winget\1.4.0 --scope user
 rc --version
 ```
 

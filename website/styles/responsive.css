@@ -36,7 +36,7 @@
     padding-left: 23px;
   }
 }
-@media (max-width: 760px) {
+@media (max-width: 860px) {
   .main-nav {
     min-height: 60px;
   }
@@ -61,6 +61,8 @@
   .mobile-links a {
     padding: 8px;
   }
+}
+@media (max-width: 760px) {
   .hero-grid {
     grid-template-columns: minmax(0, 1fr);
     gap: 24px;

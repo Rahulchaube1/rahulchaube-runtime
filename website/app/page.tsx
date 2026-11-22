@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight, BookOpen, Braces, SquareTerminal, GraduationCap } from "lucide-react";
+import { CommandToolkit } from "@/components/command-toolkit";
 import { Hero } from "@/components/hero";
 import { TerminalDemo } from "@/components/terminal-demo";
 import measurements from "@/public/benchmarks.json";
@@ -60,6 +61,7 @@ export default function HomePage() {
           </Link>
         </div>
       </div>
+      <CommandToolkit homepage />
       <section className="site-wrap home-section">
         <div className="section-heading">
           <h2>

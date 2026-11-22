@@ -1,35 +1,35 @@
 {
-  "version": "1.3.0",
+  "version": "1.4.0",
   "channel": "stable",
   "launcher": "rc",
   "release": "https://www.rahulchaube.space/releases",
-  "downloadUrl": "https://raw.githubusercontent.com/Rahulchaube1/rahulchaube-runtime/v1.3.0/dist",
+  "downloadUrl": "https://raw.githubusercontent.com/Rahulchaube1/rahulchaube-runtime/v1.4.0/dist",
   "assets": {
-    "win-x64": "https://raw.githubusercontent.com/Rahulchaube1/rahulchaube-runtime/v1.3.0/dist/runtime-win-x64.zip",
-    "linux-x64": "https://raw.githubusercontent.com/Rahulchaube1/rahulchaube-runtime/v1.3.0/dist/runtime-linux-x64.tar.gz",
-    "linux-arm64": "https://raw.githubusercontent.com/Rahulchaube1/rahulchaube-runtime/v1.3.0/dist/runtime-linux-arm64.tar.gz",
-    "darwin-x64": "https://raw.githubusercontent.com/Rahulchaube1/rahulchaube-runtime/v1.3.0/dist/runtime-darwin-x64.tar.gz",
-    "darwin-arm64": "https://raw.githubusercontent.com/Rahulchaube1/rahulchaube-runtime/v1.3.0/dist/runtime-darwin-arm64.tar.gz"
+    "win-x64": "https://raw.githubusercontent.com/Rahulchaube1/rahulchaube-runtime/v1.4.0/dist/runtime-win-x64.zip",
+    "linux-x64": "https://raw.githubusercontent.com/Rahulchaube1/rahulchaube-runtime/v1.4.0/dist/runtime-linux-x64.tar.gz",
+    "linux-arm64": "https://raw.githubusercontent.com/Rahulchaube1/rahulchaube-runtime/v1.4.0/dist/runtime-linux-arm64.tar.gz",
+    "darwin-x64": "https://raw.githubusercontent.com/Rahulchaube1/rahulchaube-runtime/v1.4.0/dist/runtime-darwin-x64.tar.gz",
+    "darwin-arm64": "https://raw.githubusercontent.com/Rahulchaube1/rahulchaube-runtime/v1.4.0/dist/runtime-darwin-arm64.tar.gz"
   },
   "sha256": {
-    "runtime-win-x64.zip": "5a9ec448fb4381a639537eef2994486d27bca7ccacd7903b36dbf90bcc05c35b",
-    "runtime-linux-x64.tar.gz": "260c231860102ff634d55c6dffa07b5d58f955b11e6f377019ce9f9eb958e168",
-    "runtime-linux-arm64.tar.gz": "639016e2aeaac1a5611b334353fa7b74871cb5efc9dd9826f7153f106cbea527",
-    "runtime-darwin-x64.tar.gz": "6a9649e73b0e8a1c36488d560c38e91794a38cfa4276f2a44eaa2242fbaea398",
-    "runtime-darwin-arm64.tar.gz": "d39a898402aae2489a195defbf4388f808b26611a36ddcb31d82764736e29678"
+    "runtime-win-x64.zip": "0d4c57e60dd860338cee955a122e09fd87ae910dde1dc3d685ece2f419835301",
+    "runtime-linux-x64.tar.gz": "6d939cded6bdb45c43b4b600523e021249f5a36c8223090fec61bb305340fb71",
+    "runtime-linux-arm64.tar.gz": "8d8f39c73ee9bd8f8c8ef12ffa95f972eadb8df094b3603ec2746f0454ac71c3",
+    "runtime-darwin-x64.tar.gz": "a58c6d49bb0eb637390eda2d327c5edd4f29e2aeb9f7ea45327dbddd09f94514",
+    "runtime-darwin-arm64.tar.gz": "12ce3356af856f60fe99795aeaa68c89219fa5f085e040c47ab1c43ac86394e6"
   },
   "sizes": {
-    "runtime-win-x64.zip": 5545356,
-    "runtime-linux-x64.tar.gz": 5447198,
-    "runtime-linux-arm64.tar.gz": 4938195,
-    "runtime-darwin-x64.tar.gz": 5376745,
-    "runtime-darwin-arm64.tar.gz": 4921290
+    "runtime-win-x64.zip": 10841525,
+    "runtime-linux-x64.tar.gz": 10735419,
+    "runtime-linux-arm64.tar.gz": 10221166,
+    "runtime-darwin-x64.tar.gz": 10667377,
+    "runtime-darwin-arm64.tar.gz": 10245161
   },
   "blobs": {
-    "runtime-win-x64.zip": "9b1c5ac5290c455bac642663305eee0a480f60e2",
-    "runtime-linux-x64.tar.gz": "e8dc6c2c8495acc0081243fe6b24ae0c0ab054d1",
-    "runtime-linux-arm64.tar.gz": "d75d9ce8fa1bc8aa8a3c55916617acdb570f36d8",
-    "runtime-darwin-x64.tar.gz": "cc989bbc70babedb22350ac23bae8987da60d8f4",
-    "runtime-darwin-arm64.tar.gz": "2aabe2c96cfcad3637592e9cf340e8cb05d9012f"
+    "runtime-win-x64.zip": "d80ddb8ee63719bafee50c7c16dce322ec1a3619",
+    "runtime-linux-x64.tar.gz": "f285bf7d779d051930b45e5851813129332ee46f",
+    "runtime-linux-arm64.tar.gz": "4ca137c6ef837fd8c8b53f6655546eeddaef8ab0",
+    "runtime-darwin-x64.tar.gz": "bd45952e8bba2167788be452183b0cf701ddddab",
+    "runtime-darwin-arm64.tar.gz": "f1deaf1f89669772367b2eded30d0a21c75fcbcd"
   }
 }

@@ -1,3 +1,13 @@
+## Measure the six native commands
+
+From the repository root on Linux, place the released `rc` executable on PATH. Python 3.9 or newer runs the fixtures. The command below generates all six charts’ data. Add `--command fmt` to run a single workload, or `--rc /path/to/rc` to select a binary.
+
+```sh
+python3 benchmarks/toolkit.py --samples 11 --warmups 2 > toolkit-results.json
+```
+
+For each command, the harness measures 1, 8 and 32 inputs in seeded, shuffled order. Each observation starts a fresh process. It verifies the formatted files, type-check result, runnable bundle, passing assertions, restored module bytes or program output after each observation. Select **Median** or **P95** on a chart to see the middle observation or nearest-rank 95th percentile. The raw samples record each measured duration. [Command charts](/commands) · [Download the measurements](/toolkit-benchmarks.json)
+
 ## Reproduce execution timings
 
 Clone the repository and run the harness from its root on Linux or macOS. Install Python 3.9+, RC, Bun, Node.js 24+ and npm. Use the documented executable options to select exact versions.

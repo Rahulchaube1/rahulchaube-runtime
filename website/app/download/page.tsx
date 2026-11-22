@@ -43,7 +43,7 @@ export default function Downloads() {
       <section className="page-section" id="vscode">
         <h2>VS Code extension</h2>
         <p>
-          Run, watch and test a saved file in VS Code, VSCodium or code-server. In Extensions, choose{" "}
+          Format, check, run, watch and test a saved file in VS Code, VSCodium or code-server. In Extensions, choose{" "}
           <strong>Install from VSIX</strong> and select the downloaded file.
         </p>
         <div className="button-row">
