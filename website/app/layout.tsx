@@ -69,7 +69,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         name: site.name,
         operatingSystem: "Linux, macOS, Windows",
         applicationCategory: "DeveloperApplication",
-        softwareVersion: "1.0.0",
+        softwareVersion: site.version,
+        license: site.social.github + "/blob/main/LICENSE.md",
+        author: { "@id": `${site.domain}/#person` },
         downloadUrl: `${site.domain}/download`,
         offers: {
           "@type": "Offer",

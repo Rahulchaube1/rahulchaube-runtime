@@ -1,3 +1,4 @@
+import { createHmac, randomUUID, timingSafeEqual, createHash } from "node:crypto";
 /**
  * RahulChaube Runtime — API middleware.
  *
@@ -48,13 +49,31 @@ export function rateLimit(max: number, windowMs: number) {
   };
 }
 
-/** Bearer-token authentication against an env-provided secret. */
+function matchesSecret(value: string, secret: string): boolean {
+  const digest = (s: string) => createHash("sha256").update(s).digest();
+  return timingSafeEqual(digest(value), digest(secret));
+}
+
+function signature(payload: string, secret: string): string {
+  return createHmac("sha256", secret).update(payload).digest("base64url");
+}
+
+export function issueAccessToken(req: Request): string | undefined {
+  const secret = process.env.API_AUTH_SECRET;
+  if (!secret || !matchesSecret(req.headers.get("authorization") ?? "", "Bearer " + secret)) return;
+  const payload = `rc1.${Math.floor(Date.now() / 1000) + 900}.${randomUUID()}`;
+  return payload + "." + signature(payload, secret);
+}
+
 export function bearerAuth(secretEnv = "API_AUTH_SECRET") {
-  const secret = process.env[secretEnv];
   return (req: Request): boolean => {
-    if (!secret) return true; // auth disabled when no secret configured
+    const secret = process.env[secretEnv];
     const header = req.headers.get("authorization") ?? "";
-    return header === `Bearer ${secret}`;
+    if (!secret || !header.startsWith("Bearer ")) return false;
+    const token = header.slice(7);
+    if (matchesSecret(token, secret)) return true;
+    const match = /^(rc1\.(\d{10})\.[a-f0-9-]{36})\.([A-Za-z0-9_-]{43})$/.exec(token);
+    return !!match && Number(match[2]) > Date.now() / 1000 && matchesSecret(match[3], signature(match[1], secret));
   };
 }
 

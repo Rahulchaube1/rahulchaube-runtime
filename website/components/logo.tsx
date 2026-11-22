@@ -8,7 +8,7 @@ export function Logo({
   return (
     <img
       src="/rahulchaube-runtimelogo.png"
-      alt="RahulChaube Runtime Logo"
+      alt="RC Runtime Logo"
       className={`object-contain select-none ${className}`}
     />
   );

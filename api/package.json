@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "bun run src/server.ts",
     "start": "bun run src/server.ts",
-    "test": "bun test src"
+    "test": "bun test tests"
   },
   "devDependencies": {
     "typescript": "^5.0.0"

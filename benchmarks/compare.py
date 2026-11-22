@@ -42,6 +42,7 @@ def run():
         executable = shutil.which(getattr(args, name))
         if not executable:
             parser.error(f"missing {name}; pass --{name} /path/to/{name}")
+        executable = os.path.abspath(executable)
         engines[name] = {
             "path": executable,
             "version": subprocess.check_output([executable, "--version"], text=True).strip(),

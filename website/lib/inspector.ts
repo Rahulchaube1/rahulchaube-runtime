@@ -1,5 +1,5 @@
 /**
- * Runtime Inspector & Memory Profiler Infrastructure for RahulChaube Runtime.
+ * Runtime Inspector & Memory Profiler Infrastructure for RC Runtime.
  * Provides programmatic access to system metrics, V8 heap usage, and startup diagnostics.
  */
 

@@ -1,32 +1,31 @@
-name: deploy-website
+name: Verify production website
 
 on:
   push:
     branches: [main]
-    paths:
-      - "website/**"
-      - "branding/**"
-      - "docs/**"
+    paths: ["website/**"]
   workflow_dispatch:
 
 permissions:
   contents: read
-  deployments: write
+
+concurrency:
+  group: rc-production-website
+  cancel-in-progress: true
 
 jobs:
-  deploy:
+  verify:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - name: Install website deps
-        working-directory: website
-        run: npm ci || npm install
-      - name: Build
-        working-directory: website
-        run: npm run build
-      - name: Deploy to rahulchaube.space
-        working-directory: website
-        run: echo "Deploy dist/ to your host (Vercel/Cloudflare/Docker)."
+      - name: Verify the Vercel deployment on the public domain
+        shell: bash
+        run: |
+          for attempt in {1..36}; do
+            if curl --max-time 8 -fsS "https://www.rahulchaube.space/api/health?build=$GITHUB_SHA" |
+              jq -e --arg sha "$GITHUB_SHA" '.status == "healthy" and .commit == $sha' > /dev/null; then
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "The domain is not serving commit $GITHUB_SHA" >&2
+          exit 1

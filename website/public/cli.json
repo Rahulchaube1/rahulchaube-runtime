@@ -1,28 +1,42 @@
 {
-  "binary": "rahulchaube",
-  "version": "1.2.0",
+  "binary": "rc",
+  "version": "1.3.0",
   "commands": [
-    { "name": "blyx", "usage": "rahulchaube blyx <subcommand>", "description": "Access the bundled Blyx compiler and interpreter", "status": "Implemented" },
-    { "name": "run", "usage": "rahulchaube run <script|file>", "description": "Execute script or TS/JS file natively", "status": "Implemented" },
-    { "name": "test", "usage": "rahulchaube test [file]", "description": "Execute unit tests in workspace", "status": "Implemented" },
-    { "name": "build", "usage": "rahulchaube build [entry]", "description": "Bundle source code for production", "status": "Implemented" },
-    { "name": "install", "usage": "rahulchaube install", "description": "Install dependencies from package.json", "status": "Implemented" },
-    { "name": "add", "usage": "rahulchaube add <pkg>", "description": "Add dependency to package.json", "status": "Implemented" },
-    { "name": "remove", "usage": "rahulchaube remove <pkg>", "description": "Remove dependency from package.json", "status": "Implemented" },
-    { "name": "update", "usage": "rahulchaube update [pkg]", "description": "Update installed dependencies", "status": "Implemented" },
-    { "name": "audit", "usage": "rahulchaube audit", "description": "Scan dependencies for security vulnerabilities", "status": "Implemented" },
-    { "name": "licenses", "usage": "rahulchaube licenses", "description": "Audit third-party package licenses", "status": "Implemented" },
-    { "name": "why", "usage": "rahulchaube why <pkg>", "description": "Explain dependency resolution path", "status": "Implemented" },
-    { "name": "graph", "usage": "rahulchaube graph", "description": "Display ASCII dependency tree", "status": "Implemented" },
-    { "name": "create", "usage": "rahulchaube create <template> [name]", "description": "Scaffold project template", "status": "Implemented" },
-    { "name": "doctor", "usage": "rahulchaube doctor", "description": "Run environment health checks", "status": "Implemented" },
-    { "name": "explain", "usage": "rahulchaube explain <error>", "description": "AI error diagnostic assistant", "status": "Implemented" },
-    { "name": "optimize", "usage": "rahulchaube optimize", "description": "Scan project for performance tips", "status": "Implemented" },
-    { "name": "migrate", "usage": "rahulchaube migrate <pm>", "description": "Convert project from npm/yarn/pnpm/bun", "status": "Implemented" },
-    { "name": "cache clean", "usage": "rahulchaube cache clean", "description": "Clear package binary caches", "status": "Implemented" },
-    { "name": "plugins list", "usage": "rahulchaube plugins list", "description": "List installed CLI plugins", "status": "Implemented" },
-    { "name": "plugins install", "usage": "rahulchaube plugins install <plugin>", "description": "Install CLI plugin", "status": "Implemented" },
-    { "name": "plugins update", "usage": "rahulchaube plugins update", "description": "Update all CLI plugins", "status": "Implemented" },
-    { "name": "plugins remove", "usage": "rahulchaube plugins remove <plugin>", "description": "Uninstall CLI plugin", "status": "Implemented" }
+    {
+      "name": "run",
+      "usage": "rc run [--watch] <entry> [--] [args...]",
+      "description": "Run a program and optionally restart on changes",
+      "status": "Implemented"
+    },
+    {
+      "name": "build",
+      "usage": "rc build [--watch] <entry> --outfile <file>",
+      "description": "Bundle an ES module graph",
+      "status": "Implemented"
+    },
+    {
+      "name": "test",
+      "usage": "rc test [files...]",
+      "description": "Run named or discovered test files",
+      "status": "Implemented"
+    },
+    {
+      "name": "init",
+      "usage": "rc init <directory>",
+      "description": "Scaffold an RC Web application and tests",
+      "status": "Implemented"
+    },
+    {
+      "name": "install",
+      "usage": "rc install [--offline]",
+      "description": "Install integrity-pinned ES modules",
+      "status": "Implemented"
+    },
+    {
+      "name": "doctor",
+      "usage": "rc doctor",
+      "description": "Print the version, platform, engine and compiler",
+      "status": "Implemented"
+    }
   ]
 }

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Security Policy — RahulChaube Runtime",
-  description: "Security vulnerability disclosure policy, audit reporting guidelines, and security practices for RahulChaube Runtime.",
+  title: "Security Policy — RC Runtime",
+  description: "Security vulnerability disclosure policy, audit reporting guidelines, and security practices for RC Runtime.",
 };
 
 export default function SecurityPage() {
@@ -14,7 +14,7 @@ export default function SecurityPage() {
         </h1>
         <div className="space-y-4 text-zinc-700 dark:text-[#8B949E] text-base leading-relaxed">
           <p>
-            Security is paramount to the RahulChaube Runtime developer platform. We perform automated dependency auditing and provide native security scanning via \`rahulchaube audit\`.
+            Security is paramount to the RC Runtime developer platform. We perform automated dependency auditing and provide native security scanning via \`rahulchaube audit\`.
           </p>
 
           <h2 className="text-xl font-bold text-zinc-900 dark:text-[#F0F6FC] font-title">

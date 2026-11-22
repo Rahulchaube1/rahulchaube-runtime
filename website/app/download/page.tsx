@@ -6,9 +6,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Download RahulChaube Runtime — Official Packages & Installers",
+  title: "Download RC Runtime — Official Packages & Installers",
   description:
-    "Download RahulChaube Runtime for Windows x64, Linux, and macOS.",
+    "Download RC Runtime for Windows x64, Linux, and macOS.",
 };
 
 const getTargetIcon = (os: string) => {
@@ -23,10 +23,10 @@ export default function DownloadPage() {
       {/* Page Header */}
       <div className="text-center max-w-3xl mx-auto mb-12">
         <h1 className="text-3xl sm:text-5xl font-extrabold text-zinc-900 dark:text-[#F0F6FC] tracking-tight mb-4">
-          Download RahulChaube Runtime
+          Download RC Runtime
         </h1>
         <p className="text-zinc-600 dark:text-[#8B949E] text-sm sm:text-base">
-          Install Bun first to run the RC Runtime installer and JavaScript or TypeScript projects.
+          Run RC from the verified archive. The JavaScript engine, TypeScript compiler and RC Web ship inside the executable.
         </p>
       </div>
 
@@ -41,9 +41,9 @@ export default function DownloadPage() {
           In the Extensions view, choose Install from VSIX and select the downloaded file.
           Open a JavaScript or TypeScript file and choose RC Runtime: Watch Current File to restart on save.
         </p>
-        <a href="/extensions/rahulchaube-runtime-1.0.0.vsix" download
+        <a href="/extensions/rahulchaube-runtime-1.1.0.vsix" download
           className="inline-flex items-center gap-2 font-semibold text-sm underline underline-offset-4">
-          <Download aria-hidden="true" className="h-4 w-4" /> Download extension 1.0.0
+          <Download aria-hidden="true" className="h-4 w-4" /> Download extension 1.1.0
         </a>
         <a className="ml-5 text-sm underline" href="/extensions/SHA256SUMS">SHA-256 checksum</a>
       </section>

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "OpenAPI Specs & API Reference — RahulChaube Runtime",
-  description: "Interactive Swagger & OpenAPI 3.0 API reference documentation for RahulChaube Runtime REST services.",
+  title: "OpenAPI Specs & API Reference — RC Runtime",
+  description: "Interactive Swagger & OpenAPI 3.0 API reference documentation for RC Runtime REST services.",
 };
 
 export default function ApiDocsPage() {
@@ -16,7 +16,7 @@ export default function ApiDocsPage() {
             REST API Reference &amp; OpenAPI Spec
           </h1>
           <p className="text-zinc-600 dark:text-[#8B949E] text-base">
-            Official OpenAPI 3.0 specification endpoints for the RahulChaube Runtime service engine.
+            Official OpenAPI 3.0 specification endpoints for the RC Runtime service engine.
           </p>
         </div>
 
@@ -46,7 +46,7 @@ export default function ApiDocsPage() {
               </span>
             </div>
             <p className="text-sm text-zinc-600 dark:text-[#8B949E]">
-              Get current RahulChaube Runtime version, release channel, and platform commit hash.
+              Get current RC Runtime version, release channel, and platform commit hash.
             </p>
           </div>
 

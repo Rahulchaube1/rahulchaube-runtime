@@ -1,63 +1,25 @@
 # Installation
 
-RahulChaube Runtime ships as a single executable, `rahulchaube`. The engine
-underneath is the proven, MIT-licensed Bun core; the brand, CLI, and developer
-experience are reimplemented independently.
-
-## Supported platforms
-
-| Platform | Architectures |
-| --- | --- |
-| Linux | x64, arm64 |
-| macOS | x64, Apple Silicon (arm64) |
-| Windows | x64, arm64 |
-
-> Linux users: kernel 5.6+ is recommended (minimum 5.1).
-
-## Install methods
-
-### npm (recommended)
+The installer downloads the archive for your operating system, checks its SHA-256 digest and installs the release under ~/.rc-runtime. On Linux and macOS, use Bash.
 
 ```sh
-npm install -g rahulchaube-cli
+curl -fsSL https://www.rahulchaube.space/install | bash
 ```
 
-### From source
+On Windows x64, use PowerShell.
 
-The engine is built from the upstream Bun sources. Prerequisites: a C/C++
-toolchain, Zig, and Rust.
+```powershell
+irm https://www.rahulchaube.space/install.ps1 | iex
+```
+
+Open a new terminal and check the executable.
 
 ```sh
-git clone <your-fork-url> rahulchaube
-cd rahulchaube
-rahulchaube install            # install dev dependencies via the engine
-bun run build:release          # build the native engine (uses the engine build scripts)
+rc --version
 ```
 
-### Docker
 
-```sh
-docker run --rm --init rahulchaube/rahulchaube rahulchaube --version
-```
 
-## Verify
+Archives cover Linux x64/ARM64, macOS Intel/Apple Silicon and Windows x64. The Download page lists direct archives and their digests.
 
-```sh
-rahulchaube --version
-rahulchaube doctor
-```
-
-`rahulchaube doctor` runs a set of environment checks (engine present, manifest
-found, dependency tree consistent, VCS hygiene). Pass `--fix` to auto-repair
-common issues.
-
-## Upgrading
-
-```sh
-npm update -g rahulchaube-cli
-```
-
-## CPU requirements
-
-On x64, some instructions require a baseline CPU (e.g. AVX2). If you see
-"illegal instruction" errors, use a baseline build of the engine.
+[Online guide](https://www.rahulchaube.space/docs/installation)

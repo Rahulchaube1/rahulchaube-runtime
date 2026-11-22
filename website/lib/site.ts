@@ -1,3 +1,5 @@
+import release from "./release-manifest.json";
+
 export interface DownloadTarget {
   os: string;
   arch: string;
@@ -5,20 +7,19 @@ export interface DownloadTarget {
 }
 
 export const site = {
-  name: "RahulChaube Runtime",
-  shortName: "RahulChaube",
+  name: "RC Runtime",
+  shortName: "RC Runtime",
   company: "RahulChaube",
   domain: "https://www.rahulchaube.space",
-  tagline: "High-performance JavaScript & TypeScript developer platform.",
+  tagline: "Standalone JavaScript and TypeScript runtime by Rahul Chaube.",
   description:
-    "A next-generation JavaScript & TypeScript runtime, package manager, and developer platform engineered for high-throughput execution, instant startup, and modular CLI tooling.",
-  version: "1.2.0",
+    "Run JavaScript and TypeScript, bundle modules, test code and serve HTTP with RC Web. RC Runtime is open source under the MIT License.",
+  version: release.version,
   social: {
     github: "https://github.com/Rahulchaube1/rahulchaube-runtime",
-    npm: "https://www.npmjs.com/package/rahulchaube",
-    x: "https://x.com/rahulchaube",
-    linkedin: "https://linkedin.com/in/rahulchaube",
-    discord: "https://discord.gg/rahulchaube",
+    x: "https://x.com/RahulChaube_",
+    linkedin: "https://www.linkedin.com/in/rahulchaube1",
+    issues: "https://github.com/Rahulchaube1/rahulchaube-runtime/issues",
   },
   nav: [
     { label: "Overview", href: "/" },

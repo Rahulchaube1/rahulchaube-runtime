@@ -11,6 +11,18 @@ export interface BlogPost {
 
 export const blogPosts: BlogPost[] = [
   {
+    slug: "standalone-rc-runtime", title: "RC Runtime 1.3 and RC Web",
+    description: "Build, serve and test a TypeScript application with the standalone rc executable.",
+    date: "2026-11-22", tags: ["release", "RC Web"], category: "Releases", author: "RC Runtime",
+    body: `# RC Runtime 1.3 and RC Web
+
+RC Runtime runs JavaScript and TypeScript with QuickJS-NG and esbuild embedded in a native executable. The release includes RC Web for HTTP routes, a test runner and a filesystem library.
+
+Run rc init hello to create an application. From the hello directory, run rc test, then rc run --watch server.ts. Visit http://127.0.0.1:3000/hello/Rahul to try the route.
+
+The Download page lists the five platform archives and their checksums. The Benchmarks page publishes the workloads, measurements and raw samples.`,
+  },
+  {
     slug: "introducing-rahulchaube-runtime",
     title: "Introducing RahulChaube Runtime: High-Performance Developer Platform",
     description:

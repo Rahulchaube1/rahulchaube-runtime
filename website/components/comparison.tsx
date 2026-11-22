@@ -46,7 +46,7 @@ export function ComparisonSection() {
       <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
         <h2 className="text-h2-fluid font-black text-zinc-900 dark:text-[#F0F6FC]">Platform Comparison</h2>
         <p className="text-body-fluid text-zinc-600 dark:text-[#8B949E]">
-          How RahulChaube Runtime compares against existing developer tools and runtimes.
+          How RC Runtime compares against existing developer tools and runtimes.
         </p>
       </div>
 

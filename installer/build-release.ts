@@ -85,10 +85,10 @@ export function buildReleaseArtifacts(outputDir: string = "dist", nativeDir: str
   writeFileSync(join(distPath, "SHA256SUMS"), checksumLines, "utf-8");
 
   // Write version.json
-  const downloadUrl = "https://raw.githubusercontent.com/Rahulchaube1/rahulchaube-runtime/refs/heads/main/dist";
+  const downloadUrl = `https://raw.githubusercontent.com/Rahulchaube1/rahulchaube-runtime/v${version}/dist`;
   writeFileSync(join(distPath, "VERSION"), version + "\n");
   const versionJson = {
-    version: version,
+    version,
     channel: "stable",
     launcher: "rc",
     release: "https://www.rahulchaube.space/releases",

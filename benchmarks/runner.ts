@@ -5,7 +5,7 @@ import { runAllBenchmarks } from "./suite.ts";
 
 async function main() {
   console.log("=========================================================");
-  console.log("   RahulChaube Runtime — Real Execution Benchmark Suite   ");
+  console.log("   RahulChaube compatibility tooling microbenchmarks   ");
   console.log("=========================================================\n");
 
   const results = await runAllBenchmarks();
@@ -23,4 +23,4 @@ async function main() {
   console.log("\n[Note] All benchmarks executed live using performance.now(). Zero fabricated metrics.");
 }
 
-main().catch(console.error);
+main().catch(error => { console.error(error); process.exitCode = 1; });

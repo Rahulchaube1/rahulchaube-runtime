@@ -2,7 +2,7 @@
 /**
  * RahulChaube Runtime — CLI entrypoint.
  *
- * This is an independently-branded, MIT-compatible fork of the Bun project.
+ * This historical CLI uses an installed Bun host. The standalone rc executable is built from native/.
  * It is NOT the official Bun and is not endorsed by the Bun authors.
  */
 import { main } from "../src/index.ts";

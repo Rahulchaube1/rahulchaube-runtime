@@ -1,72 +1,31 @@
 {
-  "platform": "RahulChaube Runtime",
-  "version": "1.2.0",
+  "platform": "RC Runtime",
+  "version": "1.3.0",
   "features": [
     {
-      "name": "TypeScript & JSX Execution",
+      "name": "Standalone JS and TS",
       "status": "Implemented",
-      "category": "runtime",
-      "description": "Execute .ts, .tsx, .js, .jsx files natively without tsc or Babel precompilation."
+      "description": "QuickJS-NG and esbuild in one native executable"
     },
     {
-      "name": "Fast Cold Startup",
+      "name": "RC Web",
       "status": "Implemented",
-      "category": "performance",
-      "description": "CLI commands load on demand."
+      "description": "HTTP routes, path parameters and async handlers"
     },
     {
-      "name": "Node.js API Compatibility Layer",
+      "name": "RC tests",
       "status": "Implemented",
-      "category": "compatibility",
-      "description": "Compatibility for standard Node.js built-ins including fs, path, http, crypto, os, stream."
+      "description": "Isolated test files and asynchronous assertions"
     },
     {
-      "name": "High-Speed Lockfile Package Manager",
+      "name": "Watch mode",
       "status": "Implemented",
-      "category": "package-manager",
-      "description": "Lockfile-compatible package resolution engine with global content-addressable storage."
+      "description": "Restart on imported source changes"
     },
     {
-      "name": "Production Bundler",
+      "name": "Pinned dependencies",
       "status": "Implemented",
-      "category": "bundler",
-      "description": "Bundles JS/TS for web browsers, Node, or Bun with tree-shaking and minification."
-    },
-    {
-      "name": "Dependency Graph Visualizer",
-      "status": "Implemented",
-      "category": "cli",
-      "description": "Renders ASCII workspace dependency tree via rahulchaube graph."
-    },
-    {
-      "name": "AI Error Diagnostic Assistant",
-      "status": "Implemented",
-      "category": "cli",
-      "description": "Explains runtime errors and suggests fixes via rahulchaube explain."
-    },
-    {
-      "name": "Environment Health Doctor",
-      "status": "Implemented",
-      "category": "cli",
-      "description": "Verifies environment variables, node versions, and system PATH via rahulchaube doctor."
-    },
-    {
-      "name": "CLI Plugin Extension System",
-      "status": "Implemented",
-      "category": "plugins",
-      "description": "Extensible CLI ecosystem using rahulchaube-plugin-* packages."
-    },
-    {
-      "name": "Standalone Binary Compiler",
-      "status": "Experimental",
-      "category": "compiler",
-      "description": "Compiles JavaScript/TypeScript applications into single standalone executables."
-    },
-    {
-      "name": "Distributed Package Cache Proxy",
-      "status": "Planned",
-      "category": "enterprise",
-      "description": "Distributed binary mirror and team cache proxy server."
+      "description": "Verified ES modules with offline cache support"
     }
   ]
 }

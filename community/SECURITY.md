@@ -26,4 +26,4 @@ the vulnerability is exploitable through RahulChaube Runtime itself.
 ## Credits
 
 This policy is adapted for the RahulChaube Runtime fork. The runtime is an
-MIT-licensed fork of Bun; upstream security practices are acknowledged.
+MIT-licensed project embedding QuickJS-NG and esbuild.

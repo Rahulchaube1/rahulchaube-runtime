@@ -1,61 +1,14 @@
-# Contributing to RahulChaube Runtime
+# Contributing to RC Runtime
 
-Thank you for your interest in contributing! This guide covers how to get
-involved.
-
-## Ways to contribute
-
-- Report bugs and request features via GitHub Issues.
-- Improve documentation in `docs/rahulchaube/` and `website/`.
-- Build examples in `examples/` and templates in `templates/`.
-- Submit pull requests for the CLI (`packages/rahulchaube-cli`) and ecosystem
-  apps (`website/`, `api/`, `installer/`).
-
-## Development setup
+The native host, CLI, RC Web and built-in libraries are developed in this public repository. Run the following from a clone with Go 1.25+ and a C compiler installed.
 
 ```sh
-git clone <your-fork-url>
-cd rahulchaube
-rahulchaube install
+cd native
+go test ./...
+go build -trimpath -o rc .
+./rc doctor
 ```
 
-### CLI (TypeScript)
+The starter is in `native/starter` and the built-in JavaScript libraries are under `native/modules`. The website uses Next.js in `website/`. To test the website from that directory, run `bun install --frozen-lockfile` and `bun run build`.
 
-```sh
-cd packages/rahulchaube-cli
-bun run start --help
-bun run typecheck
-```
-
-### Website (Next.js)
-
-```sh
-cd website
-npm install
-npm run dev
-```
-
-### API
-
-```sh
-cd api
-bun run dev
-```
-
-## Before opening a PR
-
-- Run the relevant type checks and linters.
-- Keep changes focused and add tests where practical.
-- Update documentation for any user-facing change.
-- Ensure `rahulchaube doctor` passes in your environment.
-
-## License
-
-By contributing, you agree that your contributions are licensed under the
-**MIT License**. The project is a fork of Bun; do not remove or alter upstream
-copyright notices or license headers.
-
-## Attribution
-
-RahulChaube Runtime is an independent fork of Bun. Retain all upstream
-attribution and the original MIT license terms.
+For a bug report, include the RC version, OS, input program, expected output and observed output. Pull requests should exercise the affected entry points. Contributions to RC Runtime are covered by the project’s MIT License. [License](../LICENSE.md)

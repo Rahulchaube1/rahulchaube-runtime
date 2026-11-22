@@ -29,7 +29,7 @@ rc test
 rc run server.ts
 ```
 
-Open `http://127.0.0.1:3000/hello/Rahul` to receive `{"hello":"Rahul"}`. Routes are ordinary functions. You can test them by calling `app.handle()` or serve them through the native HTTP listener.
+Open `http://127.0.0.1:3000/hello/Rahul` to receive `{"hello":"Rahul"}`. The generated project includes TypeScript declarations for the host and library APIs. Routes are ordinary functions. You can test them by calling `app.handle()` or serve them through the native HTTP listener.
 
 ```ts
 import { createApp, json } from "rc:web";
@@ -44,6 +44,7 @@ app.listen({ port: 3000 });
 | Command | What it does |
 | --- | --- |
 | `rc run app.ts -- one two` | Runs the program and exposes its arguments as `RC.args`. |
+| `rc run --watch app.ts` | Restarts the app when the entry or one of its imports changes. |
 | `rc build app.ts --outfile app.mjs` | Bundles imports into an ES module. Run it with `rc run app.mjs`. |
 | `rc test` | Discovers `.test` and `.spec` files and reports failures with a nonzero exit code. |
 | `rc init hello` | Creates a TypeScript HTTP application and its first test in a new directory. |

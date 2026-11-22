@@ -1,26 +1,10 @@
 import { Code } from "lucide-react";
 
 const TEMPLATES = [
-  {
-    title: "React 19 + TypeScript",
-    command: "rahulchaube create react my-app",
-    description: "Start a React project with a TypeScript entry point."
-  },
-  {
-    title: "HTTP REST API Server",
-    command: "rahulchaube create hono my-api",
-    description: "Create a Hono server with a sample route."
-  },
-  {
-    title: "Next.js app",
-    command: "rahulchaube create next my-site",
-    description: "Create a Next.js project with a page in src/pages."
-  },
-  {
-    title: "CLI Tooling Template",
-    command: "rahulchaube create cli my-tool",
-    description: "Start a command-line tool with a TypeScript entry point."
-  }
+  { title: "Start an HTTP service", command: "rc init hello", description: "Generate a TypeScript route, a server entry and a test. Open the new hello directory." },
+  { title: "Test a route", command: "rc test", description: "From your project directory, run the test suite against the app’s handlers." },
+  { title: "Watch a service", command: "rc run --watch server.ts", description: "Restart the server when you save the entry or one of its imported files." },
+  { title: "Bundle the application", command: "rc build server.ts --outfile dist/server.mjs", description: "Produce an ES module you can run with RC Runtime." },
 ];
 
 export function TemplatesGallery() {
@@ -28,10 +12,10 @@ export function TemplatesGallery() {
     <section className="mx-auto max-w-6xl px-6 py-12 font-sans border-t border-zinc-200 dark:border-[#163830]">
       <div className="text-center max-w-3xl mx-auto mb-8 space-y-3">
         <h2 className="text-h2-fluid font-black text-zinc-900 dark:text-[#F0F6FC]">
-          Project templates
+          Develop with RC Web
         </h2>
         <p className="text-body-fluid text-zinc-600 dark:text-[#8B949E]">
-          Run a command from the directory where you want to create your project.
+          Create a project, then run the remaining commands from its directory.
         </p>
       </div>
 

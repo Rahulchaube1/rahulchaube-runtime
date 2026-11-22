@@ -5,10 +5,10 @@ import { useState } from "react";
 import { site } from "@/lib/site";
 import { Logo } from "@/components/logo";
 
-const AI_PROMPT = `Tell me about RahulChaube Runtime (https://www.rahulchaube.space).
+const AI_PROMPT = `Tell me about RC Runtime (https://www.rahulchaube.space).
 
 Explain:
-• What RahulChaube Runtime is
+• What RC Runtime is
 • Why it exists
 • Its architecture
 • CLI features
@@ -106,7 +106,7 @@ export function Footer() {
               <Logo className="h-10 w-auto" />
             </Link>
             <p className="text-sm text-zinc-600 dark:text-[#8B949E] leading-relaxed">
-              High-performance developer platform for JavaScript &amp; TypeScript.
+              Open-source JavaScript and TypeScript runtime by Rahul Chaube.
             </p>
           </div>
 
@@ -124,8 +124,8 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => handlePlatformClick(platform.name, platform.url)}
-                  aria-label={`Ask ${platform.name} about RahulChaube Runtime`}
-                  title={`Ask ${platform.name} about RahulChaube Runtime`}
+                  aria-label={`Ask ${platform.name} about RC Runtime`}
+                  title={`Ask ${platform.name} about RC Runtime`}
                   className="text-zinc-500 dark:text-[#8B949E] hover:text-[#2FA866] dark:hover:text-[#A8F05B] transition-all duration-200 hover:scale-110 hover:drop-shadow-[0_0_10px_rgba(47,168,102,0.6)] cursor-pointer inline-flex items-center justify-center p-1 rounded-lg"
                 >
                   {platform.type === "svg" ? (
@@ -148,7 +148,7 @@ export function Footer() {
             )}
 
             <p className="text-xs text-zinc-500 dark:text-[#8B949E] leading-tight font-sans">
-              Ask your favorite AI assistant about RahulChaube Runtime.
+              Ask your favorite AI assistant about RC Runtime.
             </p>
           </div>
         </div>
@@ -180,8 +180,6 @@ export function Footer() {
         <div>
           <h4 className="text-sm font-bold text-zinc-900 dark:text-[#F0F6FC] uppercase tracking-wider mb-4 font-title">Legal</h4>
           <ul className="space-y-3 font-medium">
-            <li><Link href="/license" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Privacy Policy</Link></li>
-            <li><Link href="/license" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Terms of Service</Link></li>
             <li><Link href="/security" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Security</Link></li>
             <li><Link href="/license" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Software License</Link></li>
           </ul>
@@ -191,8 +189,8 @@ export function Footer() {
         <div>
           <h4 className="text-sm font-bold text-zinc-900 dark:text-[#F0F6FC] uppercase tracking-wider mb-4 font-title">Contact</h4>
           <ul className="space-y-3 font-medium">
-            <li><a href="mailto:rahulchaube@users.noreply.github.com" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Support Email</a></li>
-            <li><a href={site.social.discord} target="_blank" rel="noreferrer" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Discord Community</a></li>
+            <li><a href="https://www.rahulchaube1.com/contact" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Contact Rahul</a></li>
+            <li><a href={site.social.linkedin} target="_blank" rel="noreferrer" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Rahul on LinkedIn</a></li>
             <li><a href={site.social.x} target="_blank" rel="noreferrer" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">X (Twitter)</a></li>
           </ul>
         </div>
@@ -201,10 +199,8 @@ export function Footer() {
       {/* Bottom Bar */}
       <div className="border-t border-zinc-200 dark:border-[#163830] py-8 bg-zinc-50/50 dark:bg-[#0A1F1B]/60">
         <div className="site-container flex flex-col sm:flex-row items-center justify-between gap-4 text-sm font-medium">
-          <span className="text-zinc-500 dark:text-[#8B949E]">© 2026 RahulChaube Runtime</span>
+          <span className="text-zinc-500 dark:text-[#8B949E]">© 2026 RC Runtime</span>
           <div className="flex items-center gap-8 text-zinc-500 dark:text-[#8B949E]">
-            <Link href="/license" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Privacy</Link>
-            <Link href="/license" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Terms</Link>
             <Link href="/security" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">Security</Link>
             <Link href="/license" className="hover:text-zinc-900 dark:hover:text-[#F0F6FC] transition-colors">License</Link>
           </div>

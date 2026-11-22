@@ -1,36 +1,27 @@
 import { BenchmarkChart } from "@/components/benchmark-chart";
-import { Card } from "@/components/ui/card";
-import { runtimeSeries } from "@/lib/benchmarks";
+import data from "@/public/benchmarks.json";
+import { site } from "@/lib/site";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Benchmarks — RahulChaube Runtime",
-  description: "RahulChaube Runtime throughput and startup benchmarks compared with Node.js and Deno.",
-};
+export const metadata: Metadata = { title: "Benchmarks", description: "Reproducible RC Runtime, Bun, Node.js and npm script measurements." };
 
 export default function BenchmarksPage() {
   return (
-    <div className="mx-auto max-w-5xl px-4 py-16 font-sans">
-      <h1 className="text-3xl font-extrabold text-zinc-900 dark:text-[#F0F6FC]">Runtime Performance &amp; Startup</h1>
-      <p className="mt-3 max-w-2xl text-xs text-zinc-600 dark:text-[#8B949E] leading-relaxed">
-        These charts use illustrative values. To measure the runtime on your hardware, run{" "}
-        <code className="ml-1 font-mono">bun benchmarks/runner.ts</code> from the repository root.
-      </p>
-
-      <div className="mt-10">
-        <BenchmarkChart />
+    <article className="mx-auto max-w-5xl space-y-8 px-5 py-16">
+      <div className="space-y-3"><h1 className="text-4xl font-bold">Runtime benchmarks</h1>
+        <p>Each fresh process ran the same program and produced the same verified output. The npm column runs the program through a Node.js package script.</p>
       </div>
-
-      <div className="mt-10 grid gap-4 sm:grid-cols-3">
-        {runtimeSeries.map((r) => (
-          <Card key={r.t} className="bg-white dark:bg-[#0E2923] border-zinc-200 dark:border-[#163830]">
-            <h3 className="font-semibold capitalize text-sm text-zinc-900 dark:text-[#F0F6FC]">{r.t} startup example</h3>
-            <p className="mt-2 text-xs text-zinc-600 dark:text-[#8B949E] font-mono">
-              rahulchaube: <span className="text-[#2FA866] dark:text-[#A8F05B] font-semibold">{r.rahulchaube}ms</span> · node: {r.node}ms · deno: {r.deno}ms
-            </p>
-          </Card>
-        ))}
-      </div>
-    </div>
+      <BenchmarkChart />
+      <section className="space-y-3 text-sm leading-relaxed">
+        <h2 className="text-xl font-semibold">Test environment</h2>
+        <p>{data.date} · {data.cpu} · {data.system}</p>
+        <p>{data.samples} timed runs followed {data.warmups} warmups for each program. Execution order was interleaved and randomized. Elapsed time includes startup and exit, with a warm filesystem cache. Peak resident memory comes from the operating system.</p>
+        <ul className="list-inside list-disc">{Object.entries(data.engines).map(([name, item]) => <li key={name}>
+          {name === "rc" ? item.version : name + " " + item.version}{item.executable_mib != null && ` · ${item.executable_mib} MiB executable`}
+        </li>)}</ul>
+        <p>The programs exercise startup, TypeScript module loading and integer arithmetic. Package installation and sustained HTTP throughput need their own workloads.</p>
+        <div className="flex flex-wrap gap-5 font-semibold underline"><a href="/benchmarks.json">Raw results</a><a href={site.social.github + "/tree/main/benchmarks"}>Harness and reproduction instructions</a></div>
+      </section>
+    </article>
   );
 }

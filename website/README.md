@@ -1,6 +1,6 @@
-# RahulChaube Runtime Website
+# RC Runtime Website
 
-The official website for RahulChaube Runtime, served at
+The official website for RC Runtime, served at
 [rahulchaube.space](https://rahulchaube.space).
 
 - **Framework:** Next.js 16 (App Router)
@@ -16,7 +16,7 @@ The official website for RahulChaube Runtime, served at
 | `/download` | Installation commands and platform archives |
 | `/docs` | Documentation with sidebar (MDX-like content) |
 | `/blog` | Developer blog with RSS-style posts |
-| `/benchmarks` | Interactive charts (placeholder-labeled data) |
+| `/benchmarks` | Measured startup, TypeScript, CPU, memory and executable size |
 | `/roadmap` | Public roadmap with progress |
 
 ## Develop
@@ -35,22 +35,19 @@ npm run typecheck
 - `app/manifest.ts` — PWA manifest
 - Open Graph + Twitter cards in `app/layout.tsx`
 
-## Notes
+## Public data
 
-- Benchmark charts render **only** clearly-labeled placeholder data until real
-  measurements are published. The project does not claim to be faster than Bun
-  or Node without evidence.
-- This site is independent of the runtime; it can be deployed separately
-  (Vercel, Cloudflare, Docker) and is not required to build the runtime.
+The benchmark page and JSON read the same measurements. The installer and download cards use the release manifest generated from the platform archives. Vercel deploys the website from the repository’s main branch.
 
 ## License
 
-MIT. RahulChaube Runtime is an independent fork of Bun; upstream attribution
-and license files are preserved.
+RC Runtime is MIT-licensed. Release archives include third-party notices.
 
 ## Connect with Rahul Chaube
 
 [Portfolio](https://www.rahulchaube1.com/) · [GitHub](https://github.com/Rahulchaube1) · [LinkedIn](https://www.linkedin.com/in/rahulchaube1) · [Hugging Face](https://huggingface.co/oncody) · [X](https://x.com/RahulChaube_) · [EverestQ](https://www.everestqai.com/) · [Contact](https://www.rahulchaube1.com/contact)
+
+### Rahul’s other projects
 
 [Blyx website](https://www.blyx-lang.space/) · [BlyxTorch](https://www.blyx-lang.space/packages/blyxtorch) · [Handbook](https://doc.blyx-lang.space/) · [Community](https://www.blyx-lang.space/community)
 

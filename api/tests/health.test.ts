@@ -19,3 +19,18 @@ describe("middleware", () => {
     expect(clientIp(req)).toBe("9.9.9.9");
   });
 });
+
+it("issues a usable short-lived credential to a configured API client", async () => {
+  const { issueAccessToken, bearerAuth } = await import("../src/middleware.ts");
+  const previous = process.env.API_AUTH_SECRET;
+  try {
+    process.env.API_AUTH_SECRET = crypto.randomUUID();
+    const request = (token: string) => new Request("https://example.test/api", { headers: { authorization: "Bearer " + token } });
+    const issued = issueAccessToken(request(process.env.API_AUTH_SECRET))!;
+    expect(issued).toStartWith("rc1.");
+    expect(bearerAuth()(request(issued))).toBe(true);
+  } finally {
+    if (previous === undefined) delete process.env.API_AUTH_SECRET;
+    else process.env.API_AUTH_SECRET = previous;
+  }
+});
