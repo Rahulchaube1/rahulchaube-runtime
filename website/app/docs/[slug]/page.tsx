@@ -9,7 +9,7 @@ import { docUrl, getGuide, getSection, guides, lessons } from "@/lib/doc-catalog
 import { guideHeadings, readGuide } from "@/lib/docs";
 import { site } from "@/lib/site";
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = Readonly<{ params: Promise<{ slug: string }> }>;
 export const dynamicParams = false;
 export function generateStaticParams() {
   return guides.map(({ slug }) => ({ slug }));

@@ -1,8 +1,11 @@
 import { afterAll, beforeAll, expect, test } from "bun:test";
 import { createHash } from "node:crypto";
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawn } from "node:child_process";
+import { once } from "node:events";
+import { createInterface } from "node:readline";
 import {
   appendFileSync,
+  copyFileSync,
   mkdtempSync,
   mkdirSync,
   readFileSync,
@@ -57,7 +60,17 @@ test("every guide has searchable content, unique section links and a matching so
   expect(searchGuides(searchIndex(content), "unfindable-marker")).toHaveLength(0);
 });
 
-test("the five published lessons build a working, tested greeting service", () => {
+test("handbook sources accept Windows line endings", () => {
+  const windowsSource = join(tmp, "windows-source");
+  mkdirSync(windowsSource);
+  writeFileSync(
+    join(windowsSource, "getting-started.md"),
+    readGuide("getting-started").replaceAll("\n", "\r\n"),
+  );
+  expect(readSource("getting-started", windowsSource)).toBe(readGuide("getting-started"));
+});
+
+test("the five published lessons build a working, tested greeting service", async () => {
   expect(lessons.map((guide) => guide.slug)).toEqual([
     "getting-started",
     "tutorials-first-steps",
@@ -75,11 +88,34 @@ test("the five published lessons build a working, tested greeting service", () =
   const output = run(app, "test");
   expect(output).toContain("pass creates a greeting");
   expect(output).toContain("pass requires a name");
+  // Use the OS-assigned port so the documented service can run beside other tests.
+  const entry = join(app, "server.ts");
+  writeFileSync(entry, readFileSync(entry, "utf8").replace("port: 3000", "port: 0"));
   run(app, "build", "server.ts", "--outfile", "dist/server.mjs");
-  const bundled = readFileSync(join(app, "dist/server.mjs"), "utf8");
-  expect(bundled).toContain("rc:web");
-  expect(bundled).toContain("/greetings");
-});
+  const deployment = join(tmp, "deployment");
+  mkdirSync(deployment);
+  copyFileSync(join(app, "dist/server.mjs"), join(deployment, "server.mjs"));
+  const child = spawn(rc, ["run", "server.mjs"], { cwd: deployment, stdio: ["ignore", "pipe", "pipe"] });
+  const stopped = once(child, "exit");
+  const lines = createInterface({ input: child.stdout });
+  try {
+    const [message] = await once(lines, "line", { signal: AbortSignal.timeout(6000) });
+    const address = message.match(/^Listening on (http:\/\/127\.0\.0\.1:\d+)$/)?.[1];
+    expect(address).toBeDefined();
+    const response = await fetch(address + "/greetings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: "Ada" }),
+      signal: AbortSignal.timeout(4000),
+    });
+    expect(response.status).toBe(201);
+    expect(await response.json()).toEqual({ hello: "Ada" });
+  } finally {
+    lines.close();
+    child.kill();
+    await stopped;
+  }
+}, 12_000);
 
 test("filesystem, test and library examples execute as printed", () => {
   const work = join(tmp, "modules");

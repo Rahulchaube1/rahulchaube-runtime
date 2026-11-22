@@ -2,7 +2,7 @@ import Link from "next/link";
 import { BookOpen, ChevronDown, GraduationCap } from "lucide-react";
 import { sections, guides, docUrl } from "@/lib/doc-catalog";
 
-export function DocsSidebar({ active }: { active: string }) {
+export function DocsSidebar({ active }: { readonly active: string }) {
   const nav = (
     <nav aria-label="Handbook chapters">
       <Link className="side-overview" href="/docs">

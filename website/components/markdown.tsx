@@ -1,4 +1,4 @@
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Fragment, isValidElement } from "react";
 import { jsx, jsxs } from "react/jsx-runtime";
@@ -21,35 +21,33 @@ const languageNames: Record<string, string> = {
   json: "JSON",
 };
 
-export function Markdown({ source }: { source: string }) {
+const components: Components = {
+  h2: ({ children }) => <h2 id={headingId(String(children))}>{children}</h2>,
+  table: ({ children }) => (
+    <div className="table-scroll">
+      <table>{children}</table>
+    </div>
+  ),
+  pre: ({ children }) => {
+    if (!isValidElement<{ children: string; className?: string }>(children)) return <pre>{children}</pre>;
+    const language = children.props.className?.replace(/^language-/, "");
+    const code = String(children.props.children).replace(/\n$/, "");
+    const tokens =
+      language && highlighter.registered(language)
+        ? toJsxRuntime(highlighter.highlight(language, code), { Fragment, jsx, jsxs })
+        : code;
+    return (
+      <CodeBlock code={code} lang={language && (languageNames[language] || language)}>
+        {tokens}
+      </CodeBlock>
+    );
+  },
+};
+
+export function Markdown({ source }: { readonly source: string }) {
   return (
     <div className="prose-rc">
-      <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
-        components={{
-          h2: ({ children }) => <h2 id={headingId(String(children))}>{children}</h2>,
-          table: ({ children }) => (
-            <div className="table-scroll">
-              <table>{children}</table>
-            </div>
-          ),
-          pre: ({ children }) => {
-            if (!isValidElement<{ children: string; className?: string }>(children))
-              return <pre>{children}</pre>;
-            const language = children.props.className?.replace(/^language-/, "");
-            const code = String(children.props.children).replace(/\n$/, "");
-            const tokens =
-              language && highlighter.registered(language)
-                ? toJsxRuntime(highlighter.highlight(language, code), { Fragment, jsx, jsxs })
-                : code;
-            return (
-              <CodeBlock code={code} lang={language && (languageNames[language] || language)}>
-                {tokens}
-              </CodeBlock>
-            );
-          },
-        }}
-      >
+      <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
         {source}
       </ReactMarkdown>
     </div>

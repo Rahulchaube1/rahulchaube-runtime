@@ -338,7 +338,8 @@ summary {
   color: var(--muted);
   font-size: 11px;
 }
-.search-results p {
+.search-results output {
+  display: block;
   padding: 17px;
   font-size: 14px;
 }

@@ -5,9 +5,9 @@ export function ProjectArticle({
   intro,
   children,
 }: {
-  title: string;
-  intro: string;
-  children: ReactNode;
+  readonly title: string;
+  readonly intro: string;
+  readonly children: ReactNode;
 }) {
   return (
     <article className="site-wrap page-shell simple-article">

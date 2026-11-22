@@ -2,7 +2,13 @@
 import { useState, type ReactNode } from "react";
 import { Check, Copy, Terminal } from "lucide-react";
 
-export function CopyButton({ text, label = "Copy code" }: { text: string; label?: string }) {
+export function CopyButton({
+  text,
+  label = "Copy code",
+}: {
+  readonly text: string;
+  readonly label?: string;
+}) {
   const [status, setStatus] = useState("");
   async function copy() {
     try {
@@ -23,7 +29,15 @@ export function CopyButton({ text, label = "Copy code" }: { text: string; label?
   );
 }
 
-export function CodeBlock({ code, lang, children }: { code: string; lang?: string; children?: ReactNode }) {
+export function CodeBlock({
+  code,
+  lang,
+  children,
+}: {
+  readonly code: string;
+  readonly lang?: string;
+  readonly children?: ReactNode;
+}) {
   return (
     <div className="code-block">
       <div className="code-top">

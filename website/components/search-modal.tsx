@@ -60,6 +60,9 @@ export function SearchModal() {
     router.push("/docs/" + slug);
   }
 
+  let emptyMessage = "Loading guides…";
+  if (index.length) emptyMessage = "No guides match this search.";
+  if (error) emptyMessage = "Search could not load. Reopen search to retry.";
   return (
     <>
       <button
@@ -77,9 +80,7 @@ export function SearchModal() {
         ref={dialog}
         aria-label="Search documentation"
         onClose={() => setOpen(false)}
-        onClick={(event) => {
-          if (event.target === dialog.current) setOpen(false);
-        }}
+        closedby="any"
       >
         <div className="search-inner">
           <div className="search-input">
@@ -137,15 +138,7 @@ export function SearchModal() {
                 <CornerDownLeft size={14} />
               </a>
             ))}
-            {!results.length && (
-              <p role="status">
-                {error
-                  ? "Search could not load. Reopen search to retry."
-                  : index.length
-                    ? "No guides match this search."
-                    : "Loading guides…"}
-              </p>
-            )}
+            {!results.length && <output>{emptyMessage}</output>}
           </div>
           <div className="search-help">
             <span>

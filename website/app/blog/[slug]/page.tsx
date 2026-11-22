@@ -3,7 +3,7 @@ import Link from "next/link";
 import { getPost, posts } from "@/lib/blog";
 import { Markdown } from "@/components/markdown";
 import type { Metadata } from "next";
-type Props = { params: Promise<{ slug: string }> };
+type Props = Readonly<{ params: Promise<{ slug: string }> }>;
 export function generateStaticParams() {
   return posts.map(({ slug }) => ({ slug }));
 }

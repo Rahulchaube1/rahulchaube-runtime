@@ -12,7 +12,7 @@ export const metadata = {
 export default async function DocsIndex({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string | string[] }>;
+  readonly searchParams: Promise<{ q?: string | string[] }>;
 }) {
   const { q } = await searchParams;
   const query = (typeof q === "string" ? q : "").trim();

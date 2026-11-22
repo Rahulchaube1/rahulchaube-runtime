@@ -4,9 +4,9 @@ export function PageIntro({
   title,
   children,
 }: {
-  section: string;
-  title: string;
-  children: ReactNode;
+  readonly section: string;
+  readonly title: string;
+  readonly children: ReactNode;
 }) {
   return (
     <header className="page-intro">

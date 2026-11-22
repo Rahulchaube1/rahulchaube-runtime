@@ -4,7 +4,7 @@ import { guides } from "./doc-catalog";
 
 export function readGuide(slug: string, directory = join(process.cwd(), "content", "docs")) {
   if (!guides.some((guide) => guide.slug === slug)) throw new Error("Unknown documentation page");
-  return readFileSync(join(directory, slug + ".md"), "utf8");
+  return readFileSync(join(directory, slug + ".md"), "utf8").replace(/\r\n?/g, "\n");
 }
 
 export function headingId(heading: string) {

@@ -38,7 +38,7 @@ function useProgress() {
   return { completed, toggle };
 }
 
-export function LessonCompletion({ slug }: { slug: string }) {
+export function LessonCompletion({ slug }: { readonly slug: string }) {
   const { completed, toggle } = useProgress();
   const done = completed.includes(slug);
   return (
@@ -57,6 +57,8 @@ export function LessonCompletion({ slug }: { slug: string }) {
 export function CoursePath() {
   const { completed } = useProgress();
   const next = lessons.find((lesson) => !completed.includes(lesson.slug));
+  let action = "Start course";
+  if (completed.length) action = next ? "Continue course" : "Review course";
   return (
     <div className="course-grid">
       <aside className="course-panel">
@@ -68,7 +70,7 @@ export function CoursePath() {
         <progress value={completed.length} max={lessons.length} aria-label="Course progress" />
         <p>Mark each lesson complete as you go. Progress is saved in this browser.</p>
         <Link className="btn primary" href={docUrl(next ?? lessons[0])}>
-          {completed.length ? (next ? "Continue course" : "Review course") : "Start course"}
+          {action}
           <ArrowRight size={16} />
         </Link>
       </aside>

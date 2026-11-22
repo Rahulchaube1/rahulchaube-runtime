@@ -20,7 +20,7 @@ export function BenchmarkChart() {
       <div className="section-heading">
         <h2>Execution workloads</h2>
         <label className="metric-select">
-          Metric
+          <span>Metric</span>
           <select value={metric} onChange={(e) => setMetric(e.target.value as keyof typeof metrics)}>
             {Object.entries(metrics).map(([key, label]) => (
               <option value={key} key={key}>
