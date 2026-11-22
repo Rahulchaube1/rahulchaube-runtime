@@ -1,41 +1,12 @@
-# rahulchaube-cli
+# Historical rahulchaube CLI
 
-The user-facing command-line interface for **RahulChaube Runtime** — an
-independent, MIT-licensed fork of Bun.
-
-```sh
-rahulchaube --help
-```
-
-## Execution
-
-The release launcher is compiled from `blyx/main.blyx`. It handles flags, help, version, package commands, tests, builds and script dispatch. JS and TS files run in JavaScriptCore through Bun. Watch mode, debug mode and the other compatibility commands use the TypeScript implementation in `src/`.
-
-The bundled Blyx compiler can interpret portable programs and build standalone executables. Native compilation requires Rust and a host linker. An installed user can run `rahulchaube blyx --help` to inspect the compiler commands.
-
-## Development
-
-From the repository root, install the compiler revision used by CI and build the launcher for your host OS.
-
-```sh
-cargo install --locked --git https://github.com/Rahulchaube1/blyxxxx --rev 2b6bd149ee898e05bb4b4e7f87e392baa7786071 blyxc
-bun installer/build-native.ts "$(command -v blyxc)" packages/rahulchaube-cli/bin
-packages/rahulchaube-cli/bin/rahulchaube-native --help
-RAHUL_TEST_NATIVE=1 bun test tests/native-cli.test.ts
-```
-
-On Windows, pass the path to blyxc.exe and run rahulchaube-native.exe. The build embeds help and version from the CLI package and places the compiler beside the launcher.
-
-Run `bun run typecheck` from this package to check the TypeScript compatibility layer. The five-platform CI matrix produces the native inputs for `bun installer/build-release.ts`.
-
-## License
-
-MIT. This is a fork of Bun; all upstream copyright notices and licenses are
-preserved. Not affiliated with or endorsed by the Bun authors.
+This directory contains the Bun-hosted TypeScript tooling from the earlier command line. To run it from a checkout, use `bun packages/rahulchaube-cli/bin/rahulchaube.ts --help` at the repository root. Current RC releases use the standalone `rc` executable under `native/`. [RC Runtime](../../README.md)
 
 ## Connect with Rahul Chaube
 
 [Portfolio](https://www.rahulchaube1.com/) · [GitHub](https://github.com/Rahulchaube1) · [LinkedIn](https://www.linkedin.com/in/rahulchaube1) · [Hugging Face](https://huggingface.co/oncody) · [X](https://x.com/RahulChaube_) · [EverestQ](https://www.everestqai.com/) · [Contact](https://www.rahulchaube1.com/contact)
+
+### Rahul’s other projects
 
 [Blyx website](https://www.blyx-lang.space/) · [BlyxTorch](https://www.blyx-lang.space/packages/blyxtorch) · [Handbook](https://doc.blyx-lang.space/) · [Community](https://www.blyx-lang.space/community)
 

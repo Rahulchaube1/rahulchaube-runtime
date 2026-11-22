@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contributing Guidelines — RahulChaube Runtime",
-  description: "How to contribute to RahulChaube Runtime CLI, documentation, and starter templates.",
+  title: "Contributing Guidelines — RC Runtime",
+  description: "How to contribute to RC Runtime CLI, documentation, and starter templates.",
 };
 
 export default function ContributingPage() {
@@ -10,7 +10,7 @@ export default function ContributingPage() {
     <div className="site-container py-16 font-sans">
       <div className="max-w-4xl mx-auto space-y-8">
         <h1 className="text-3xl sm:text-4xl font-extrabold text-zinc-900 dark:text-[#F0F6FC] tracking-tight font-title">
-          Contributing to RahulChaube Runtime
+          Contributing to RC Runtime
         </h1>
         <div className="space-y-4 text-zinc-700 dark:text-[#8B949E] text-base leading-relaxed">
           <p>

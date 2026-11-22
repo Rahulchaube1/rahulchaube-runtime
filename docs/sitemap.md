@@ -1,19 +1,11 @@
-# Official Documentation Sitemap — RahulChaube Runtime
+# RC Runtime documentation
 
-## 1. Getting Started
-- [Installation Guide](/docs/getting-started/installation)
-- [Quick Start](/docs/getting-started/quick-start)
-- [Feature Matrix & Comparison](/docs/reference/feature-matrix)
-
-## 2. Runtime & Architecture
-- [Runtime Overview](/docs/runtime/overview)
-- [System Architecture](/docs/runtime/architecture)
-
-## 3. CLI Subcommands
-- [CLI Reference & Commands](/docs/cli/commands)
-
-## 4. Machine Readable Specification
-- [LLMs Context Specification](/llms.txt)
-- [AI Crawler Specification](/ai.txt)
-- [OpenAPI Spec](/api/openapi.json)
-- [OpenAPI Reference UI](/api/docs)
+- [Install](getting-started/installation.md)
+- [Quick start](getting-started/quick-start.md)
+- [Commands](cli/commands.md)
+- [Build an HTTP service](how-to/build-rest-api.md)
+- [Architecture](runtime/architecture.md)
+- [Install and publish pinned modules](rahulchaube/pinned-modules.md)
+- [Supported features](reference/feature-matrix.md)
+- [Benchmarks](../benchmarks/README.md)
+- [Online documentation](https://www.rahulchaube.space/docs)

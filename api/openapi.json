@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "RahulChaube Runtime API",
-    "version": "1.0.0",
-    "description": "Production REST API for RahulChaube Runtime release management, telemetry, and developer services."
+    "title": "RC Runtime API",
+    "version": "1.3.0",
+    "description": "Production REST API for RC Runtime release management, telemetry, and developer services."
   },
   "paths": {
     "/api/health": {

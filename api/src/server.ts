@@ -60,7 +60,7 @@ const ROUTES: Route[] = [
   { method: "GET", pattern: "/api/protected", handler: protectedResource, secure: true },
 ];
 
-function dispatch(req: Request): Response {
+async function dispatch(req: Request): Promise<Response> {
   const url = new URL(req.url);
   const ip = clientIp(req);
   const r = limit(ip);
@@ -78,10 +78,13 @@ function dispatch(req: Request): Response {
   metrics.requests++;
   const ctx: Ctx = { req, url, ip, state: {} };
   try {
-    return match.handler(ctx);
-  } catch (e) {
+    const result = await match.handler(ctx);
+    for (const [key, value] of Object.entries(headers)) result.headers.set(key, value);
+    return result;
+  } catch {
+    // Count handler failures while keeping request data out of logs and public error messages.
     metrics.errors++;
-    return json({ error: (e as Error).message }, 500);
+    return json({ error: "Internal server error" }, 500);
   }
 }
 

@@ -35,6 +35,6 @@ judgment may be invited to become maintainers by existing maintainers.
 
 ## Fork attribution
 
-RahulChaube Runtime is a fork of Bun (MIT). Maintainers are responsible for
+RC Runtime is MIT-licensed. Maintainers are responsible for
 preserving upstream copyright notices, license files, and attribution, and for
 keeping the project clearly distinct from the official Bun project.

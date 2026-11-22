@@ -5,417 +5,76 @@ export interface DocPage {
   body: string;
 }
 
-export const docSections = [
-  "Getting Started",
-  "Tutorials (Diátaxis)",
-  "How-to Guides (Diátaxis)",
-  "Explanations (Diátaxis)",
-  "Reference (Diátaxis)",
-  "Installation",
-  "CLI Reference",
-  "Runtime Engine",
-  "Package Manager",
-  "Bundler",
-  "API & Web Standards",
-  "Plugins",
-  "Configuration",
-  "Project Structure",
-  "Architecture",
-  "Performance & Benchmarks",
-  "Troubleshooting & FAQ",
-  "Community & Legal",
-] as const;
+export const docSections = ["Getting Started", "Runtime", "Libraries", "Compatibility", "Project"] as const;
 
-export function getDoc(slug: string): DocPage | undefined {
-  return docs.find((d) => d.slug === slug);
-}
+const page = (slug: string, title: string, section: typeof docSections[number], body: string): DocPage =>
+  ({ slug, title, section, body: `# ${title}\n\n${body.trim()}` });
+
+const code = (language: string, lines: string) => "\n\n```" + language + "\n" + lines.trim() + "\n```\n\n";
+
+const install = `The installer downloads the archive for your operating system, checks its SHA-256 digest and installs the release under ~/.rc-runtime. On Linux and macOS, use Bash.` +
+  code("sh", "curl -fsSL https://www.rahulchaube.space/install | bash") +
+  "On Windows x64, use PowerShell." + code("powershell", "irm https://www.rahulchaube.space/install.ps1 | iex") +
+  "Open a new terminal and check the executable." + code("sh", "rc --version");
+
+const first = "Create a TypeScript application, run its tests and start the HTTP server." +
+  code("sh", "rc init hello\ncd hello\nrc test\nrc run server.ts") +
+  'Visit http://127.0.0.1:3000/hello/Rahul. The route responds with {"hello":"Rahul"}. Press Ctrl+C to stop the server.';
+
+const web = 'Import `createApp`, `json` and `text` from `rc:web`. Register routes before starting the server.' +
+  code("ts", 'import { createApp, json } from "rc:web";\n\nconst app = createApp();\napp.get("/hello/:name", ({ params }) => json({ hello: params.name }));\napp.post("/echo", ({ body }) => json({ body }, 201));\nconst server = app.listen({ hostname: "127.0.0.1", port: 3000 });') +
+  'Routes match in registration order. Use `app.on(method, path, fn)` for other methods. Route handlers may return promises. A request exposes its method, escaped path, decoded route parameters, query and header arrays, and a UTF-8 body. The host accepts text bodies up to 1 MiB. Responses have a status, headers and text body. A missing route returns 404. A handler error returns 500.\n\n' +
+  'Use port 0 to request an available port and read `server.port`. Call `server.close()` to stop accepting connections. The default listener uses the loopback interface. Set the hostname to `0.0.0.0` to listen on all IPv4 interfaces.\n\n## Testing a route\n' +
+  code("ts", 'import { test, equal } from "rc:test";\nimport { app } from "./app";\n\ntest("greets Ada", async () => {\n  const res = await app.handle({ method: "GET", path: "/hello/Ada" });\n  equal(res.status, 200);\n  equal(JSON.parse(res.body).hello, "Ada");\n});');
+
+const commands = [
+  "`rc run <entry> [--] [args...]` runs JS or TS. Read arguments from `RC.args`.",
+  "`rc run --watch <entry>` restarts the application on change. `rc build --watch` keeps a bundle up to date.",
+  "`rc build <entry> --outfile <file>` writes an ES module bundle.",
+  "`rc init <new-directory>` generates a working RC Web application.",
+  "`rc test [files...]` executes named files or discovers .test and .spec files recursively. Each file has its own VM.",
+  "`rc install [--offline]` installs pinned, single-file ES modules declared in rc.json.",
+  "`rc doctor` prints runtime and platform information.",
+  "`rc --version` prints the installed release. `rc --help` lists the commands.",
+].map(line => "- " + line).join("\n");
+
+const modules = 'Try the example library by saving this manifest as `rc.json` in a project directory. It pins the exact bytes of the public module.' +
+  code("json", '{\n  "dependencies": {\n    "hello": {\n      "url": "https://www.rahulchaube.space/modules/hello-1.0.0.mjs",\n      "sha256": "9a509a7beb871fd88b57e4886e3a6cc6631cad58a2a418a663517668acba25e8"\n    }\n  }\n}') +
+  'Run `rc install` and import from `"hello"` in your code. Commit rc.json to version control. The digest pins the bytes for each dependency. Verified modules live in .rc/modules and in your OS user cache. Use `rc install --offline` to restore a project from that cache.\n\n' +
+  code("ts", 'import { greet, sum } from "hello";\nconsole.log(greet("Ada"), sum(10, 20, 12));') +
+  'To publish your own library, use `rc build library.ts --outfile library.mjs`, host that file over HTTPS and compute its SHA-256 digest. ' +
+  'Each dependency is a UTF-8 JavaScript bundle up to 16 MiB. Bundle relative imports before publishing. This package format is independent of the npm registry. For npm dependencies, use your project’s npm-compatible package manager. The native bundler can import pure JS packages whose runtime APIs it supports.';
+
+const runtime = 'The native Go host embeds QuickJS-NG through quickjs-go and compiles TypeScript with esbuild. Local ES modules, literal dynamic imports, top-level await, CommonJS dependencies and JSON are supported through the bundled module graph. `console`, `setTimeout`, `clearTimeout` and `RC.args` are available in the host.\n\n' +
+  'RC executes TypeScript without type checking. Applications using Node built-ins, Bun globals, browser DOM APIs, native Node add-ons or dynamic module names may require another host. JS programs run with the filesystem and network privileges of the current user.';
+
+const compatibility = 'RC uses the rc executable and its own installation directory. Earlier rahulchaube CLI releases remain available on GitHub for projects that rely on the Bun-hosted commands. Node and Bun built-ins need a compatible host. The rc: libraries expose native RC APIs.';
+
+const performance = "The Benchmarks page reports fresh-process timings, executable size and peak resident memory on the published host. Each workload checks its output. npm runs the program through a Node package script. Use the same programs and versions to compare on your system." +
+  code("sh", "python3 benchmarks/compare.py --samples 25 > results.json");
 
 export const docs: DocPage[] = [
-  {
-    slug: "tutorials-first-steps",
-    title: "Tutorial: First Steps with RahulChaube Runtime",
-    section: "Tutorials (Diátaxis)",
-    body: `# Tutorial: First Steps with RahulChaube Runtime
-
-- **Category**: Tutorials (Diátaxis Framework)
-- **Version**: v1.0.0
-- **Status**: Implemented
-
-## Summary
-Learn how to install RahulChaube Runtime, create your first project, run a server in TypeScript, and execute unit tests.
-
-## Overview
-This tutorial guides beginners through setting up RahulChaube Runtime and building a simple HTTP service using native TypeScript support.
-
-## Step 1: Installation (POSIX & Windows)
-\`\`\`sh
-curl -fsSL https://www.rahulchaube.space/install | bash
-\`\`\`
-
-Verify installation:
-\`\`\`sh
-rahulchaube --version
-# Output: rahulchaube v1.0.0
-\`\`\`
-
-## Step 2: Create a Project
-\`\`\`sh
-rahulchaube create react my-app
-cd my-app
-\`\`\`
-
-## Step 3: Write a Native Server
-\`\`\`typescript
-// server.ts
-RahulChaube.serve({
-  port: 3000,
-  fetch(req: Request): Response {
-    return new Response("Hello from RahulChaube Runtime!");
-  },
-});
-\`\`\`
-
-Run directly:
-\`\`\`sh
-rahulchaube run server.ts
-\`\`\`
-`,
-  },
-  {
-    slug: "how-to-build-rest-api",
-    title: "How-to: Build a Production REST API",
-    section: "How-to Guides (Diátaxis)",
-    body: `# How-to: Build a Production REST API
-
-- **Category**: How-to Guides (Diátaxis Framework)
-- **Version**: v1.0.0
-- **Status**: Implemented
-
-## Summary
-Learn how to build, structure, and deploy a REST API microservice using RahulChaube Runtime and native Web Standard APIs.
-
-## Code Example: Production REST API Server (\`api-server.ts\`)
-
-\`\`\`typescript
-// api-server.ts
-interface User {
-  id: string;
-  name: string;
-  email: string;
-}
-
-const users: Map<string, User> = new Map([
-  ["1", { id: "1", name: "Rahul Chaube", email: "rahul@example.com" }]
-]);
-
-RahulChaube.serve({
-  port: 8080,
-  async fetch(req: Request): Promise<Response> {
-    const url = new URL(req.url);
-
-    if (req.method === "GET" && url.pathname === "/api/users") {
-      return Response.json(Array.from(users.values()));
-    }
-
-    if (req.method === "POST" && url.pathname === "/api/users") {
-      try {
-        const body = (await req.json()) as Omit<User, "id">;
-        if (!body.name || !body.email) {
-          return Response.json({ error: "Name and email required" }, { status: 400 });
-        }
-        const id = String(users.size + 1);
-        const newUser: User = { id, name: body.name, email: body.email };
-        users.set(id, newUser);
-        return Response.json(newUser, { status: 201 });
-      } catch {
-        return Response.json({ error: "Invalid JSON body" }, { status: 400 });
-      }
-    }
-
-    return Response.json({ error: "Route not found" }, { status: 404 });
-  },
-});
-
-console.log("REST API Server running on http://localhost:8080");
-\`\`\`
-
-Execute:
-\`\`\`sh
-rahulchaube run api-server.ts
-\`\`\`
-`,
-  },
-  {
-    slug: "explanations-architecture-and-lifecycle",
-    title: "Explanation: Architecture & System Lifecycle",
-    section: "Explanations (Diátaxis)",
-    body: `# Explanation: Architecture & System Lifecycle
-
-- **Category**: Explanations (Diátaxis Framework)
-- **Version**: v1.0.0
-- **Status**: Implemented
-
-## Process Bootstrapping Pipeline
-
-\`\`\`
-+-------------------------------------------------------------+
-|               rahulchaube CLI Dispatcher Subcommand         |
-+-------------------------------------------------------------+
-                               |
-                               v
-+-------------------------------------------------------------+
-|              Module Resolution & Lockfile Store             |
-+-------------------------------------------------------------+
-                               |
-                               v
-+-------------------------------------------------------------+
-|                 V8 / JSC Native Core Event Loop             |
-+-------------------------------------------------------------+
-\`\`\`
-
-## Memory & Execution Lifecycle
-1. **CLI Phase**: Argument parsing and subcommand routing.
-2. **Resolution Phase**: Dependencies checked against \`package.json\` and \`rahulchaube.lock\`.
-3. **Execution Phase**: Native V8/JSC engine boots and registers Web Standard APIs.
-4. **Diagnostic Phase**: \`rahulchaube explain\` hooks inspect unhandled stack traces.
-`,
-  },
-  {
-    slug: "reference-cli-specification",
-    title: "Reference: Comprehensive CLI Specification",
-    section: "Reference (Diátaxis)",
-    body: `# Reference: Comprehensive CLI Specification
-
-- **Category**: Reference (Diátaxis Framework)
-- **Version**: v1.0.0
-- **Status**: Implemented
-
-## Command Synopsis Matrix
-
-| Command | Synopsis | Description | Exit Codes | Status |
-| :--- | :--- | :--- | :--- | :--- |
-| \`run\` | \`rahulchaube run <target>\` | Execute script file or package.json script | 0 (OK), 1 (Err) | Implemented |
-| \`test\` | \`rahulchaube test [file]\` | Run workspace unit tests | 0 (Pass), 1 (Fail) | Implemented |
-| \`build\` | \`rahulchaube build [entry]\` | Bundle source code for production | 0 (OK), 1 (Err) | Implemented |
-| \`install\` | \`rahulchaube install\` | Install package dependencies | 0 (OK), 1 (Err) | Implemented |
-| \`add\` | \`rahulchaube add <pkg>\` | Add dependency to package.json | 0 (OK), 1 (Err) | Implemented |
-| \`remove\` | \`rahulchaube remove <pkg>\` | Remove dependency from package.json | 0 (OK), 1 (Err) | Implemented |
-| \`update\` | \`rahulchaube update [pkg]\` | Update installed dependencies | 0 (OK), 1 (Err) | Implemented |
-| \`audit\` | \`rahulchaube audit\` | Scan dependencies for vulnerabilities | 0 (Clean), 1 (Warn) | Implemented |
-| \`licenses\`| \`rahulchaube licenses\` | List third-party package licenses | 0 (OK) | Implemented |
-| \`why\` | \`rahulchaube why <pkg>\` | Trace dependency resolution origin | 0 (OK), 1 (Err) | Implemented |
-| \`graph\` | \`rahulchaube graph\` | Render ASCII dependency tree | 0 (OK) | Implemented |
-| \`create\` | \`rahulchaube create <tmpl>\` | Scaffold starter project template | 0 (OK), 1 (Err) | Implemented |
-| \`doctor\` | \`rahulchaube doctor\` | Audit system environment health | 0 (OK), 1 (Warn) | Implemented |
-| \`explain\` | \`rahulchaube explain <err>\` | AI error explanation helper | 0 (OK) | Implemented |
-| \`optimize\`| \`rahulchaube optimize\` | Scan project for performance tips | 0 (OK) | Implemented |
-| \`migrate\` | \`rahulchaube migrate <pm>\` | Convert project from npm/yarn/pnpm | 0 (OK), 1 (Err) | Implemented |
-`,
-  },
-  {
-    slug: "getting-started",
-    title: "Getting Started with RahulChaube Runtime",
-    section: "Getting Started",
-    body: `# Getting Started with RahulChaube Runtime
-
-Install Bun and follow the instructions on the Download page. Open a new terminal and check the CLI.
-
-\`\`\`sh
-rahulchaube --version
-\`\`\`
-
-## Run your first file
-Save this as hello.ts.
-
-\`\`\`ts
-const message: string = "Hello, runtime!";
-console.log(message);
-\`\`\`
-
-From the same directory, run the file.
-
-\`\`\`sh
-rahulchaube run ./hello.ts
-\`\`\`
-
-The command prints "Hello, runtime!". RC Runtime watches the entry file and its imported modules. Save a change to restart the app. Use hot reload to keep compatible process state, such as values stored on globalThis.
-
-\`\`\`sh
-rahulchaube run --watch ./hello.ts
-rahulchaube run --hot ./hello.ts
-rahulchaube build --watch ./hello.ts --outdir dist
-\`\`\`
-
-In VS Code, install the RahulChaube Runtime extension from the Download page. Open a JS or TS file and choose RC Runtime: Watch Current File. Choose RC Runtime: Stop Running Task to end the session.
-
-## Run Blyx
-
-The release includes a native Blyx launcher and the Blyx compiler. Create a project and run it with the bundled interpreter.
-
-\`\`\`sh
-rahulchaube blyx new hello
-rahulchaube blyx run hello/src/main.blyx
-\`\`\`
-
-Install Rust 1.85 or newer and a host linker to compile a standalone executable. Choose an output filename ending in .exe on Windows.
-
-\`\`\`sh
-rahulchaube build hello/src/main.blyx --outfile hello-app
-\`\`\`
-
-Use rahulchaube run file.blyx -- args to compile and run a program with its arguments.
-`,
-  },
-  {
-    slug: "installation",
-    title: "Installation & Platform Setup",
-    section: "Installation",
-    body: `# Installation & Platform Setup
-
-## Overview
-Install Bun first. The installer downloads the platform archive from GitHub and verifies its SHA-256 digest.
-
-## POSIX (Linux / macOS)
-\`\`\`sh
-curl -fsSL https://www.rahulchaube.space/install | bash
-\`\`\`
-
-## Windows (PowerShell)
-\`\`\`powershell
-powershell -c "irm https://www.rahulchaube.space/install.ps1 | iex"
-\`\`\`
-
-## Verification
-\`\`\`sh
-rahulchaube --version
-# Output: rahulchaube v1.2.0
-\`\`\`
-`,
-  },
-  {
-    slug: "cli",
-    title: "Complete CLI Command Reference",
-    section: "CLI Reference",
-    body: `# Complete CLI Command Reference
-
-The \`rahulchaube\` CLI provides 21 built-in subcommands categorized into script execution, dependency management, bundling, and environment diagnostics.
-`,
-  },
-  {
-    slug: "runtime",
-    title: "Runtime Execution & Web Standards",
-    section: "Runtime Engine",
-    body: `# Runtime Execution & Web Standards
-
-RahulChaube Runtime provides high-speed native JavaScript execution with built-in support for ES Modules, CommonJS, TypeScript (\`.ts\`, \`.tsx\`), and Web Standard APIs.
-`,
-  },
-  {
-    slug: "package-manager",
-    title: "Lockfile Package Manager",
-    section: "Package Manager",
-    body: `# Lockfile Package Manager
-
-The package management subsystem in RahulChaube Runtime offers fast dependency resolution, lockfile parsing, global content-addressable package caching, and dependency introspection.
-`,
-  },
-  {
-    slug: "bundler",
-    title: "Production Bundler & Transpiler",
-    section: "Bundler",
-    body: `# Production Bundler & Transpiler
-
-RahulChaube Runtime includes an integrated production bundler capable of compiling TypeScript, JSX, and ES modules into production-ready web or Node artifacts.
-`,
-  },
-  {
-    slug: "api",
-    title: "Built-in REST API Engine",
-    section: "API & Web Standards",
-    body: `# Built-in REST API Engine
-
-The repository includes a standalone REST API microservice in \`api/src/server.ts\` running on \`RahulChaube.serve\` with rate-limiting and standard endpoints.
-`,
-  },
-  {
-    slug: "plugins",
-    title: "CLI Plugin Extension Architecture",
-    section: "Plugins",
-    body: `# CLI Plugin Extension Architecture
-
-RahulChaube CLI supports modular extensions prefixed with \`rahulchaube-plugin-*\`.
-`,
-  },
-  {
-    slug: "configuration",
-    title: "Project Configuration (rahulchaube.json)",
-    section: "Configuration",
-    body: `# Project Configuration (rahulchaube.json)
-
-Configure application defaults using \`rahulchaube.json\` or standard \`package.json\` configuration fields.
-`,
-  },
-  {
-    slug: "project-structure",
-    title: "Recommended Project Structure",
-    section: "Project Structure",
-    body: `# Recommended Project Structure
-
-Standard workspace layout for RahulChaube projects.
-`,
-  },
-  {
-    slug: "architecture",
-    title: "System Architecture & Subsystems",
-    section: "Architecture",
-    body: `# System Architecture & Subsystems
-
-RahulChaube Runtime follows a two-tier architectural design.
-`,
-  },
-  {
-    slug: "performance",
-    title: "Performance & Cold Boot Optimization",
-    section: "Performance & Benchmarks",
-    body: `# Performance & Cold Boot Optimization
-
-Process boot and script startup target under 20ms.
-`,
-  },
-  {
-    slug: "benchmarks",
-    title: "System Benchmarks & Comparative Analysis",
-    section: "Performance & Benchmarks",
-    body: `# System Benchmarks & Comparative Analysis
-
-Comparative analysis against Node.js, Deno, npm, pnpm, and Yarn.
-`,
-  },
-  {
-    slug: "faq",
-    title: "Comprehensive FAQ (40+ Answers)",
-    section: "Troubleshooting & FAQ",
-    body: `# Comprehensive FAQ (40+ Answers)
-
-Answers to 40+ common questions about RahulChaube Runtime.
-`,
-  },
-  {
-    slug: "contributing",
-    title: "Contributing Guidelines",
-    section: "Community & Legal",
-    body: `# Contributing Guidelines
-
-Guidelines for contributing to RahulChaube Runtime.
-`,
-  },
-  {
-    slug: "license",
-    title: "Software License & Legal Notices",
-    section: "Community & Legal",
-    body: `# Software License & Legal Notices
-
-RahulChaube Runtime software terms and copyright declarations.
-`,
-  },
+  page("getting-started", "Getting started with RC Runtime", "Getting Started", install + "\n\n## Your first application\n\n" + first),
+  page("installation", "Installation", "Getting Started", install + "\n\nArchives cover Linux x64/ARM64, macOS Intel/Apple Silicon and Windows x64. The Download page lists direct archives and their digests."),
+  page("tutorials-first-steps", "Your first project", "Getting Started", first),
+  page("cli", "CLI reference", "Runtime", commands),
+  page("runtime", "JavaScript and TypeScript", "Runtime", runtime),
+  page("bundler", "Bundling a program", "Runtime", "Build a source entry and its imports into one ES module." + code("sh", "rc build server.ts --outfile dist/server.mjs\nrc run dist/server.mjs") + "Bundles that use rc: modules require the RC host."),
+  page("rc-web", "RC Web", "Libraries", web),
+  page("how-to-build-rest-api", "Build an HTTP API", "Libraries", first + "\n\n" + web),
+  page("api", "Built-in libraries", "Libraries", 'Use `rc:web` to serve HTTP and `rc:test` to register async or synchronous tests. `equal(actual, expected)` compares values using Object.is. `assert(value, message)` checks truthiness. The `rc:fs` library reads and writes UTF-8 files.' + code("ts", 'import { readText, writeText, readJSON, writeJSON } from "rc:fs";\nwriteJSON("status.json", { ready: true });\nconsole.log(readJSON("status.json").ready);')),
+  page("package-manager", "Installing pinned modules", "Libraries", modules),
+  page("configuration", "Project configuration", "Runtime", modules),
+  page("project-structure", "Project files", "Getting Started", "rc init creates app.ts for your routes, server.ts for the listener, app.test.ts for tests and rc.json for pinned dependencies."),
+  page("architecture", "Runtime architecture", "Runtime", runtime),
+  page("explanations-architecture-and-lifecycle", "Execution lifecycle", "Runtime", runtime + "\n\nThe event loop drains promise jobs and timers and dispatches HTTP requests on the VM owner thread."),
+  page("reference-cli-specification", "Command specification", "Runtime", commands),
+  page("compatibility", "Compatibility and earlier releases", "Compatibility", compatibility),
+  page("plugins", "Compatibility CLI plugins", "Compatibility", "The Bun-hosted rahulchaube CLI supports its original plugin commands. Run rahulchaube plugins --help for options."),
+  page("benchmarks", "Reproduce the benchmarks", "Project", performance),
+  page("performance", "Performance measurements", "Project", performance),
+  page("faq", "Troubleshooting", "Getting Started", "## The shell cannot find rc\nOpen a new terminal or add ~/.rc-runtime/bin to PATH.\n\n## A package imports node:fs\nThe native host provides rc:fs. Use the Bun-hosted compatibility CLI for packages that depend on Node APIs.\n\n## A pinned module is missing\nRun rc install from the directory containing rc.json. Check that the URL and SHA-256 match the published file."),
+  page("contributing", "Contributing", "Project", 'The repository accepts issues and pull requests. With Go 1.25+ and a C compiler, run the native tests from the native directory.' + code("sh", "go test ./...\ngo build -trimpath -o rc .")),
+  page("license", "License", "Project", "Rahul Chaube releases RC Runtime under the MIT License. You can use, modify and redistribute it under those terms. The release archives include the license and third-party notices."),
 ];
+export const getDoc = (slug: string) => docs.find(page => page.slug === slug);

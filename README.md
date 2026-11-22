@@ -1,124 +1,87 @@
-# RahulChaube Runtime
+# RC Runtime (RahulChaube Runtime)
 
-![Version](https://img.shields.io/badge/version-1.2.0-emerald.svg)
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)
-![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-darkgreen.svg)
+RC Runtime is Rahul Chaube’s open-source JavaScript and TypeScript runtime. One native executable runs scripts, bundles modules, tests applications, and serves HTTP with RC Web. The release includes its JavaScript engine and TypeScript compiler. You can run `rc` on a machine without Node.js, npm, Bun, or a GitHub account.
 
-**RahulChaube Runtime** is an all-in-one JavaScript & TypeScript runtime and developer platform. It ships as a self-contained portable installation under `~/.rahulchaube/`.
+[Website](https://www.rahulchaube.space/) · [Documentation](https://www.rahulchaube.space/docs/getting-started) · [Downloads and SHA-256 checksums](https://www.rahulchaube.space/download) · [Benchmarks](https://www.rahulchaube.space/benchmarks) · [MIT license](LICENSE.md)
 
-Website: [https://rahulchaube.space](https://rahulchaube.space)
+## Install
 
----
+On Linux or macOS, run
 
-## Installation
+```sh
+curl -fsSL https://www.rahulchaube.space/install | bash
+```
 
-Install Bun first. The installer downloads the matching GitHub archive and verifies its SHA-256 digest. [Install Bun](https://bun.sh/)
-
-### Windows (PowerShell)
+On Windows x64, open PowerShell and run
 
 ```powershell
 irm https://www.rahulchaube.space/install.ps1 | iex
 ```
 
-### Linux / macOS (Bash)
+Open a new terminal and run `rc --version`. The installer verifies the archive before updating the release files under `~/.rc-runtime`. Archives are available for Linux x64/ARM64, macOS Intel/Apple Silicon and Windows x64.
 
-```bash
-curl -fsSL https://www.rahulchaube.space/install | bash
-```
-
-### Live development with RC Runtime
+## Build your first HTTP service
 
 ```sh
-rahulchaube run --watch ./src/app.ts
-rahulchaube run --hot ./src/app.ts
-rahulchaube build --watch ./src/app.ts --outdir dist
+rc init hello
+cd hello
+rc test
+rc run server.ts
 ```
 
-Watch restarts the application when you save the entry file or an imported module. Hot reload re-evaluates modules in the running process. Open the Command Palette in VS Code and choose **RC Runtime: Watch Current File** or **RC Runtime: Hot Reload Current File**. [Download the VS Code extension](https://www.rahulchaube.space/download#vscode)
+Open `http://127.0.0.1:3000/hello/Rahul` to receive `{"hello":"Rahul"}`. The generated project includes TypeScript declarations for the host and library APIs. Routes are ordinary functions. You can test them by calling `app.handle()` or serve them through the native HTTP listener.
 
-### Run a Blyx program
+```ts
+import { createApp, json } from "rc:web";
 
-The installed CLI starts in native Blyx. It includes the Blyx compiler and interpreter. Blyx sends JS and TS files directly to Bun’s JavaScriptCore host for ES modules, CommonJS, dynamic imports and top-level await. RC Runtime uses Bun for JS/TS watch and hot reload, debugging and package tooling.
+const app = createApp();
+app.get("/hello/:name", ({ params }) => json({ hello: params.name }));
+app.listen({ port: 3000 });
+```
+
+## Commands and libraries
+
+| Command | What it does |
+| --- | --- |
+| `rc run app.ts -- one two` | Runs the program and exposes its arguments as `RC.args`. |
+| `rc run --watch app.ts` | Restarts the app when the entry or one of its imports changes. |
+| `rc build app.ts --outfile app.mjs` | Bundles imports into an ES module. Run it with `rc run app.mjs`. |
+| `rc test` | Discovers `.test` and `.spec` files and reports failures with a nonzero exit code. |
+| `rc init hello` | Creates a TypeScript HTTP application and its first test in a new directory. |
+| `rc install` | Installs HTTPS ES modules pinned by SHA-256 in `rc.json`. |
+| `rc install --offline` | Restores verified modules from the local cache. |
+| `rc doctor` | Prints the installed engine, compiler, version and platform. |
+
+The built-in libraries are `rc:web` for HTTP routing, `rc:test` for synchronous and asynchronous tests, and `rc:fs` for text and JSON files. Each ships inside the executable. [RC Web and library reference](https://www.rahulchaube.space/docs/rc-web) · [Pinned module guide](https://www.rahulchaube.space/docs/package-manager)
+
+## Engines and compatibility
+
+The RC host and CLI are written in Go. QuickJS-NG evaluates JavaScript through quickjs-go. esbuild compiles TypeScript and resolves module graphs, including local ESM, CommonJS and JSON imports. The native host provides timers, files and HTTP. Packages that require Node built-ins, native Node add-ons, browser APIs or Bun globals need a compatible host. TypeScript execution strips types. Use a separate type checker when you need type diagnostics.
+
+Earlier releases of the `rahulchaube` CLI remain available to existing projects. RC uses the separate `rc` executable and installation directory. [Previous release](https://github.com/Rahulchaube1/rahulchaube-runtime/releases/tag/v1.2.0)
+
+## Build from source
+
+With Go 1.25 or newer and a C compiler installed, build and test the native executable from this repository.
 
 ```sh
-rahulchaube blyx new hello
-rahulchaube blyx run hello/src/main.blyx
-rahulchaube build hello/src/main.blyx --outfile hello-app
+cd native
+go test ./...
+go build -trimpath -ldflags="-s -w" -o rc .
+./rc --version
 ```
 
-The interpreter can run portable programs immediately. Native builds and `rahulchaube run file.blyx -- args` require Rust 1.85 or newer and a host linker. A compiled program can be distributed and run independently.
-
-### Upgrade to Latest Release
-
-```bash
-rahulchaube upgrade
-```
-
-### Uninstall
-
-```bash
-rahulchaube uninstall
-```
-
----
-
-## Technical Architecture & Host Dependencies
-
-RahulChaube Runtime combines custom high-level runtime infrastructure with host JavaScriptCore (JSC) / Node.js primitives:
-
-- **Transpiler**: Native regex-based multi-pass TypeScript stripper (`runtime/compiler/transpiler.ts`).
-- **Module Loader & Resolver**: Custom two-way `DependencyGraph` with `ModuleLoader` and `VirtualFS`.
-- **Package Manager**: Native POSIX `ustar` tarball extractor, SHA-256 checksum verifier, global package cache (`~/.rahulchaube/cache/packages/`), and `rahulchaube.lock` lockfile generator.
-- **Cache Engine**: Persistent multi-category disk cache (`~/.rahulchaube/cache/`) with SHA-256 content verification.
-- **Worker Threads & Pool**: `RahulChaubeWorker` and work-stealing `WorkerPool` for multi-core CPU task distribution.
-- **Security & Permissions**: Capability-based `PermissionManager` with explicit `PermissionDeniedError` checks.
-- **Host Engine**: Uses Bun's JavaScriptCore (JSC) engine for JS evaluation (`new Function()`).
-
----
-
-## Quick Start
-
-```bash
-# Install dependencies with native installer
-rahulchaube install
-
-# Execute TypeScript file directly
-rahulchaube run index.ts
-
-# Execute in watch mode
-rahulchaube run --watch index.ts
-
-# Run profile analysis
-rahulchaube profile index.ts
-
-# Run environment diagnostics
-rahulchaube doctor
-```
-
----
-
-## Command Overview
-
-| Command | Subsystem | Description |
-| --- | --- | --- |
-| `rahulchaube run <file>` | Engine & Loader | Execute JavaScript / TypeScript with optional `--watch` |
-| `rahulchaube install` | Package Manager | Resolve dependencies, verify SHA checksums, extract tarballs, generate lockfile |
-| `rahulchaube profile <file>` | Profiler | Profile CPU user/system time, memory RSS/heap, and per-module load timings |
-| `rahulchaube benchmark` | Benchmark Suite | Execute real wall-clock performance benchmarks |
-| `rahulchaube doctor` | Diagnostics | System health and environment capability check |
-| `rahulchaube upgrade` | Maintenance | Self-update to latest release |
-| `rahulchaube uninstall` | Maintenance | Remove `~/.rahulchaube` installation |
-
----
+The CI matrix builds and exercises the native binaries on each supported target. To reproduce the process benchmarks on Linux or macOS, install Python 3, Bun, Node.js 24+ and npm, then run `python3 benchmarks/compare.py --rc /path/to/rc` from the repository root. [CI](https://github.com/Rahulchaube1/rahulchaube-runtime/actions) · [Methodology](benchmarks/README.md)
 
 ## License
 
-MIT License © 2026 Rahul Chaube
+RC Runtime’s original code is MIT-licensed, copyright © 2026 Rahul Chaube. The distribution includes third-party license notices for its dependencies. [MIT license](LICENSE.md) · [Third-party notices](licenses) · [Contributing](community/CONTRIBUTING.md)
 
 ## Connect with Rahul Chaube
 
 [Portfolio](https://www.rahulchaube1.com/) · [GitHub](https://github.com/Rahulchaube1) · [LinkedIn](https://www.linkedin.com/in/rahulchaube1) · [Hugging Face](https://huggingface.co/oncody) · [X](https://x.com/RahulChaube_) · [EverestQ](https://www.everestqai.com/) · [Contact](https://www.rahulchaube1.com/contact)
+
+### Rahul’s other projects
 
 [Blyx website](https://www.blyx-lang.space/) · [BlyxTorch](https://www.blyx-lang.space/packages/blyxtorch) · [Handbook](https://doc.blyx-lang.space/) · [Community](https://www.blyx-lang.space/community)
 

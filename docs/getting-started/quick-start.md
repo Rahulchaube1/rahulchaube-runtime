@@ -1,78 +1,36 @@
-# Quick Start — RahulChaube Runtime
+# Getting started with RC Runtime
 
-> **Status**: Implemented
+The installer downloads the archive for your operating system, checks its SHA-256 digest and installs the release under ~/.rc-runtime. On Linux and macOS, use Bash.
 
-## Overview
-Get up and running with RahulChaube Runtime in under 60 seconds.
-
----
-
-## Prerequisites
-- Installed `rahulchaube` CLI ([Installation Guide](/docs/getting-started/installation)).
-
----
-
-## Step 1: Initialize a New Project
-Use the built-in template generator to scaffold a new project:
-
-```bash
-rahulchaube create react my-app
-cd my-app
+```sh
+curl -fsSL https://www.rahulchaube.space/install | bash
 ```
 
-**Output**:
-```text
-[OK] Project my-app created successfully from template 'react'.
+On Windows x64, use PowerShell.
+
+```powershell
+irm https://www.rahulchaube.space/install.ps1 | iex
 ```
 
----
+Open a new terminal and check the executable.
 
-## Step 2: Install Dependencies
-Install dependencies from `package.json` into `node_modules`:
-
-```bash
-rahulchaube install
+```sh
+rc --version
 ```
 
-**Output**:
-```text
-[OK] Installed 110 packages in 0.42s
+
+
+## Your first application
+
+Create a TypeScript application, run its tests and start the HTTP server.
+
+```sh
+rc init hello
+cd hello
+rc test
+rc run server.ts
 ```
 
----
+Visit http://127.0.0.1:3000/hello/Rahul. The route responds with {"hello":"Rahul"}. Press Ctrl+C to stop the server.
 
-## Step 3: Run the Development Server
-Execute the development script:
-
-```bash
-rahulchaube run dev
-```
-
----
-
-## Code Example: Native Server in TypeScript
-Create `server.ts`:
-
-```typescript
-// server.ts
-RahulChaube.serve({
-  port: 3000,
-  fetch(req: Request): Response {
-    return new Response("Hello from RahulChaube Runtime!");
-  },
-});
-
-console.log("Server listening on http://localhost:3000");
-```
-
-Run directly without compilation:
-
-```bash
-rahulchaube run server.ts
-```
-
----
-
-## Related Pages
-- [First Project Guide](/docs/getting-started/first-project)
-- [CLI Commands](/docs/cli/commands)
+[Online guide](https://www.rahulchaube.space/docs/getting-started)

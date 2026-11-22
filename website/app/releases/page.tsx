@@ -3,8 +3,8 @@ import { Download, Calendar, ShieldCheck, FileText } from "lucide-react";
 import Link from "next/link";
 
 export const metadata = {
-  title: "Releases & Changelog — RahulChaube Runtime",
-  description: "Download official release binaries, release notes, SHA256 checksums, and version history for RahulChaube Runtime.",
+  title: "Releases & Changelog — RC Runtime",
+  description: "Download official release binaries, release notes, SHA256 checksums, and version history for RC Runtime.",
 };
 
 export default function ReleasesPage() {

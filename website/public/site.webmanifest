@@ -1,6 +1,6 @@
 {
-  "name": "RahulChaube Runtime",
-  "short_name": "RahulChaube",
+  "name": "RC Runtime",
+  "short_name": "RC Runtime",
   "description": "High-performance JavaScript & TypeScript runtime and developer platform.",
   "start_url": "/",
   "display": "standalone",

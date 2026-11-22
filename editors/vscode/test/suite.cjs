@@ -17,7 +17,7 @@ async function run() {
   const lib = join(dir, "value.ts");
   const marker = join(dir, "output.txt");
   writeFileSync(lib, "export const value = 1;");
-  writeFileSync(entry, 'import {value} from "./value"; import {writeFileSync} from "node:fs"; writeFileSync("output.txt", String(value));');
+  writeFileSync(entry, 'import {value} from "./value"; import {writeText} from "rc:fs"; writeText("output.txt", String(value));');
   const doc = await vscode.workspace.openTextDocument(entry);
   await vscode.window.showTextDocument(doc);
   const extension = vscode.extensions.getExtension("RahulChaube.rahulchaube-runtime");
@@ -46,11 +46,13 @@ async function run() {
     await command("run");
     await until(() => result() === "1" && tasks().length === 0, "one-shot run to finish");
     await exerciseLive("watch", "2");
-    await exerciseLive("hot", "3");
+    writeFileSync(entry, 'import {test} from "rc:test"; import {writeText} from "rc:fs"; test("editor", () => writeText("output.txt", "tested"));');
+    await command("test");
+    await until(() => result() === "tested" && tasks().length === 0, "file test to finish");
   } finally {
     ended.dispose();
     for (const task of tasks()) task.terminate();
   }
-  console.log("RC Runtime packaged VSIX ran, watched, hot reloaded and stopped real tasks.");
+  console.log("RC Runtime packaged VSIX ran, watched, tested and stopped real tasks.");
 }
 module.exports = { run };

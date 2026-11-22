@@ -1,5 +1,5 @@
 /**
- * Dependency Health & Security Analyzer for RahulChaube Runtime.
+ * Dependency Health & Security Analyzer for RC Runtime.
  * Inspects package.json structures, license compliance, and version consistency.
  */
 

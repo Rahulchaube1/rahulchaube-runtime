@@ -40,7 +40,7 @@ export function ArchitectureSection() {
               Unified Package Engine
             </h3>
             <p className="text-sm sm:text-base text-zinc-600 dark:text-[#8B949E] leading-relaxed">
-              Parallel lockfile resolution and symlink node_modules storage capable of installing packages up to 3x faster than traditional package managers.
+              Install pinned ES modules into a project and restore verified dependencies from the shared cache.
             </p>
           </div>
         </div>
@@ -55,7 +55,7 @@ export function ArchitectureSection() {
               Zero-overhead Bundler
             </h3>
             <p className="text-sm sm:text-base text-zinc-600 dark:text-[#8B949E] leading-relaxed">
-              Built-in SWC-backed bundler with automatic tree-shaking, code splitting, and sub-20ms cold start execution times.
+              Bundle local modules and TypeScript sources with the embedded esbuild compiler.
             </p>
           </div>
         </div>

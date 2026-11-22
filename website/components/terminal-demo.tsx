@@ -5,9 +5,9 @@ import { Terminal } from "lucide-react";
 import { CodeBlock } from "./code-block";
 
 const examples = [
-  { label: "Run", instruction: "Save the first line as hello.ts, then run it from your terminal.", file: 'console.log("Hello, runtime!");', command: "rahulchaube run ./hello.ts", output: "Hello, runtime!" },
-  { label: "Create", instruction: "Create a TypeScript CLI project in a new directory.", command: "rahulchaube create cli my-tool" },
-  { label: "Diagnose", instruction: "Check your engine, project files, and installation.", command: "rahulchaube doctor" },
+  { label: "Run", instruction: "Save the first line as hello.ts, then run it from your terminal.", file: 'console.log("Hello, runtime!");', command: "rc run hello.ts", output: "Hello, runtime!" },
+  { label: "Create", instruction: "Create an RC Web application with a passing route test.", command: "rc init hello" },
+  { label: "Diagnose", instruction: "Check your engine, project files, and installation.", command: "rc doctor" },
 ];
 
 export function TerminalDemo() {

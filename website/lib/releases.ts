@@ -2,7 +2,7 @@ import manifest from "./release-manifest.json";
 
 const ref = process.env.VERCEL_GIT_COMMIT_SHA;
 const downloadUrl = ref && /^[a-f0-9]{40}$/.test(ref)
-  ? manifest.downloadUrl.replace("refs/heads/main", ref)
+  ? manifest.downloadUrl.replace(/\/(?:refs\/heads\/main|v[\d.]+)\/dist$/, `/${ref}/dist`)
   : manifest.downloadUrl;
 export const versionInfo = {
   ...manifest, downloadUrl,
@@ -29,12 +29,12 @@ const assets = Object.entries(versionInfo.assets).map(([target, downloadUrl]) =>
 });
 
 export const releases = [{
-  version: manifest.version, tag: `v${manifest.version}`, date: "2026-11-19", isLatest: true,
-  notes: ["Watch JavaScript and TypeScript projects in the terminal or VS Code.", "Reload changed modules while keeping compatible process state."],
+  version: manifest.version, tag: `v${manifest.version}`, date: "2026-11-22", isLatest: true,
+  notes: ["Run JavaScript and TypeScript with the standalone rc executable.", "Scaffold and test HTTP services with RC Web."],
   changelog: {
-    features: ["Run, watch, hot reload and stop a project with the RC Runtime editor commands."],
+    features: ["Run, watch and test modules in the CLI or VS Code.", "Install checksum-pinned modules online or from cache."],
     fixes: ["Restart when an imported module changes and recover after correcting syntax errors."],
-    improvements: ["Download verified public release archives without signing in."],
+    improvements: ["Install on five native targets without an external JavaScript runtime."],
   },
   assets,
 }];

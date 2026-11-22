@@ -1,69 +1,37 @@
-import { benchmarkData, benchmarkPlaceholder, type BenchRow } from "@/lib/benchmarks";
+"use client";
 
-const COLORS: Record<string, string> = {
-  rahulchaube: "#2FA866",
-  node: "#16a34a",
-  deno: "#2563eb",
-};
+import { useState } from "react";
+import measurements from "@/public/benchmarks.json";
+
+const engines = { rc: "RC Runtime", bun: "Bun", node: "Node.js", npm: "npm script" } as const;
+const workloads = { hello: "Hello world", typescript: "Two-file TypeScript import", integer_loop: "1M integer additions" } as const;
+const metrics = { median_ms: "Median time (ms)", p95_ms: "p95 time (ms)", peak_mib: "Median peak RSS (MiB)" } as const;
 
 export function BenchmarkChart() {
-  const rows: BenchRow[] = benchmarkData;
-  const width = 720;
-  const groupW = width / rows.length;
-  const barW = 32;
-  const gap = 12;
-  const height = 320;
-
+  const [metric, setMetric] = useState<keyof typeof metrics>("median_ms");
   return (
-    <div className="rounded-2xl border border-zinc-200 dark:border-[#163830] bg-white dark:bg-[#0E2923] p-6 shadow-md font-sans">
-      <div className="mb-3 flex items-center justify-between">
-        <h3 className="font-semibold text-zinc-900 dark:text-[#F0F6FC]">Runtime comparison (lower is better)</h3>
-        {benchmarkPlaceholder && (
-          <span className="rounded-full bg-amber-400/20 px-3 py-1 text-xs font-medium text-amber-600 dark:text-amber-300">
-            Example data — not measured
-          </span>
-        )}
+    <section aria-label="Measured performance" className="space-y-4">
+      <label className="flex flex-wrap items-center gap-3 text-sm font-medium">
+        <span>Metric</span>
+        <select value={metric} onChange={event => setMetric(event.target.value as keyof typeof metrics)}
+          className="rounded-md border border-zinc-400 bg-white px-3 py-2 dark:bg-ink-800">
+          {Object.entries(metrics).map(([key, label]) => <option value={key} key={key}>{label}</option>)}
+        </select>
+      </label>
+      <div className="overflow-x-auto rounded-xl border border-zinc-300 dark:border-vscode-border">
+        <table className="w-full text-left text-sm tabular-nums">
+          <caption className="sr-only">{metrics[metric]} across {measurements.samples} measured runs per engine and workload</caption>
+          <thead><tr className="bg-zinc-100 dark:bg-ink-800"><th className="p-4">Workload</th>
+            {Object.values(engines).map(label => <th key={label} scope="col" className="p-4 text-right">{label}</th>)}
+          </tr></thead>
+          <tbody>{(Object.keys(workloads) as (keyof typeof workloads)[]).map(workload =>
+            <tr key={workload} className="border-t border-zinc-300 dark:border-vscode-border">
+              <th scope="row" className="p-4 font-medium">{workloads[workload]}</th>
+              {(Object.keys(engines) as (keyof typeof engines)[]).map(engine =>
+                <td className="p-4 text-right font-mono" key={engine}>{measurements.workloads[workload][engine][metric].toFixed(2)}</td>)}
+            </tr>)}</tbody>
+        </table>
       </div>
-      <svg viewBox={`0 0 ${width} ${height}`} className="w-full">
-        {rows.map((row, gi) => {
-          const max = Math.max(row.rahulchaube, row.node, row.deno) * 1.1;
-          const keys = ["rahulchaube", "node", "deno"] as const;
-          const totalW = keys.length * barW + (keys.length - 1) * gap;
-          const startX = gi * groupW + (groupW - totalW) / 2;
-          return (
-            <g key={row.workload}>
-              {keys.map((k, bi) => {
-                const value = row[k];
-                const h = (value / max) * (height - 80);
-                return (
-                  <rect
-                    key={k}
-                    x={startX + bi * (barW + gap)}
-                    y={height - 40 - h}
-                    width={barW}
-                    height={h}
-                    rx={4}
-                    fill={COLORS[k]}
-                  >
-                    <title>{`${k}: ${value}${row.unit}`}</title>
-                  </rect>
-                );
-              })}
-              <text x={gi * groupW + groupW / 2} y={height - 16} textAnchor="middle" className="fill-current text-xs font-medium text-zinc-600 dark:text-[#8B949E]">
-                {row.workload}
-              </text>
-            </g>
-          );
-        })}
-      </svg>
-      <div className="mt-3 flex flex-wrap gap-4 text-xs font-mono font-semibold">
-        {(["rahulchaube", "node", "deno"] as const).map((k) => (
-          <span key={k} className="flex items-center gap-1.5 text-zinc-700 dark:text-[#8B949E]">
-            <span className="inline-block h-3 w-3 rounded" style={{ background: COLORS[k] }} />
-            {k}
-          </span>
-        ))}
-      </div>
-    </div>
+    </section>
   );
 }

@@ -1,5 +1,5 @@
 export function greet(name: string): string {
-  return `Hello, ${name}! — powered by RahulChaube Runtime`;
+  return `Hello, ${name}! — powered by RC Runtime`;
 }
 
 export function sum(...ns: number[]): number {

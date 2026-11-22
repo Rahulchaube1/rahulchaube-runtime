@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "RahulChaube Runtime website API",
-    "version": "1.2.0"
+    "title": "RC Runtime website API",
+    "version": "1.3.0"
   },
   "paths": {
     "/api/health": {
@@ -74,6 +74,29 @@
         "responses": {
           "200": {
             "description": "Templates list"
+          }
+        }
+      }
+    },
+    "/api/install": {
+      "get": {
+        "summary": "Tab-separated version, SHA-256 and archive URL",
+        "parameters": [
+          {
+            "name": "platform",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verified installer metadata"
+          },
+          "404": {
+            "description": "Unknown platform"
           }
         }
       }

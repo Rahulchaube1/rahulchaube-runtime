@@ -1,65 +1,36 @@
-# Getting Started
+# Getting started with RC Runtime
 
-Welcome to **RahulChaube Runtime** — a fast JavaScript & TypeScript runtime and
-developer platform. This guide gets you from zero to a running app in under a
-minute.
-
-> RahulChaube Runtime is an independent, MIT-licensed fork of Bun. It is not
-> affiliated with or endorsed by the Bun authors.
-
-## 1. Install
+The installer downloads the archive for your operating system, checks its SHA-256 digest and installs the release under ~/.rc-runtime. On Linux and macOS, use Bash.
 
 ```sh
-npm install -g rahulchaube-cli
-rahulchaube --version
+curl -fsSL https://www.rahulchaube.space/install | bash
 ```
 
-## 2. Create a project
+On Windows x64, use PowerShell.
 
-Pick a template and scaffold instantly:
+```powershell
+irm https://www.rahulchaube.space/install.ps1 | iex
+```
+
+Open a new terminal and check the executable.
 
 ```sh
-rahulchaube create react my-app
-rahulchaube create next my-app
-rahulchaube create express my-app
-rahulchaube create hono my-app
-rahulchaube create library my-lib
-rahulchaube create cli my-tool
+rc --version
 ```
 
-The generator is interactive — run `rahulchaube create` with no arguments to
-choose a template and name interactively.
 
-## 3. Install dependencies
+
+## Your first application
+
+Create a TypeScript application, run its tests and start the HTTP server.
 
 ```sh
-cd my-app
-rahulchaube install
+rc init hello
+cd hello
+rc test
+rc run server.ts
 ```
 
-You get a colorful, progress-aware install experience with a lockfile
-(`bun.lock`, engine-compatible) for reproducible installs.
+Visit http://127.0.0.1:3000/hello/Rahul. The route responds with {"hello":"Rahul"}. Press Ctrl+C to stop the server.
 
-## 4. Run it
-
-```sh
-rahulchaube run dev
-```
-
-TypeScript, JSX, and modern syntax work out of the box — no config required.
-
-## 5. Test & build
-
-```sh
-rahulchaube test                 # run the test suite
-rahulchaube build --minify --sourcemap   # bundle for production
-rahulchaube benchmark            # measure performance
-```
-
-## Next steps
-
-- [Installation guide](./installation.md)
-- [Migration guide](./migration-guide.md)
-- [Performance guide](./performance-guide.md)
-- [Architecture guide](./architecture-guide.md)
-- [Plugin guide](./plugin-guide.md)
+[Online guide](https://www.rahulchaube.space/docs/getting-started)

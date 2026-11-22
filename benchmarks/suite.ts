@@ -1,25 +1,9 @@
-/**
- * RahulChaube Runtime — Real Execution Benchmark Suite.
- *
- * HONEST IMPLEMENTATION STATUS:
- * ─────────────────────────────────────────────────────────────────
- * WHAT THIS DOES:
- *   - Measures real execution wall-clock timing using `performance.now()`.
- *   - Measures process memory allocation (`rss`, `heapUsed`).
- *   - Benchmarks:
- *       1. Startup & Init Overhead
- *       2. TypeScript Transpilation Throughput
- *       3. Module Graph Load & Resolution Speed
- *       4. Execution Speed (Sorting & Math)
- *       5. Cryptographic Hashing Performance
- *   - Zero fabricated numbers — all metrics recorded live during execution.
- * ─────────────────────────────────────────────────────────────────
- */
-
+// Microbenchmarks for the historical Bun-hosted tooling.
 import { performance } from "node:perf_hooks";
 import { createHash } from "node:crypto";
 import { transpileSource } from "../runtime/compiler/transpiler.ts";
-import { PersistentCacheEngine } from "../runtime/cache/persistent-cache.ts";
+import { resolveModule } from "../runtime/module-loader/resolver.ts";
+import { fileURLToPath } from "node:url";
 
 export interface BenchmarkResult {
   name: string;
@@ -66,10 +50,8 @@ export class BenchmarkRunner {
 export async function runAllBenchmarks(): Promise<BenchmarkResult[]> {
   const runner = new BenchmarkRunner();
 
-  // 1. Startup & Init Overhead
-  await runner.run("Startup & Init Overhead", "startup", 1000, () => {
-    const now = performance.now();
-    if (now < 0) throw new Error("bad timer");
+  await runner.run("Monotonic clock read", "execution", 1000, () => {
+    performance.now();
   });
 
   // 2. TypeScript Transpilation Speed
@@ -84,8 +66,9 @@ export async function runAllBenchmarks(): Promise<BenchmarkResult[]> {
   });
 
   // 3. Module Graph Load & Resolution Speed
+  const parent = fileURLToPath(import.meta.url);
   await runner.run("Module Resolution (10,000 lookups)", "module_loading", 10000, () => {
-    createHash("sha1").update("packages/rahulchaube-cli/package.json").digest("hex");
+    resolveModule("./suite.ts", parent);
   });
 
   // 4. Execution Speed (Array Sort)
@@ -102,7 +85,7 @@ export async function runAllBenchmarks(): Promise<BenchmarkResult[]> {
   // 6. Memory Footprint Allocation
   await runner.run("Memory Footprint (50,000 objects)", "memory", 50000, () => {
     const obj = { id: Math.random(), ts: Date.now() };
-    if (!obj.id) throw new Error();
+    if (obj.ts < 0) throw new Error("Invalid timestamp");
   });
 
   return runner.getResults();

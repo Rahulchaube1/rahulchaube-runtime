@@ -14,8 +14,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const doc = getDoc(slug);
   return {
-    title: `${doc?.title ?? "Documentation"} — RahulChaube Runtime`,
-    description: `Official documentation for ${doc?.title ?? "RahulChaube Runtime"}. Detailed overview, code examples, CLI subcommands, and best practices.`,
+    title: `${doc?.title ?? "Documentation"} — RC Runtime`,
+    description: `Official documentation for ${doc?.title ?? "RC Runtime"}. Detailed overview, code examples, CLI subcommands, and best practices.`,
     alternates: {
       canonical: `${site.domain}/docs/${slug}`,
     },
@@ -37,7 +37,7 @@ export default async function DocPage({ params }: { params: Promise<{ slug: stri
       {
         "@type": "TechArticle",
         headline: doc.title,
-        description: `Official documentation for ${doc.title} in RahulChaube Runtime.`,
+        description: `Official documentation for ${doc.title} in RC Runtime.`,
         url: `${site.domain}/docs/${slug}`,
         author: {
           "@type": "Organization",

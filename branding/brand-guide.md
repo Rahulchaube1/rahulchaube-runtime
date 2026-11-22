@@ -1,7 +1,7 @@
-# RahulChaube Runtime — Brand Guide
+# RC Runtime — Brand Guide
 
-This document defines the visual and verbal identity for **RahulChaube Runtime**,
-an independent, MIT-licensed fork of Bun.
+This document defines the visual and verbal identity for **RC Runtime**,
+the standalone MIT-licensed JavaScript and TypeScript runtime by Rahul Chaube.
 
 ## Logo
 
@@ -38,9 +38,8 @@ Use weight 700–800 for headlines, 400–500 for body.
 - Confident, modern, concise.
 - Lead with speed, developer experience, and openness.
 - Never claim the project is faster than Bun or Node unless a benchmark
-  demonstrates it. Use clearly-labeled placeholder data until real results exist.
+  demonstrates it. Publish the workload and its measurements with any comparison.
 
 ## Attribution
 
-RahulChaube Runtime is a fork of Bun. Preserve the MIT license and upstream
-copyright notices. Do not use the official Bun logo, wordmark, or trademarks.
+Credit Rahul Chaube as the creator. Preserve the project license and the license notices for the embedded engine and compiler.

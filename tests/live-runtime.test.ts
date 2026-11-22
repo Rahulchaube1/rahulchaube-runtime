@@ -6,9 +6,9 @@ import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 import { createInterface } from "node:readline";
 
-const native = resolve("packages/rahulchaube-cli/bin/rahulchaube-native" + (process.platform === "win32" ? ".exe" : ""));
+const legacy = resolve("packages/rahulchaube-cli/bin/rahulchaube.ts");
 for (const mode of ["--watch", "--hot"]) {
-  test.skipIf(process.env.RAHUL_TEST_NATIVE !== "1")(`RC Runtime ${mode} reacts to imports, atomic saves and repairs`, async () => {
+  test(`Compatibility CLI ${mode} reacts to imports, atomic saves and repairs`, async () => {
     const dir = mkdtempSync(join(tmpdir(), "rc live "));
     const dep = join(dir, "value.ts");
     const source = (value: number) => `export const value: number = ${value};`;
@@ -19,7 +19,7 @@ for (const mode of ["--watch", "--hot"]) {
       'console.log(["RC", value, globalThis.rcRuns, ...process.argv.slice(2)].join("|"));',
       'globalThis.keepAlive ??= setInterval(() => {}, 10000);',
     ].join("\n"));
-    const proc = spawn(native, ["run", mode, "app.ts", "--", "two words", "--label=x=y"], {
+    const proc = spawn(process.execPath, [legacy, "run", mode, "app.ts", "--", "two words", "--label=x=y"], {
       cwd: dir, stdio: ["ignore", "pipe", "pipe"], detached: process.platform !== "win32",
     });
     const closed = once(proc, "close");
@@ -57,7 +57,7 @@ for (const mode of ["--watch", "--hot"]) {
   }, 50_000);
 }
 
-test.skipIf(process.env.RAHUL_TEST_NATIVE !== "1")("build --watch rebuilds imports outside the entry directory", async () => {
+test("build --watch rebuilds imports outside the entry directory", async () => {
   const { mkdirSync, readFileSync, existsSync } = await import("node:fs");
   const dir = mkdtempSync(join(tmpdir(), "rc build watch "));
   const src = join(dir, "src");
@@ -66,7 +66,7 @@ test.skipIf(process.env.RAHUL_TEST_NATIVE !== "1")("build --watch rebuilds impor
   const dep = join(dir, "common.ts");
   writeFileSync(join(src, "main.ts"), 'import {value} from "../common"; console.log(value);');
   writeFileSync(dep, 'export const value = "RC_INITIAL";');
-  const proc = spawn(native, ["build", "-w", "src/main.ts", "--outfile", output], {
+  const proc = spawn(process.execPath, [legacy, "build", "-w", "src/main.ts", "--outfile", output], {
     cwd: dir, stdio: "ignore", detached: process.platform !== "win32",
   });
   const closed = once(proc, "close");

@@ -3,19 +3,15 @@ import { CheckCircle2, Clock, Sparkles } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Roadmap — RahulChaube Runtime",
-  description: "The public roadmap and milestone tracker for RahulChaube Runtime.",
+  title: "Roadmap — RC Runtime",
+  description: "The public roadmap and milestone tracker for RC Runtime.",
 };
 
 const roadmap = [
-  { title: "Premium CLI Tooling", desc: "Dependency-free interactive command dispatcher, progress bars, tables, and colors.", status: "Shipped", pct: 100 },
-  { title: "Package Manager Core", desc: "install, add, remove, update, why, outdated, audit, licenses, graph, cache clean.", status: "Shipped", pct: 100 },
-  { title: "Project Scaffolding Generator", desc: "Interactive templates: react, next, express, hono, library, cli.", status: "Shipped", pct: 100 },
-  { title: "AI-Assisted Diagnostics", desc: "explain error analysis, optimize performance tips, migrate, analyze diagnostics.", status: "Shipped", pct: 100 },
-  { title: "Plugin System & Ecosystem Registry", desc: "Plugin API and discovery registry for rahulchaube-plugin-* packages.", status: "Shipped", pct: 100 },
-  { title: "Package manager distribution", desc: "Package manager channels beyond the archive installers.", status: "Planned", pct: 0 },
-  { title: "Native C++ Addon Bindings", desc: "Native N-API C/C++ module loader and node-gyp compatibility layer.", status: "In Progress", pct: 65 },
-  { title: "Global CDN Edge Registry", desc: "High-speed tarball caching and global edge distribution network.", status: "Planned", pct: 25 },
+  { title: "Standalone JS and TS execution", desc: "Ship a single rc executable on Windows, macOS and Linux.", status: "Shipped", pct: 100 },
+  { title: "RC Web and test library", desc: "Scaffold, run and test HTTP services from the same executable.", status: "Shipped", pct: 100 },
+  { title: "Pinned module installation", desc: "Verify HTTPS module digests and restore dependencies offline.", status: "Shipped", pct: 100 },
+  { title: "Native watch and editor support", desc: "Restart an app when an imported file changes and run tests from VS Code.", status: "Shipped", pct: 100 },
 ];
 
 export default function RoadmapPage() {

@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Community & Support — RahulChaube Runtime",
-  description: "Join the RahulChaube Runtime community on Discord, GitHub, and X (Twitter).",
+  title: "Community & Support — RC Runtime",
+  description: "Join the RC Runtime community on GitHub and X (Twitter).",
 };
 
 export default function CommunityPage() {
@@ -19,14 +19,14 @@ export default function CommunityPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <a
-            href={site.social.discord}
+            href={site.social.issues}
             target="_blank"
             rel="noopener noreferrer"
             className="p-6 rounded-2xl bg-white dark:bg-[#0E2923] border border-zinc-200 dark:border-[#163830] hover:border-[#2FA866] transition-colors shadow-sm"
           >
-            <h3 className="text-lg font-bold text-zinc-900 dark:text-[#F0F6FC] font-title mb-2">Discord Server</h3>
+            <h3 className="text-lg font-bold text-zinc-900 dark:text-[#F0F6FC] font-title mb-2">GitHub issues</h3>
             <p className="text-sm text-zinc-600 dark:text-[#8B949E]">
-              Join real-time technical discussions, ask questions, and share project feedback.
+              Report reproducible issues, request features and share project feedback.
             </p>
           </a>
 

@@ -1,7 +1,7 @@
 {
   "name": "rahulchaube-cli",
   "version": "1.2.0",
-  "description": "RahulChaube Runtime — a next-generation JavaScript runtime and developer platform.",
+  "description": "Historical Bun-hosted developer tooling for the rahulchaube command.",
   "license": "MIT",
   "type": "module",
   "bin": {
@@ -9,7 +9,6 @@
   },
   "files": [
     "bin",
-    "blyx",
     "src",
     "README.md"
   ],

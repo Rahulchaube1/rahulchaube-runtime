@@ -13,7 +13,7 @@ export function DownloadTabs() {
   const platform = platforms[index];
   return (
     <section aria-label="Install the CLI" className="mx-auto max-w-3xl rounded-xl border border-zinc-200 bg-white p-6 dark:border-vscode-border dark:bg-ink-800">
-      <p className="mb-5 text-sm leading-relaxed">Install <a className="underline" href="https://bun.sh/">Bun</a> and sign in to the GitHub CLI with an account that can read the runtime repository.</p>
+      <p className="mb-5 text-sm leading-relaxed">Choose your platform. The installer verifies the public archive and installs the native executable.</p>
       <fieldset className="flex flex-wrap gap-2" aria-label="Operating system">
         {platforms.map(({ label }, i) => (
           <button key={label} aria-pressed={i === index} onClick={() => setIndex(i)}
@@ -21,7 +21,7 @@ export function DownloadTabs() {
         ))}
       </fieldset>
       <CodeBlock key={platform.label} code={platform.cmd} lang={platform.shell} />
-      <p className="text-sm">After installation, open a new terminal and run <code>rahulchaube --version</code>.</p>
+      <p className="text-sm">After installation, open a new terminal and run <code>rc --version</code>.</p>
     </section>
   );
 }

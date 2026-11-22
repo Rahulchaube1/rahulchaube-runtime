@@ -1,71 +1,7 @@
-# Architecture Guide
+# Runtime architecture
 
-RahulChaube Runtime is organized as two cooperating layers:
+The native Go host embeds QuickJS-NG through quickjs-go and compiles TypeScript with esbuild. Local ES modules, literal dynamic imports, top-level await, CommonJS dependencies and JSON are supported through the bundled module graph. `console`, `setTimeout`, `clearTimeout` and `RC.args` are available in the host.
 
-1. **The engine** — the upstream Bun core (Rust, Zig, and C++), which provides
-   the JavaScript runtime, transpiler, bundler, test runner, and package
-   manager. This layer is API-compatible with Node.js and web standards.
-2. **The RahulChaube CLI** — an independent, TypeScript front-end that provides
-   the branded developer experience, command surface, and tooling. It lives in
-   `packages/rahulchaube-cli`.
+RC executes TypeScript without type checking. Applications using Node built-ins, Bun globals, browser DOM APIs, native Node add-ons or dynamic module names may require another host. JS programs run with the filesystem and network privileges of the current user.
 
-```
-packages/rahulchaube-cli/
-├── bin/
-│   └── rahulchaube.ts          # entrypoint
-├── src/
-│   ├── index.ts                # command dispatcher
-│   ├── ui/                     # premium terminal UI toolkit
-│   │   ├── colors.ts           # ANSI color helpers
-│   │   ├── spinner.ts          # animated spinners
-│   │   ├── progress.ts         # multi-bar progress
-│   │   ├── table.ts            # box-drawn tables
-│   │   ├── icons.ts            # unicode icon set
-│   │   ├── banner.ts           # branded banners
-│   │   ├── logger.ts           # structured logging
-│   │   └── prompt.ts           # interactive prompts
-│   ├── engine/
-│   │   └── bun.ts              # delegation to the engine binary
-│   ├── commands/               # one file per command
-│   │   ├── install.ts  add.ts  remove.ts  update.ts
-│   │   ├── run.ts     test.ts  build.ts  create.ts
-│   │   ├── doctor.ts  audit.ts licenses.ts graph.ts
-│   │   ├── why.ts     outdated.ts cache.ts benchmark.ts
-│   │   ├── explain.ts optimize.ts migrate.ts analyze.ts
-│   │   └── plugins.ts
-│   ├── commands/templates.ts   # project templates
-│   └── util/                   # fs, config, semver helpers
-└── package.json
-```
-
-## Design principles
-
-- **Modularity** — each command is an isolated, testable module.
-- **Extensibility** — new commands are plain async functions registered in
-  `src/index.ts`.
-- **No hard dependencies** — the UI toolkit is dependency-free so the CLI runs
-  on any Node or Bun runtime.
-- **Brand separation** — the CLI never claims to be the official Bun, and all
-  upstream licenses/attribution are preserved.
-
-## Command dispatch
-
-`bin/rahulchaube.ts` calls `main(argv)`, which:
-
-1. Parses global flags (`--help`, `--version`, `--json`, `--no-color`).
-2. Looks up the command in the `COMMANDS` registry.
-3. Invokes the command's async handler with `(args, flags)`.
-4. Returns a process exit code.
-
-## Engine delegation
-
-Commands that need the runtime (install, run, test, build) delegate to the
-`bun` engine binary via `engine/bun.ts`. The CLI controls branding, UX, and
-diagnostics; the engine performs the heavy lifting. This keeps the rebrand
-self-contained and the engine unmodified.
-
-## Workspaces & monorepos
-
-`rahulchaube` reads `package.json` workspaces and `rahulchaube.json` to support
-parallel task execution, smart caching, and incremental builds — mirroring the
-engine's workspace support.
+[Online guide](https://www.rahulchaube.space/docs/architecture)

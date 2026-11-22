@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Vision & Mission — RahulChaube Runtime",
-  description: "The long-term engineering vision, performance principles, and roadmap for RahulChaube Runtime.",
+  title: "Vision & Mission — RC Runtime",
+  description: "The long-term engineering vision, performance principles, and roadmap for RC Runtime.",
 };
 
 export default function VisionPage() {

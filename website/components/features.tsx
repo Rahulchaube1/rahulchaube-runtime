@@ -34,7 +34,7 @@ const platformFeatures = [
   {
     icon: Cpu,
     title: "Integrated Runtime",
-    desc: "High-performance JavaScript and TypeScript engine with native JSX compilation and sub-20ms cold startup.",
+    desc: "Run JavaScript and TypeScript with a bundled engine and compiler.",
     link: "/docs",
   },
   {

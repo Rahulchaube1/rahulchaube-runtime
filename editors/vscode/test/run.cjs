@@ -12,7 +12,7 @@ async function main() {
     const workspace = join(dir, "project with spaces");
     mkdirSync(workspace);
     mkdirSync(join(workspace, ".vscode"));
-    const binary = resolve(root, "packages/rahulchaube-cli/bin/rahulchaube-native" + (process.platform === "win32" ? ".exe" : ""));
+    const binary = resolve(root, "native/rc" + (process.platform === "win32" ? ".exe" : ""));
     const platform = { linux: "linux", darwin: "osx", win32: "windows" }[process.platform];
     writeFileSync(join(workspace, ".vscode/settings.json"), JSON.stringify({
       "rcRuntime.executablePath": binary,

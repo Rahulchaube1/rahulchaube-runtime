@@ -3,7 +3,7 @@ const path = require("node:path");
 const { resolveRuntime, supportsFile } = require("./runtime");
 
 const taskType = "rahulchaube-runtime";
-const labels = { run: "Run", watch: "Watch", hot: "Hot reload" };
+const labels = { run: "Run", watch: "Watch", test: "Test" };
 
 function activate(context) {
   const starting = new Set();
@@ -36,11 +36,11 @@ function activate(context) {
       }
       if (doc.isDirty && !await doc.save()) return;
       const folder = vscode.workspace.getWorkspaceFolder(doc.uri);
-      const args = ["run", ...(mode === "run" ? [] : ["--" + mode]), doc.fileName];
+      const args = mode === "test" ? ["test", doc.fileName] : ["run", ...(mode === "watch" ? ["--watch"] : []), doc.fileName];
       const proc = new vscode.ProcessExecution(program, args, { cwd: folder?.uri.fsPath || path.dirname(doc.fileName) });
       const task = new vscode.Task({ type: taskType, file: key, mode }, folder || vscode.TaskScope.Global,
         labels[mode] + " " + path.basename(doc.fileName), "RC Runtime", proc, []);
-      task.isBackground = mode !== "run";
+      task.isBackground = mode === "watch";
       task.presentationOptions = { reveal: vscode.TaskRevealKind.Always, panel: vscode.TaskPanelKind.Dedicated, focus: false };
       const execution = await vscode.tasks.executeTask(task);
       launched.add(execution);

@@ -5,7 +5,7 @@ import { TemplatesGallery } from "@/components/templates-gallery";
 
 const guides = [
   { href: "/docs/cli", title: "CLI reference", detail: "Find a command and its options." },
-  { href: "/releases", title: "Release archives", detail: "Find your platform and check its SHA-256 digest." },
+  { href: "/docs/rc-web", title: "RC Web", detail: "Build and test your first HTTP route." },
   { href: "/benchmarks", title: "Benchmarks", detail: "Run the suite on your machine." },
 ];
 

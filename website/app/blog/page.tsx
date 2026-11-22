@@ -5,8 +5,8 @@ import { Calendar } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Engineering Blog — RahulChaube Runtime",
-  description: "News, engineering notes, release updates, and architecture guides from the RahulChaube Runtime team.",
+  title: "Engineering Blog — RC Runtime",
+  description: "News, engineering notes, release updates, and architecture guides from the RC Runtime team.",
 };
 
 export default function BlogIndex() {

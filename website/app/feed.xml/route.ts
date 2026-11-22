@@ -20,9 +20,9 @@ export function GET() {
   const rssXml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>RahulChaube Runtime Blog &amp; Release Feed</title>
+    <title>RC Runtime Blog &amp; Release Feed</title>
     <link>${baseUrl}</link>
-    <description>Latest news, release announcements, and guides for RahulChaube Runtime.</description>
+    <description>Latest news, release announcements, and guides for RC Runtime.</description>
     <language>en-us</language>
     <atom:link href="${baseUrl}/feed.xml" rel="self" type="application/rss+xml"/>
     ${rssItems}

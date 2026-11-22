@@ -37,7 +37,7 @@ export function WorkflowSection() {
               <Check className="w-5 h-5 text-[#2FA866] shrink-0 mt-0.5" />
               <div>
                 <span className="font-bold text-zinc-900 dark:text-[#F0F6FC]">Instant Feedback Loop:</span>
-                <span className="text-zinc-600 dark:text-[#8B949E] ml-1.5">Sub-20ms cold start times for rapid test iterations.</span>
+                <span className="text-zinc-600 dark:text-[#8B949E] ml-1.5">Restart when an imported source file changes.</span>
               </div>
             </div>
           </div>

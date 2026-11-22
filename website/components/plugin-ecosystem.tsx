@@ -37,7 +37,7 @@ export function PluginEcosystem() {
           Plugin Ecosystem
         </h2>
         <p className="text-body-fluid text-zinc-600 dark:text-[#8B949E]">
-          Extend RahulChaube Runtime capabilities with official plugins for frameworks, databases, and compilers.
+          Extend RC Runtime capabilities with official plugins for frameworks, databases, and compilers.
         </p>
       </div>
 
