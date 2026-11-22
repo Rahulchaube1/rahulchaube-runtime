@@ -17,7 +17,7 @@ Website icons preserve the mark’s proportions and gradient. To export them fro
 
 ## Website colors and type
 
-The logo backdrop is `#071a16`. Lime `#aee75a` and emerald `#199050` come from the original artwork. The dark theme uses pine surfaces with lime links. Light pages use deeper emerald links for legibility. Action icons use the same palette and resource icons carry the diagonal fold from the mark. Geist is the site typeface and IBM Plex Mono is used for code and terminal output. Theme colors are defined in [globals.css](../website/app/globals.css).
+The logo backdrop is `#071a16`. Lime `#aee75a` and emerald `#199050` come from the original artwork. The website uses a pure-black canvas (`#000000`), near-black panels and lime links on every device. Action icons use the same palette and resource icons carry the diagonal fold from the mark. Geist is the site typeface and IBM Plex Mono is used for code and terminal output. Theme colors are defined in [globals.css](../website/app/globals.css).
 
 ## Voice
 

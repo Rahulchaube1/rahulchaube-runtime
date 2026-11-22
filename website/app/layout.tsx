@@ -45,11 +45,8 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image", images: ["/rc-social.jpg?art=terminal"] },
 };
 export const viewport: Viewport = {
-  colorScheme: "dark light",
-  themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: site.theme.dark },
-    { media: "(prefers-color-scheme: light)", color: site.theme.light },
-  ],
+  colorScheme: "dark",
+  themeColor: site.themeColor,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -82,14 +79,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     ],
   };
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang="en" className="dark" style={{ backgroundColor: site.themeColor }}>
       <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html:
-              "try{if(localStorage.getItem('theme')==='light')document.documentElement.classList.remove('dark')}catch{}",
-          }}
-        />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       </head>
       <body>

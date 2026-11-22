@@ -3,30 +3,29 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
   --brand-lime: #aee75a;
   --brand-emerald: #199050;
   --brand-ink: #071a16;
-  --bg: #f5f8f2;
-  --panel: #fcfef9;
-  --raised: #eaf1e6;
-  --text: #12271b;
-  --muted: #455d4d;
-  --subtle: #536a5a;
-  --line: #cedacd;
-  --accent: #17623a;
-  --accent-end: #14744a;
-  --icon: #23794a;
+  --bg: #000000;
+  --panel: #060a07;
+  --raised: #0d1510;
+  --text: #eff7ed;
+  --muted: #b0c0b3;
+  --subtle: #93a899;
+  --line: #243228;
+  --accent: var(--brand-lime);
+  --accent-end: #57cd85;
+  --icon: #89d89a;
   --accent-bg: var(--brand-lime);
   --accent-hover: #bff183;
-  --tint: #e2f0dc;
-  --header: rgb(245 248 242 / 95%);
+  --tint: #102417;
   --on-btn: #102b18;
-  --console-bg: #0a1913;
-  --console-top: #13271c;
-  --console-line: #2f4938;
+  --console-bg: #040805;
+  --console-top: #0b130d;
+  --console-line: #26392b;
   --console-text: #edf7ed;
-  --console-muted: #aec2ae;
+  --console-muted: #acbead;
   --syntax-keyword: #b9ed72;
   --syntax-string: #86dfaa;
   --syntax-type: #a6ded2;
@@ -34,22 +33,8 @@
   --sans: "Geist Variable", "Inter Variable", system-ui, sans-serif;
   --mono: "IBM Plex Mono", ui-monospace, monospace;
 }
-html.dark {
-  color-scheme: dark;
-  --bg: #0a1612;
-  --panel: #10211a;
-  --raised: #192d23;
-  --text: #eff7ed;
-  --muted: #b3c6b6;
-  --subtle: #9bb29e;
-  --line: #2b4032;
-  --accent: var(--brand-lime);
-  --accent-end: #57cd85;
-  --icon: #89d89a;
-  --tint: #203725;
-  --header: rgb(10 22 18 / 95%);
-}
 html {
+  background: var(--bg);
   scroll-padding-top: 90px;
 }
 body {
@@ -110,9 +95,8 @@ summary {
   position: sticky;
   top: 0;
   z-index: 40;
-  background: var(--header);
+  background: var(--bg);
   border-bottom: 1px solid var(--line);
-  backdrop-filter: blur(15px);
 }
 .main-nav {
   display: flex;
@@ -215,14 +199,9 @@ summary {
   color: var(--accent);
   border-color: var(--icon);
 }
-.theme-sun,
-.dark .theme-moon,
 .menu-trigger,
 .mobile-links {
   display: none;
-}
-.dark .theme-sun {
-  display: block;
 }
 .site-footer {
   background: var(--bg);
@@ -316,7 +295,7 @@ summary {
   box-shadow: 0 18px 65px #0006;
 }
 .search-dialog::backdrop {
-  background: rgb(4 17 10 / 80%);
+  background: rgb(0 0 0 / 85%);
 }
 .search-input {
   padding: 12px 15px;

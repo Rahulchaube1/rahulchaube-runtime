@@ -16,6 +16,7 @@ test("public brand assets and app manifests use the official RC logo exports", (
   expect(published.theme_color).toBe(app.theme_color);
   expect(published.background_color).toBe(app.background_color);
   expect(app.theme_color).toBe(palette.dark.background);
+  expect(app.theme_color).toBe("#000000");
   for (const { src, sizes } of published.icons) {
     const icon = asset(src.slice(1));
     expect(dimensions(icon).join("x")).toBe(sizes);
