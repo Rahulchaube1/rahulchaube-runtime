@@ -3,15 +3,61 @@ on:
   workflow_dispatch:
     inputs:
       registry:
-        description: Extension registry
+        description: Distribution channel (both publishes to the two editor registries)
         type: choice
-        options: [both, marketplace, open-vsx]
+        options: [both, marketplace, open-vsx, github]
         required: true
 permissions:
   contents: read
 jobs:
+  github-release:
+    if: github.ref == 'refs/heads/main' && inputs.registry == 'github'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    concurrency: rc-editor-github-release
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Prepare the verified editor release
+        run: |
+          version=$(node -p "require('./editors/vscode/package.json').version")
+          filename="rahulchaube-runtime-$version.vsix"
+          cd website/public/extensions
+          sha256sum --check SHA256SUMS
+          mkdir "$RUNNER_TEMP/editor-release"
+          sha256sum "$filename" > "$RUNNER_TEMP/editor-release/SHA256SUMS"
+          echo "EDITOR_VERSION=$version" >> "$GITHUB_ENV"
+          echo "VSIX_NAME=$filename" >> "$GITHUB_ENV"
+      - name: Publish the VSIX and checksum on GitHub
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
+        with:
+          tag_name: editor-v${{ env.EDITOR_VERSION }}
+          name: RC Runtime editor extension ${{ env.EDITOR_VERSION }}
+          target_commitish: ${{ github.sha }}
+          make_latest: 'false'
+          overwrite_files: false
+          fail_on_unmatched_files: true
+          files: |
+            website/public/extensions/${{ env.VSIX_NAME }}
+            ${{ runner.temp }}/editor-release/SHA256SUMS
+          body: |
+            Download the VSIX below. In VS Code, VSCodium or code-server, open Extensions and choose **Install from VSIX…**. To install from a terminal, run `code --install-extension ./${{ env.VSIX_NAME }}`, replacing `code` with `codium` or `code-server` for those editors.
+
+            Install the native RC Runtime on the workspace machine. Open a saved JavaScript or TypeScript file to run, watch or test it from the Command Palette.
+
+            [Editor handbook](https://www.rahulchaube.space/docs/editor) · [Native runtime downloads](https://www.rahulchaube.space/download) · [Rahul Chaube](https://github.com/Rahulchaube1)
+      - name: Verify the public release files
+        run: |
+          base="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/editor-v$EDITOR_VERSION"
+          for file in "$VSIX_NAME" SHA256SUMS; do
+            curl --fail --location --silent --show-error --retry 5 --retry-all-errors "$base/$file" --output "$RUNNER_TEMP/$file"
+          done
+          cmp "$RUNNER_TEMP/editor-release/SHA256SUMS" "$RUNNER_TEMP/SHA256SUMS"
+          (cd "$RUNNER_TEMP" && sha256sum --check SHA256SUMS)
   publish:
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' && inputs.registry != 'github'
     runs-on: ubuntu-latest
     permissions:
       contents: read
