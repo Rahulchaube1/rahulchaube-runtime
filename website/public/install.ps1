@@ -22,7 +22,9 @@ function Install-RCRuntime {
         $digest = ($record -split '\s+')[0]
     } else {
         $origin = if ($env:RAHULCHAUBE_INSTALL_ORIGIN) { $env:RAHULCHAUBE_INSTALL_ORIGIN } else { "https://www.rahulchaube.space" }
-        $meta = (Invoke-WebRequest "$origin/api/install?platform=win-x64" -UseBasicParsing).Content.Trim()
+        $client = [Net.WebClient]::new()
+        try { $meta = $client.DownloadString("$origin/api/install?platform=win-x64").Trim() }
+        finally { $client.Dispose() }
         $version, $digest, $url = $meta -split "\s+"
         if ($url -notlike "https://*") { throw "Invalid release URL" }
     }
@@ -36,8 +38,15 @@ function Install-RCRuntime {
     try {
         $file = Join-Path $stage $filename
         if ($archiveDir) { Copy-Item -LiteralPath (Join-Path $archiveDir $filename) -Destination $file }
-        else { Invoke-WebRequest $url -UseBasicParsing -OutFile $file }
-        if ((Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash -ne $digest) { throw "SHA-256 mismatch for $filename" }
+        else {
+            $client = [Net.WebClient]::new()
+            try { $client.DownloadFile($url, $file) } finally { $client.Dispose() }
+        }
+        $stream = [IO.File]::OpenRead($file)
+        $sha256 = [Security.Cryptography.SHA256]::Create()
+        try { $actual = [BitConverter]::ToString($sha256.ComputeHash($stream)).Replace("-", "") }
+        finally { $stream.Dispose(); $sha256.Dispose() }
+        if ($actual -ne $digest) { throw "SHA-256 mismatch for $filename" }
         # bsdtar handles the POSIX archive entries on supported Windows versions.
         & (Join-Path $env:SystemRoot "System32/tar.exe") -xf $file -C $stage
         if ($LASTEXITCODE -ne 0) { throw "Archive extraction failed" }
