@@ -117,19 +117,10 @@ summary {
   letter-spacing: -0.9px;
 }
 .product-mark {
-  display: grid;
-  place-items: center;
+  display: block;
   width: 32px;
   height: 32px;
-  padding: 0 2px 4px 0;
-  border-radius: 8px;
-  background: var(--accent-bg);
-  color: #211710;
-  font-size: 24px;
-  line-height: 1;
-  font-weight: 830;
-  font-style: italic;
-  letter-spacing: -2.3px;
+  background: url("/rc-mark-180.png") center / contain no-repeat;
 }
 .desktop-links,
 .nav-tools,
@@ -165,14 +156,23 @@ summary {
   min-height: 34px;
   justify-content: center;
 }
+.search-control {
+  position: relative;
+}
 .search-trigger {
   gap: 8px;
-  padding: 0 8px 0 10px;
+  padding: 0 46px 0 10px;
   color: var(--muted);
   background: var(--panel);
   font-size: 12px;
 }
-.search-trigger kbd {
+.search-control kbd {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--muted);
   border: 1px solid var(--line);
   border-radius: 4px;
   font-size: 10px;

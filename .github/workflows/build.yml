@@ -36,6 +36,9 @@ jobs:
       - name: Install dependencies
         working-directory: website
         run: bun install --frozen-lockfile --ignore-scripts
+      - name: Lint the website
+        working-directory: website
+        run: bun run lint
       - name: Verify handbook links and run the published examples
         working-directory: website
         run: bun test tests/handbook.test.mjs

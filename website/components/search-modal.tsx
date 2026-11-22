@@ -32,13 +32,13 @@ export function SearchModal() {
       dialog.current?.close();
       return;
     }
+    dialog.current?.setAttribute("closedby", "any");
     dialog.current?.showModal();
     input.current?.focus();
   }, [open]);
   useEffect(() => {
     if (!open || index.length) return;
     const request = new AbortController();
-    setError(false);
     fetch("/docs/search-index.json", { signal: request.signal })
       .then((response) => {
         if (!response.ok) throw new Error("Search index unavailable");
@@ -65,22 +65,27 @@ export function SearchModal() {
   if (error) emptyMessage = "Search could not load. Reopen search to retry.";
   return (
     <>
-      <button
-        type="button"
-        className="search-trigger"
-        aria-label="Search documentation"
-        onClick={() => setOpen(true)}
-      >
-        <Search size={16} />
-        <span>Search docs</span>
-        <kbd>⌘ K</kbd>
-      </button>
+      <div className="search-control">
+        <button
+          type="button"
+          className="search-trigger"
+          aria-label="Search documentation"
+          aria-keyshortcuts="Control+K Meta+K"
+          onClick={() => setOpen(true)}
+        >
+          <Search size={16} />
+          <span>Search documentation</span>
+        </button>
+        <kbd aria-hidden="true">⌘ K</kbd>
+      </div>
       <dialog
         className="search-dialog"
         ref={dialog}
         aria-label="Search documentation"
-        onClose={() => setOpen(false)}
-        closedby="any"
+        onClose={() => {
+          setOpen(false);
+          setError(false);
+        }}
       >
         <div className="search-inner">
           <div className="search-input">

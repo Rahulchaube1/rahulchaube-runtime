@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ProjectArticle } from "@/components/project-article";
 import { site } from "@/lib/site";
 export const metadata = {
@@ -18,8 +19,9 @@ export default function About() {
         the MIT License.
       </p>
       <p>
-        <a href="/docs/architecture">Runtime architecture</a> ·{" "}
-        <a href="/docs/contributing">Build from source</a> · <a href="/vision">Engineering principles</a>
+        <Link href="/docs/architecture">Runtime architecture</Link> ·{" "}
+        <Link href="/docs/contributing">Build from source</Link> ·{" "}
+        <Link href="/vision">Engineering principles</Link>
       </p>
       <h2>Rahul Chaube</h2>
       <p>

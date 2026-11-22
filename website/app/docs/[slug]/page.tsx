@@ -10,7 +10,6 @@ import { guideHeadings, readGuide } from "@/lib/docs";
 import { site } from "@/lib/site";
 
 type Props = Readonly<{ params: Promise<{ slug: string }> }>;
-export const dynamicParams = false;
 export function generateStaticParams() {
   return guides.map(({ slug }) => ({ slug }));
 }

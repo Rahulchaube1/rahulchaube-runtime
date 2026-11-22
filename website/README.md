@@ -27,6 +27,7 @@ bun install --frozen-lockfile
 npm run dev      # http://localhost:3000
 npm run build    # production build
 npm run typecheck
+npm run lint
 ```
 
 ## Edit the handbook

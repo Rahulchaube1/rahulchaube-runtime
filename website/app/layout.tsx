@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   ],
   manifest: "/site.webmanifest",
   icons: { icon: [{ url: "/rc-mark-32.png", sizes: "32x32", type: "image/png" }], apple: "/rc-mark-180.png" },
-  alternates: { types: { "application/rss+xml": "/feed.xml" } },
+  alternates: { types: { "application/rss+xml": site.feed } },
   openGraph: {
     title: "RC Runtime",
     description: site.description,

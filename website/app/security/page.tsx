@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ProjectArticle } from "@/components/project-article";
 import { site } from "@/lib/site";
 export const metadata = { title: "Security policy", alternates: { canonical: "/security" } };
@@ -19,7 +20,7 @@ export default function Security() {
       <h2>Verify downloads</h2>
       <p>
         Compare the SHA-256 digest of a downloaded archive with the published release. RC installers perform
-        this check before activation. <a href="/releases">Release checksums</a>
+        this check before activation. <Link href="/releases">Release checksums</Link>
       </p>
     </ProjectArticle>
   );

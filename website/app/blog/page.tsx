@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { site } from "@/lib/site";
 import { posts } from "@/lib/blog";
 import { PageIntro } from "@/components/page-intro";
 import { ArrowUpRight } from "lucide-react";
@@ -26,7 +27,7 @@ export default function Blog() {
           </Link>
         ))}
       </div>
-      <a className="text-link" href="/feed.xml">
+      <a className="text-link" rel="alternate" type="application/rss+xml" href={site.feed}>
         Subscribe via RSS ↗
       </a>
     </div>

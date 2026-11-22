@@ -7,7 +7,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "oxlint --react-plugin --nextjs-plugin --deny-warnings app components lib tests next.config.mjs postcss.config.mjs tailwind.config.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -30,6 +30,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "autoprefixer": "^10.4.20",
+    "oxlint": "1.94.0",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.15",
     "typescript": "^5.6.3"

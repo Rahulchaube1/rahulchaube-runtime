@@ -70,11 +70,11 @@ export default function Benchmarks() {
           <Link className="btn secondary" href="/docs/benchmarks">
             Reproduce the benchmarks
           </Link>
-          <a className="text-link" href="/benchmarks.json">
-            Execution samples ↗
+          <a className="text-link" download href="/benchmarks.json">
+            Execution samples ↓
           </a>
-          <a className="text-link" href="/install-benchmarks.json">
-            Install samples ↗
+          <a className="text-link" download href="/install-benchmarks.json">
+            Install samples ↓
           </a>
         </div>
       </section>

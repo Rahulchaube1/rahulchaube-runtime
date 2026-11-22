@@ -6,7 +6,7 @@
     gap: 16px;
   }
   .search-trigger span,
-  .search-trigger kbd {
+  .search-control kbd {
     display: none;
   }
   .search-trigger {
@@ -153,7 +153,6 @@
   .product-mark {
     width: 29px;
     height: 29px;
-    font-size: 22px;
   }
   .hero-actions .btn {
     font-size: 13px;

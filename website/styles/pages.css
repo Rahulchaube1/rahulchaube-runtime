@@ -220,6 +220,10 @@
   background: var(--tint);
   border-radius: 6px;
 }
+.archive-note a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 @media (max-width: 760px) {
   .download-grid,
   .release-changes {
