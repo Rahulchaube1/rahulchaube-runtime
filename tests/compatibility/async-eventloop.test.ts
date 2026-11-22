@@ -74,11 +74,16 @@ test("Scheduler: TimerRegistry setTimeout execution and clearing", async () => {
 test("Scheduler: TimerRegistry setInterval recurring ticks", async () => {
   const timers = new TimerRegistry();
   let ticks = 0;
-  const id = timers.setInterval(() => { ticks++; }, 10);
-
-  await new Promise((r) => setTimeout(r, 45));
-  timers.clear(id);
-  expect(ticks).toBeGreaterThanOrEqual(3);
+  await new Promise<void>((resolve) => {
+    const id = timers.setInterval(() => {
+      if (++ticks === 3) {
+        timers.clear(id);
+        resolve();
+      }
+    }, 10);
+  });
+  expect(ticks).toBe(3);
+  expect(timers.activeCount()).toBe(0);
 });
 
 test("Scheduler: TimerRegistry setImmediate tick", async () => {

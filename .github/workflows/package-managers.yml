@@ -27,7 +27,7 @@ jobs:
           brew test rahulchaube1/rc-runtime/rc-runtime
           rc doctor
 
-  windows:
+  scoop:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
@@ -38,10 +38,10 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           $env:SCOOP = Join-Path $env:RUNNER_TEMP 'scoop'
-          $scoopApp = Join-Path $env:SCOOP 'apps/scoop/current'
-          git clone --quiet --depth=1 --branch v0.6.0 https://github.com/ScoopInstaller/Scoop.git $scoopApp
-          if ($LASTEXITCODE -ne 0 -or (git -C $scoopApp rev-parse HEAD) -ne 'e6aa3b366bdee8ed138c1e0f7b85192ebdd35d0f') { throw 'Scoop checkout failed' }
-          $scoop = Join-Path $scoopApp 'bin/scoop.ps1'
+          $bootstrap = Join-Path $env:RUNNER_TEMP 'install-scoop.ps1'
+          Invoke-WebRequest 'https://raw.githubusercontent.com/ScoopInstaller/Install/1e2f334083d609986d8c8bc9e31ae8e87c39fab4/install.ps1' -OutFile $bootstrap
+          & $bootstrap -ScoopDir $env:SCOOP -RunAsAdmin
+          $scoop = Join-Path $env:SCOOP 'apps/scoop/current/bin/scoop.ps1'
           & $scoop bucket add rc-runtime $env:GITHUB_WORKSPACE
           if ($LASTEXITCODE -ne 0) { throw 'Scoop bucket add failed' }
           & $scoop install --no-update-scoop rc-runtime/rc-runtime
@@ -49,6 +49,13 @@ jobs:
           $entry = Join-Path $env:RUNNER_TEMP 'scoop-test.ts'
           Set-Content $entry 'const n: number = 21; console.log(n * 2);'
           if ((& "$env:SCOOP/shims/rc.exe" run $entry) -ne '42' -or $LASTEXITCODE -ne 0) { throw 'Scoop runtime test failed' }
+
+  winget:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
       - name: Validate and install the WinGet package
         shell: powershell
         run: |
