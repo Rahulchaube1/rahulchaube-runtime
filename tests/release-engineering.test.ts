@@ -13,6 +13,36 @@ test("Version API: GET /api/version returns version info with download assets", 
   expect(data.assets["win-x64"]).toContain("runtime-win-x64.zip");
 });
 
+test("package managers select the native archives and checksums for the stable release", () => {
+  const manifest = JSON.parse(readFileSync("dist/version.json", "utf8"));
+  const releaseUrl = `https://github.com/Rahulchaube1/rahulchaube-runtime/releases/download/v${manifest.version}`;
+  const formula = readFileSync("Formula/rc-runtime.rb", "utf8");
+  expect(formula).toContain(`version "${manifest.version}"`);
+  const formulas = [...formula.matchAll(/url "([^"]+)"\s+sha256 "([a-f0-9]+)"/g)];
+  expect(formulas).toHaveLength(4);
+  const urls = new Map(formulas.map(([, url, sha]) => [url.replace("#{version}", manifest.version), sha]));
+  for (const platform of ["darwin-arm64", "darwin-x64", "linux-arm64", "linux-x64"]) {
+    const filename = `runtime-${platform}.tar.gz`;
+    expect(urls.get(`${releaseUrl}/${filename}`)).toBe(manifest.sha256[filename]);
+  }
+
+  const filename = "runtime-win-x64.zip";
+  const scoop = JSON.parse(readFileSync("bucket/rc-runtime.json", "utf8"));
+  expect(scoop.version).toBe(manifest.version);
+  expect(scoop.architecture["64bit"]).toEqual({ url: `${releaseUrl}/${filename}`, hash: manifest.sha256[filename] });
+  const folder = join("packaging", "winget", manifest.version);
+  const installer = Bun.YAML.parse(readFileSync(join(folder, "RahulChaube.RCRuntime.installer.yaml"), "utf8")) as {
+    PackageVersion: string;
+    Installers: { Architecture: string; InstallerUrl: string; InstallerSha256: string }[];
+    NestedInstallerFiles: { RelativeFilePath: string; PortableCommandAlias: string }[];
+  };
+  expect(installer.PackageVersion).toBe(manifest.version);
+  expect(installer.Installers).toEqual([{
+    Architecture: "x64", InstallerUrl: `${releaseUrl}/${filename}`, InstallerSha256: manifest.sha256[filename].toUpperCase(),
+  }]);
+  expect(installer.NestedInstallerFiles).toEqual([{ RelativeFilePath: scoop.bin, PortableCommandAlias: manifest.launcher }]);
+});
+
 test("Release Generator: buildReleaseArtifacts generates distribution zip and tarballs", () => {
   const targetDir = ".tmp_dist_eng_test";
   const resolved = resolve(process.cwd(), targetDir);

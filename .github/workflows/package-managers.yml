@@ -1,0 +1,75 @@
+name: Test package manager installs
+on:
+  push:
+    branches: [main]
+    paths: ['Formula/**', 'bucket/**', 'packaging/winget/**', '.github/workflows/package-managers.yml']
+  pull_request:
+    paths: ['Formula/**', 'bucket/**', 'packaging/winget/**', '.github/workflows/package-managers.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  homebrew:
+    runs-on: macos-latest
+    env:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+      HOMEBREW_NO_INSTALL_CLEANUP: 1
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Install from the tap and run TypeScript
+        run: |
+          brew tap rahulchaube1/rc-runtime "$GITHUB_WORKSPACE"
+          brew install rahulchaube1/rc-runtime/rc-runtime
+          brew test rahulchaube1/rc-runtime/rc-runtime
+          rc doctor
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Install from the Scoop bucket and run TypeScript
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $env:SCOOP = Join-Path $env:RUNNER_TEMP 'scoop'
+          $scoopApp = Join-Path $env:SCOOP 'apps/scoop/current'
+          git clone --quiet --depth=1 --branch v0.6.0 https://github.com/ScoopInstaller/Scoop.git $scoopApp
+          if ($LASTEXITCODE -ne 0 -or (git -C $scoopApp rev-parse HEAD) -ne 'e6aa3b366bdee8ed138c1e0f7b85192ebdd35d0f') { throw 'Scoop checkout failed' }
+          $scoop = Join-Path $scoopApp 'bin/scoop.ps1'
+          & $scoop bucket add rc-runtime $env:GITHUB_WORKSPACE
+          if ($LASTEXITCODE -ne 0) { throw 'Scoop bucket add failed' }
+          & $scoop install --no-update-scoop rc-runtime/rc-runtime
+          if ($LASTEXITCODE -ne 0) { throw 'Scoop install failed' }
+          $entry = Join-Path $env:RUNNER_TEMP 'scoop-test.ts'
+          Set-Content $entry 'const n: number = 21; console.log(n * 2);'
+          if ((& "$env:SCOOP/shims/rc.exe" run $entry) -ne '42' -or $LASTEXITCODE -ne 0) { throw 'Scoop runtime test failed' }
+      - name: Validate and install the WinGet package
+        shell: powershell
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $app = Get-AppxPackage Microsoft.DesktopAppInstaller
+          if ($app) { $clientVersion = (& (Join-Path $app.InstallLocation 'winget.exe') --version).Trim().TrimStart('v') }
+          if (!$app -or [version]$clientVersion -lt [version]'1.28') {
+            Install-Module Microsoft.WinGet.Client -Scope CurrentUser -Force -Repository PSGallery
+            Repair-WinGetPackageManager -AllUsers -Latest -Force
+            $app = Get-AppxPackage Microsoft.DesktopAppInstaller
+          }
+          $winget = Join-Path $app.InstallLocation 'winget.exe'
+          $version = (Get-Content -Raw dist/VERSION).Trim()
+          $manifest = "packaging/winget/$version"
+          & $winget validate --manifest $manifest
+          if ($LASTEXITCODE -ne 0) { throw 'WinGet validation failed' }
+          & $winget settings --enable LocalManifestFiles
+          if ($LASTEXITCODE -ne 0) { throw 'WinGet local manifests could not be enabled' }
+          & $winget install --manifest $manifest --scope user --silent --accept-source-agreements --accept-package-agreements --disable-interactivity
+          if ($LASTEXITCODE -ne 0) { throw 'WinGet install failed' }
+          $entry = Join-Path $env:RUNNER_TEMP 'winget-test.ts'
+          Set-Content $entry 'const n: number = 21; console.log(n * 2);'
+          $cli = Join-Path $env:LOCALAPPDATA 'Microsoft/WinGet/Links/rc.exe'
+          if ((& $cli run $entry) -ne '42' -or $LASTEXITCODE -ne 0) { throw 'WinGet runtime test failed' }

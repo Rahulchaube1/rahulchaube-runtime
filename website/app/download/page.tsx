@@ -27,6 +27,12 @@ export default function Downloads() {
           <Link className="text-link" href="/docs/installation">
             Installation guide <ArrowRight size={15} />
           </Link>
+          <Link className="text-link" href="/docs/installation#homebrew">
+            Install with Homebrew <ArrowRight size={15} />
+          </Link>
+          <Link className="text-link" href="/docs/installation#scoop">
+            Install with Scoop <ArrowRight size={15} />
+          </Link>
         </aside>
       </div>
       <section className="page-section">
@@ -37,16 +43,17 @@ export default function Downloads() {
       <section className="page-section" id="vscode">
         <h2>VS Code extension</h2>
         <p>
-          Run, watch and test a saved file from the editor. In Extensions, choose{" "}
+          Run, watch and test a saved file in VS Code, VSCodium or code-server. In Extensions, choose{" "}
           <strong>Install from VSIX</strong> and select the downloaded file.
         </p>
         <div className="button-row">
-          <a className="btn secondary" href="/extensions/rahulchaube-runtime-1.1.0.vsix" download>
-            <Download size={15} /> Download extension 1.1.0
+          <a className="btn secondary" href={`/extensions/rahulchaube-runtime-${site.editorVersion}.vsix`} download>
+            <Download size={15} /> Download extension {site.editorVersion}
           </a>
           <Link className="text-link" href="/docs/editor">
             Editor guide <ArrowRight size={15} />
           </Link>
+          <a className="text-link" href="/extensions/SHA256SUMS" download>Download SHA-256 checksums</a>
         </div>
       </section>
     </div>

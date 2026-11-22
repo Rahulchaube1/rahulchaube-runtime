@@ -1,0 +1,13 @@
+{
+    "version": "1.3.0",
+    "description": "Rahul Chaube’s standalone JavaScript and TypeScript runtime, bundler and test runner.",
+    "homepage": "https://www.rahulchaube.space/",
+    "license": "MIT",
+    "architecture": {
+        "64bit": {
+            "url": "https://github.com/Rahulchaube1/rahulchaube-runtime/releases/download/v1.3.0/runtime-win-x64.zip",
+            "hash": "5a9ec448fb4381a639537eef2994486d27bca7ccacd7903b36dbf90bcc05c35b"
+        }
+    },
+    "bin": "bin\\rc.exe"
+}
