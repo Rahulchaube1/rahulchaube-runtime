@@ -53,6 +53,9 @@ export default function Downloads() {
           <Link className="text-link" href="/docs/editor">
             Editor guide <ArrowRight size={15} />
           </Link>
+          <a className="text-link" href={`${site.social.github}/releases/tag/editor-v${site.editorVersion}`}>
+            GitHub release <ArrowRight size={15} />
+          </a>
           <a className="text-link" href="/extensions/SHA256SUMS" download>Download SHA-256 checksums</a>
         </div>
       </section>
